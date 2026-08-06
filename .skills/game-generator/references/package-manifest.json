@@ -1,0 +1,702 @@
+{
+  "schemaVersion": 2,
+  "packageCount": 61,
+  "capabilityPackageCount": 15,
+  "packages": [
+    {
+      "name": "miaoda-game-adventure-interaction-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "27d6a49852ec7130153ff5487e37843aa15c38fcec39a7e89e02660affa477f2",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "adventure",
+          "narrative"
+        ],
+        "owns": [
+          "adventure-action-legality",
+          "adventure-state-transitions",
+          "adventure-content-analysis",
+          "adventure-goal-path-witnesses",
+          "adventure-goal-assertions",
+          "adventure-goal-path-contracts",
+          "adventure-softlock-analysis",
+          "adventure-validation-manifests",
+          "adventure-ending-analysis"
+        ],
+        "doesNotOwn": [
+          "dialogue-flow",
+          "quest-progress",
+          "rendering"
+        ],
+        "compatibleWith": [
+          "miaoda-game-adventure-interaction-react"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-scenario-core",
+            "condition": "The content is primarily linear or branching dialogue rather than world verb/target interactions."
+          }
+        ],
+        "persistence": "snapshot"
+      }
+    },
+    {
+      "name": "miaoda-game-adventure-interaction-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "f57f6698df4e944568e486fcca1c2399a812e26a002317b94f4a513ff73c4d3e",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "adventure",
+          "narrative"
+        ],
+        "owns": [
+          "react-adventure-controller",
+          "react-adventure-projection"
+        ],
+        "doesNotOwn": [
+          "adventure-rules",
+          "dialogue-flow",
+          "dom-layout"
+        ],
+        "compatibleWith": [
+          "miaoda-game-adventure-interaction-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-adventure-interaction-core",
+            "condition": "The host does not need React subscriptions or controller projection."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-ballistics-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "feaedcf3362a0cf284aec18a1a65806e59e21c08c179424d39a581700a427d8f"
+    },
+    {
+      "name": "miaoda-game-big-two-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "684857b77c9f98f80f4df9a65a04bdfee11a4b3feb9776b0d3536c6547cb7c07"
+    },
+    {
+      "name": "miaoda-game-big-two-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "d6dfde5e0bac9cbc6ff53b4061821727512aa9208f953884297cb90417655b5f"
+    },
+    {
+      "name": "miaoda-game-blackjack-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "30e64cf0796c44ddaebe31cc1a402618192fee789f943ffcf0fc60347c57a8d3"
+    },
+    {
+      "name": "miaoda-game-blackjack-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "955259b0c8bd345cff1e3a6780f7f696ea5bb83e6fefb58ee0ca7fda6a7173b4"
+    },
+    {
+      "name": "miaoda-game-command-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "6a696a357fbc1e9312e35e3d7d83975580d52f3266a1cdb2f1212e39f521175d",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "command",
+          "orchestration"
+        ],
+        "owns": [
+          "atomic-command-application",
+          "command-preview",
+          "command-replay"
+        ],
+        "doesNotOwn": [
+          "dialogue-authoring",
+          "input-dispatch",
+          "domain-rules"
+        ],
+        "compatibleWith": [
+          "miaoda-game-command-react"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-scenario-core",
+            "condition": "The requirement is authored branching story flow rather than atomic cross-system commands."
+          }
+        ],
+        "persistence": "snapshot"
+      }
+    },
+    {
+      "name": "miaoda-game-command-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "8003d36f11d0dd159dc70ad1447cdb7208dc09140e7fc1c19cf942ad442feb51",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "command",
+          "orchestration"
+        ],
+        "owns": [
+          "react-command-controller",
+          "react-command-projection"
+        ],
+        "doesNotOwn": [
+          "command-semantics",
+          "scenario-flow",
+          "dom-layout"
+        ],
+        "compatibleWith": [
+          "miaoda-game-command-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-command-core",
+            "condition": "The host does not need React subscriptions or projected command views."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-decision-score-core",
+      "version": "0.1.0",
+      "declarations": 1,
+      "referenceHash": "88e4bbf3d7a21543fb3c1c1779cf8610380946159b7d2482f54d9fce59cf6e02"
+    },
+    {
+      "name": "miaoda-game-decision-search-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "46721190031da28029f157a96e72257ee993e5b743dc6afcfda9d317d74261ab"
+    },
+    {
+      "name": "miaoda-game-deck-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "0a6bd86eca6a1e43e2383585b0abfe0515720454d38e53312bcba421b7255b03"
+    },
+    {
+      "name": "miaoda-game-deck-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "cbb02ff0e8e3e33cd1a7d2adca3f349e5ca71ea03c764183012bb765fb3326de"
+    },
+    {
+      "name": "miaoda-game-deckbuilder-core",
+      "version": "0.3.0",
+      "declarations": 1,
+      "referenceHash": "e9dc96413456a2ab3f447f09450fa5782a3165f074c01d25d7bb4b82d941a3ca"
+    },
+    {
+      "name": "miaoda-game-dou-dizhu-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "61f69c8962ebddd3742dad31f0bb8ef3716ab5001154b6e318e85a97e1caa929"
+    },
+    {
+      "name": "miaoda-game-dou-dizhu-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "490a8eaa8ebf7f7fd06dd7156dbda16423025a62614b939ae9a2a73be5922fae"
+    },
+    {
+      "name": "miaoda-game-draft-pool-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "675c8c01d33be8e79c8f9bd6b07f081b56aa48a3bc2df210c241376dd3696157"
+    },
+    {
+      "name": "miaoda-game-fixed-step-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "52563aed3645044632c1032275e6c2dee305ab8370b87a11262af23b2ad5564a"
+    },
+    {
+      "name": "miaoda-game-fsm-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "d1eeff121bb106b0eacd999de75a54b9be9af468dd8849ead257cc87eeef0f8c"
+    },
+    {
+      "name": "miaoda-game-fsm-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "f6d1db6fe0ef04a23764aa3539590a491d4a07c755063ccf815e6fa925bc0659"
+    },
+    {
+      "name": "miaoda-game-grid-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "c1219ad54562ec98ec59cbea61b0ae8568880ca786e6ef1725a2ead93cd4bed1"
+    },
+    {
+      "name": "miaoda-game-grid-react",
+      "version": "0.1.0",
+      "declarations": 1,
+      "referenceHash": "3f80dce47c7d6f4ccdc59e85060d6212e1e1ef6cb2f6222baa1af127421150a6"
+    },
+    {
+      "name": "miaoda-game-guandan-analysis-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "f3692e0bb302925de88aaf1a40c74cd7ea310a1b33d0750c1a251e773bb08686"
+    },
+    {
+      "name": "miaoda-game-guandan-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "e05153e1185a805643368fcdbfc1505fac7b3ad89c3a7f712ca9221b7f53d126"
+    },
+    {
+      "name": "miaoda-game-guandan-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "bf2dff186040055df7aa7398d7a97591e9e35519bda876a919adc3ba86af9648"
+    },
+    {
+      "name": "miaoda-game-inventory-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "d279a8fa4fc1dfab6480a7c44187648bd5da5eefcaf8337677e1cd428bb4f0ea"
+    },
+    {
+      "name": "miaoda-game-inventory-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "3d1deb2bfa77e55e8402942891fb75d6f7891764ef24ee694ce7e34172c49943"
+    },
+    {
+      "name": "miaoda-game-mcr-mahjong-analysis-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "bf773ee5b253792eaeb4bb187c0639490679d408872a74d5a89e15c39ed17262"
+    },
+    {
+      "name": "miaoda-game-mcr-mahjong-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "f245e1a1aa3ccb3fa3bc937b7e21ec7058907ad35ae0f3ea870d90a4de189b43"
+    },
+    {
+      "name": "miaoda-game-mcr-mahjong-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "14748b4951876efb0d9d026192372c3389f7d3d352088fc70d52cee324326c9b"
+    },
+    {
+      "name": "miaoda-game-mcr-mahjong-session-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "e2d865810068056be73af3d4563bbf5f6ac017072559e0d7e7dd4b7982224054"
+    },
+    {
+      "name": "miaoda-game-mcr-mahjong-strategy-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "a324045dc798302a2d4ca4b7565eb718c630a2787fd989ac7056cef1fe5f18c5"
+    },
+    {
+      "name": "miaoda-game-meld-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "41111510b4425f98c71ae5de0d3f8460cb354ec3776e91ea1a0ebabc68d833f9"
+    },
+    {
+      "name": "miaoda-game-mode-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "a92a230d678365e8802774c4fd91886e3e4dd740884d6c9d4f685e134ab152da"
+    },
+    {
+      "name": "miaoda-game-mode-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "4c9aae63824e452da842759b18f2e21172dbbb59225405f9fc53b741aa41e41f"
+    },
+    {
+      "name": "miaoda-game-objective-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "40b4bda3089d7c5a40b8cbdedac28b7af5992b195b45d3ff45c16c588e4fecdf",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "objective",
+          "progression"
+        ],
+        "owns": [
+          "objective-progress",
+          "objective-completion",
+          "objective-persistence"
+        ],
+        "doesNotOwn": [
+          "quest-stage-graphs",
+          "dialogue-flow",
+          "reward-granting"
+        ],
+        "compatibleWith": [
+          "miaoda-game-objective-react",
+          "miaoda-game-quest-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-quest-core",
+            "condition": "Progress belongs to prerequisite quests, stage graphs, exclusive branches, failure, or reward claims."
+          }
+        ],
+        "persistence": "snapshot"
+      }
+    },
+    {
+      "name": "miaoda-game-objective-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "4ea493cd0c6a73822f6a0805a73ed65b282a7784cc4ef97f8d0ccf232ae24287",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "objective",
+          "progression"
+        ],
+        "owns": [
+          "react-objective-projection",
+          "react-objective-subscription"
+        ],
+        "doesNotOwn": [
+          "objective-semantics",
+          "quest-stage-graphs",
+          "dom-layout"
+        ],
+        "compatibleWith": [
+          "miaoda-game-objective-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-objective-core",
+            "condition": "The host does not need React subscriptions."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-paodekuai-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "174c714cccb2a946c150a241880488d17b08c2863f478f72efde89e2209fa237"
+    },
+    {
+      "name": "miaoda-game-paodekuai-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "2370280a7dc17201da0a86d17f06ca0c8b4c594f1279b50ff0de3ca4c54ea5ba"
+    },
+    {
+      "name": "miaoda-game-pinball-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "9029d6a7a016d7701328a1a69a38bb9634127c1b5abf0d51fa77b56c10e30d3f"
+    },
+    {
+      "name": "miaoda-game-quest-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "5d102577d252ead284bedfa1ca8f3febcab9e772738ec233f5c5adbc80385448",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "narrative",
+          "progression",
+          "quest"
+        ],
+        "owns": [
+          "quest-stage-graphs",
+          "quest-branches",
+          "quest-reward-claims"
+        ],
+        "doesNotOwn": [
+          "dialogue-decisions",
+          "objective-algorithms",
+          "reward-granting"
+        ],
+        "compatibleWith": [
+          "miaoda-game-objective-core",
+          "miaoda-game-quest-react"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-objective-core",
+            "condition": "The requirement is one lightweight challenge or achievement without quest lifecycle."
+          },
+          {
+            "package": "miaoda-game-scenario-core",
+            "condition": "The requirement is transient branching dialogue rather than persistent quest progress."
+          }
+        ],
+        "persistence": "snapshot"
+      }
+    },
+    {
+      "name": "miaoda-game-quest-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "770be11ed43d01f5b1316d4866565487e8a339ff2ba643f7ff6b651ac1f184f7",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "narrative",
+          "progression",
+          "quest"
+        ],
+        "owns": [
+          "react-quest-controller",
+          "react-quest-projection"
+        ],
+        "doesNotOwn": [
+          "quest-semantics",
+          "dialogue-flow",
+          "dom-layout"
+        ],
+        "compatibleWith": [
+          "miaoda-game-quest-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-quest-core",
+            "condition": "The host does not need React subscriptions or controller projection."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-react-dom",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "4c23f5b67b07368550e14abd647283df2ebb709c3414149ec95e1c371c495927"
+    },
+    {
+      "name": "miaoda-game-reward-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "e1d67bfbe96bd280ef3b4e56fd6e8a016baaee7c767df0857d86ccb317968473"
+    },
+    {
+      "name": "miaoda-game-reward-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "561969f828b794e8e75f7b05f66b898120fdad3c3dc9b549fd87baac90ca5416"
+    },
+    {
+      "name": "miaoda-game-save-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "be9592cc8f16a71b43f9a88c5d8eed8228822ee364bcfab91bbc65ab9f2151fb",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "persistence"
+        ],
+        "owns": [
+          "save-envelope-validation",
+          "save-version-migration",
+          "save-checksums"
+        ],
+        "doesNotOwn": [
+          "storage-backends",
+          "story-flow",
+          "domain-state"
+        ],
+        "compatibleWith": [
+          "miaoda-game-save-react"
+        ],
+        "useInsteadWhen": [],
+        "persistence": "envelope"
+      }
+    },
+    {
+      "name": "miaoda-game-save-react",
+      "version": "0.1.0",
+      "declarations": 1,
+      "referenceHash": "49c914f660e839a00f972e25f70b8c8bf9e857e4714232331c9b901714b11122",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "persistence"
+        ],
+        "owns": [
+          "react-save-controller",
+          "react-save-status"
+        ],
+        "doesNotOwn": [
+          "storage-backends",
+          "save-envelope-semantics",
+          "dom-layout"
+        ],
+        "compatibleWith": [
+          "miaoda-game-save-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-save-core",
+            "condition": "The host does not need React save status and controller wiring."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-scenario-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "540f22f9febcff6431788193a1b7e6ef3107ffea07ed06e8e4054f4b1e490ef8",
+      "capabilities": {
+        "engine": "neutral",
+        "domains": [
+          "dialogue",
+          "narrative"
+        ],
+        "owns": [
+          "branching-scenario-flow",
+          "scenario-memory",
+          "scenario-choice-checkpoints"
+        ],
+        "doesNotOwn": [
+          "quest-progress",
+          "world-interactions",
+          "rendering"
+        ],
+        "compatibleWith": [
+          "miaoda-game-scenario-react"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-quest-core",
+            "condition": "The requirement is persistent quest stages, prerequisites, failure, or reward claims."
+          },
+          {
+            "package": "miaoda-game-adventure-interaction-core",
+            "condition": "The requirement is executable world verb/target/item/topic interactions."
+          }
+        ],
+        "persistence": "snapshot"
+      }
+    },
+    {
+      "name": "miaoda-game-scenario-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "65b76da6448884c95d2e4d3e71d19137fa364300d6e27fbde29de09436b4d201",
+      "capabilities": {
+        "engine": "react",
+        "domains": [
+          "dialogue",
+          "narrative"
+        ],
+        "owns": [
+          "react-scenario-controller",
+          "react-scenario-projection"
+        ],
+        "doesNotOwn": [
+          "scenario-semantics",
+          "dom-layout",
+          "storage-backends"
+        ],
+        "compatibleWith": [
+          "miaoda-game-scenario-core"
+        ],
+        "useInsteadWhen": [
+          {
+            "package": "miaoda-game-scenario-core",
+            "condition": "The host does not need React subscriptions or controller projection."
+          }
+        ],
+        "persistence": "delegated"
+      }
+    },
+    {
+      "name": "miaoda-game-score-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "8ac038bb27ac15479e22e31ef1a4d0d5debe00ce2cf2854fd691fd4103fc59a6"
+    },
+    {
+      "name": "miaoda-game-score-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "55497356aef56a1b9c1fa44c2002863eb66c27824aa1309b000c25bce6820326"
+    },
+    {
+      "name": "miaoda-game-shooter-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "1b033684d161fbff1b5dea7a21aa9092d2f9ffd5dc66b9d7b245c862a4ad313a"
+    },
+    {
+      "name": "miaoda-game-sports-ball-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "e176f60280b23aa28defd1e1aa2d3d411bd2edc260ca87860a02613742a98549"
+    },
+    {
+      "name": "miaoda-game-texas-holdem-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "77243c184c1ebd9669b0919e0a556ae2ac7a59b99143cb9be2dcd9dc16881185"
+    },
+    {
+      "name": "miaoda-game-texas-holdem-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "b61cb8263776cb0be8af04f046464fcf8d37c4da33fb687dc648cc8065355bc8"
+    },
+    {
+      "name": "miaoda-game-tractor-analysis-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "b40040c757768a22a5a5e61f516c63173b70518618d6bb11cc21e3f28b886f14"
+    },
+    {
+      "name": "miaoda-game-tractor-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "c3929b8695d933748d86792bc644ee762a8b712ee1d90b787a9e447e8d8a5633"
+    },
+    {
+      "name": "miaoda-game-tractor-rules",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "a1a7463fc9c97f1870bbc0f805eba5b4b7e2b4b842d20603245783b8fd6c87e8"
+    },
+    {
+      "name": "miaoda-game-trick-taking-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "32df4335c52f4cede6bdd1a289b95e30479e30a440ac0f319aafc8d6f304f23e"
+    },
+    {
+      "name": "miaoda-game-turn-core",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "33e56e702278114a129d8db73091ca6b9020293d88fe6685c421aa9da91f1967"
+    },
+    {
+      "name": "miaoda-game-turn-react",
+      "version": "0.3.1",
+      "declarations": 1,
+      "referenceHash": "3bd9d82bf96f078b56c7d1c424f702e912d9a1f7dd0cb5b7ed626d7b70cb3402"
+    }
+  ]
+}

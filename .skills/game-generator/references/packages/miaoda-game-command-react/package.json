@@ -1,0 +1,48 @@
+{
+  "name": "miaoda-game-command-react",
+  "version": "0.3.1",
+  "description": "React DOM bindings for projected command-driven turn-based game state.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-command-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "command",
+      "orchestration"
+    ],
+    "owns": [
+      "react-command-controller",
+      "react-command-projection"
+    ],
+    "doesNotOwn": [
+      "command-semantics",
+      "scenario-flow",
+      "dom-layout"
+    ],
+    "compatibleWith": [
+      "miaoda-game-command-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-command-core",
+        "condition": "The host does not need React subscriptions or projected command views."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

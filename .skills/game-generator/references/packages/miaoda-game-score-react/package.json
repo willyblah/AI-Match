@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-score-react",
+  "version": "0.3.1",
+  "description": "React bindings for score, combo, and high-score displays.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-react-dom": "0.3.1",
+    "miaoda-game-score-core": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "miaoda-game-objective-react",
+  "version": "0.3.1",
+  "description": "React bindings for objective progress and completion state.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-objective-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "objective",
+      "progression"
+    ],
+    "owns": [
+      "react-objective-projection",
+      "react-objective-subscription"
+    ],
+    "doesNotOwn": [
+      "objective-semantics",
+      "quest-stage-graphs",
+      "dom-layout"
+    ],
+    "compatibleWith": [
+      "miaoda-game-objective-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-objective-core",
+        "condition": "The host does not need React subscriptions."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-turn-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic turn rules with explicit models for ordered actors, faction phases, seat-based players, and simultaneous submission barriers. No rendering or engine dependency.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-random-core": "0.1.0"
+  }
+}

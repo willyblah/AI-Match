@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-tractor-analysis-core",
+  "version": "0.3.1",
+  "description": "Pure analysis for the fixed four-player double-deck Tractor profile.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

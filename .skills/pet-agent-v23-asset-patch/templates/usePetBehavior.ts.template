@@ -1,0 +1,377 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { PetAppConfig, PetInteractionConfig, PetState, ProactiveBubbleConfig, PetPersonality, ReactionSpriteState } from './pet-config';
+
+export interface UsePetBehaviorReturn<TAppStatus extends string> {
+  basePetState: PetState;
+  displayPetState: PetState;
+  bubbleOpen: boolean;
+  bubbleSource: 'auto' | 'click' | 'proactive' | null;
+  reactionActive: boolean;
+  reactionMode: 'compact' | 'expressive' | 'sprite';
+  reactionProfile: PetPersonality['doubleTap'];
+  // V2.2：reaction Sprite 状态独立，不混同 PetState
+  reactionSpriteState?: ReactionSpriteState;
+  reactionParticleCount: number;
+  openClickBubble: () => void;
+  closeBubble: () => void;
+  dismissTransientEvent: (eventId: string) => void;
+  triggerReaction: () => void;
+  recordInteraction: () => void;
+}
+
+const PET_INTERACTION_DEFAULTS: PetInteractionConfig<string> = {
+  singleClickOpensBubble: true,
+  doubleClickReaction: true,
+  dragMoves: true,
+  idleProactiveBubbles: true,
+  clickCooldownMs: 600,
+  doubleClickThresholdMs: 300,
+  dragThresholdPx: 5,
+  // V2.1：主动气泡更克制，至少 60 秒无交互后才允许第一次出现
+  idleProactiveMinIdleMs: 60000,
+  userTypingGraceMs: 5000,
+  userActivityEvents: ['mousedown', 'keydown', 'touchstart', 'scroll'],
+  proactiveBubbleWindowMs: 8000,
+  autoBubbleCooldownMs: 3000,
+  // V2.1：普通闲聊 proactive bubble 之间保持较长冷却（随机 60–120 秒）
+  proactiveBubbleCooldownMs: 60000,
+  proactiveBubbleMaxCooldownMs: 120000,
+  // V2.1：用户近期有操作（点击/滚动/输入）时不主动弹出
+  proactiveActivityGraceMs: 15000,
+  // V2.2：性格化双击 reaction，默认 compact，用户明确选择后才启用 expressive/sprite
+  reaction: {
+    enabled: true,
+    durationMs: 600,
+    mode: 'compact',
+    profile: 'sway',
+    cooldownMs: 900,
+    particles: false,
+    // V2.2：默认粒子数为 0；expressive 由用户配置提供具体数量
+    particleCount: 0,
+    reducedMotionFallback: true,
+  },
+  proactiveBubbles: [],
+};
+
+function randBetween(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function mergeInteractionConfig<TAppStatus extends string>(
+  interaction: Partial<PetInteractionConfig<TAppStatus>> | undefined
+): PetInteractionConfig<TAppStatus> {
+  return {
+    ...PET_INTERACTION_DEFAULTS,
+    ...interaction,
+    reaction: {
+      ...PET_INTERACTION_DEFAULTS.reaction,
+      ...interaction?.reaction,
+    },
+    proactiveBubbles: interaction?.proactiveBubbles ?? PET_INTERACTION_DEFAULTS.proactiveBubbles,
+  } as PetInteractionConfig<TAppStatus>;
+}
+
+function isUserTyping(): boolean {
+  if (typeof document === 'undefined') return false;
+  const active = document.activeElement;
+  if (!active) return false;
+  const tag = active.tagName.toLowerCase();
+  return (
+    tag === 'input' ||
+    tag === 'textarea' ||
+    (active as HTMLElement).isContentEditable
+  );
+}
+
+/**
+ * 宠物行为 Hook
+ *
+ * 管理宠物基础状态、临时覆盖事件、自动气泡、点击气泡、主动气泡、
+ * 通用交互（reaction、用户活动记录）与主动互动打断策略。
+ */
+export function usePetBehavior<TAppStatus extends string>(
+  config: PetAppConfig<TAppStatus>,
+  appStatus: TAppStatus,
+  metrics: Record<string, number>,
+  actions: Record<string, () => void>,
+): UsePetBehaviorReturn<TAppStatus> {
+  const interaction = mergeInteractionConfig(config.interaction);
+
+  const [activeEventId, setActiveEventId] = useState<string | null>(null);
+  const [bubbleOpen, setBubbleOpen] = useState(false);
+  const [bubbleSource, setBubbleSource] = useState<'auto' | 'click' | 'proactive' | null>(null);
+  const [reactionActive, setReactionActive] = useState(false);
+
+  const eventTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bubbleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reactionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const proactiveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastIdentityRef = useRef<Record<string, string | null>>({});
+  const cooldownUntilRef = useRef<Record<string, number>>({});
+  const activeEventStartRef = useRef<Record<string, number>>({});
+
+  const prevStatusRef = useRef<TAppStatus | null>(null);
+  const lastInteractionAtRef = useRef<number>(Date.now());
+  const lastUserActivityAtRef = useRef<number>(Date.now());
+  const lastBubbleAtRef = useRef<number>(0);
+  const lastProactiveBubbleAtRef = useRef<number>(0);
+  const lastClickAtRef = useRef<number>(0);
+  const lastProactiveTextRef = useRef<string | null>(null);
+  const proactiveCountRef = useRef<Record<string, number>>({});
+  const bubbleTextRef = useRef<string | null>(null);
+
+  const clearTimer = useCallback((ref: React.MutableRefObject<ReturnType<typeof setTimeout> | null>) => {
+    if (ref.current !== null) {
+      clearTimeout(ref.current);
+      ref.current = null;
+    }
+  }, []);
+
+  const basePetState = config.deriveBaseState(appStatus);
+  const activeEvent = activeEventId
+    ? config.transientEvents?.find((e) => e.eventId === activeEventId)
+    : undefined;
+  const displayPetState: PetState = activeEvent
+    ? activeEvent.targetPetState
+    : basePetState;
+
+  const recordInteraction = useCallback(() => {
+    const now = Date.now();
+    lastInteractionAtRef.current = now;
+    lastUserActivityAtRef.current = now;
+    lastClickAtRef.current = now;
+  }, []);
+
+  const recordUserActivity = useCallback(() => {
+    lastUserActivityAtRef.current = Date.now();
+  }, []);
+
+  const closeBubble = useCallback(() => {
+    clearTimer(bubbleTimerRef);
+    setBubbleOpen(false);
+    setBubbleSource(null);
+    bubbleTextRef.current = null;
+  }, [clearTimer]);
+
+  const openBubble = useCallback((
+    source: 'auto' | 'click' | 'proactive',
+    text: string,
+    durationMs: number,
+  ) => {
+    closeBubble();
+    bubbleTextRef.current = text;
+    setBubbleOpen(true);
+    setBubbleSource(source);
+    lastBubbleAtRef.current = Date.now();
+    if (source === 'proactive') {
+      lastProactiveBubbleAtRef.current = Date.now();
+    }
+    clearTimer(bubbleTimerRef);
+    bubbleTimerRef.current = setTimeout(() => {
+      setBubbleOpen(false);
+      setBubbleSource(null);
+      bubbleTextRef.current = null;
+    }, durationMs);
+  }, [closeBubble, clearTimer]);
+
+  const lastDoubleClickAtRef = useRef<number>(0);
+
+  const triggerReaction = useCallback(() => {
+    if (!interaction.reaction.enabled) return;
+    // V2.2：cooldown 期内忽略新输入，不排队、不叠加
+    const now = Date.now();
+    const cooldown = interaction.reaction.cooldownMs ?? 900;
+    if (now - lastDoubleClickAtRef.current < cooldown) return;
+    lastDoubleClickAtRef.current = now;
+    clearTimer(reactionTimerRef);
+    setReactionActive(true);
+    reactionTimerRef.current = setTimeout(() => {
+      setReactionActive(false);
+    }, interaction.reaction.durationMs ?? 600);
+  }, [interaction.reaction, clearTimer]);
+
+  const canShowProactiveBubble = useCallback((cfg: ProactiveBubbleConfig<TAppStatus>, now: number) => {
+    const id = cfg.id;
+    if (bubbleOpen) return false;
+    if (activeEventId) return false;
+    if (now - lastInteractionAtRef.current < interaction.idleProactiveMinIdleMs) return false;
+    if (now - lastUserActivityAtRef.current < interaction.userTypingGraceMs) return false;
+    // V2.1：用户近期有操作（点击/滚动/输入）时不主动弹出闲聊
+    if (now - lastUserActivityAtRef.current < interaction.proactiveActivityGraceMs) return false;
+    if (now - lastBubbleAtRef.current < interaction.proactiveBubbleWindowMs) return false;
+    if (now - lastProactiveBubbleAtRef.current < interaction.proactiveBubbleCooldownMs) return false;
+    if (cooldownUntilRef.current[id] && now < cooldownUntilRef.current[id]) return false;
+    if (isUserTyping()) return false;
+    const shown = proactiveCountRef.current[id] ?? 0;
+    if (shown >= cfg.maxPerSession) return false;
+    if (!cfg.condition(appStatus, metrics, lastInteractionAtRef.current)) return false;
+    return true;
+  }, [activeEventId, interaction, appStatus, metrics, bubbleOpen]);
+
+  // 状态变化自动气泡
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = appStatus;
+    if (prev === null || prev === appStatus) return;
+
+    const now = Date.now();
+    const cfg = config.autoBubbles?.[appStatus as keyof typeof config.autoBubbles];
+    if (cfg?.shouldShow(prev, appStatus)) {
+      if (now - lastBubbleAtRef.current < interaction.autoBubbleCooldownMs) return;
+      if (now - lastUserActivityAtRef.current < interaction.userTypingGraceMs) return;
+      openBubble('auto', cfg.getText(appStatus), cfg.durationMs);
+    }
+  }, [appStatus, config.autoBubbles, interaction, openBubble]);
+
+  // 临时事件检测与优先级调度
+  useEffect(() => {
+    const now = Date.now();
+    const events = config.transientEvents ?? [];
+
+    if (activeEventId && activeEvent) {
+      const startAt = activeEventStartRef.current[activeEventId] ?? 0;
+      const expectedEnd = startAt + activeEvent.durationMs;
+      if (now >= expectedEnd) {
+        cooldownUntilRef.current[activeEvent.eventId] = now + activeEvent.cooldownMs;
+        setActiveEventId(null);
+        activeEventStartRef.current[activeEventId] = 0;
+        closeBubble();
+      }
+    }
+
+    const candidates = events
+      .filter((e) => {
+        if (e.eventId === activeEventId) return false;
+        if (cooldownUntilRef.current[e.eventId] && now < cooldownUntilRef.current[e.eventId]) return false;
+        return e.condition(appStatus, metrics);
+      })
+      .map((e) => {
+        const identity = e.getIdentity?.(appStatus, metrics) ?? e.eventId;
+        return { event: e, identity };
+      })
+      .filter(({ event, identity }) => {
+        // 统一按 event identity 去重：无论 repeatable 是否为 true，
+        // 同一个 identity 只能触发一次。
+        // - repeatable:false：该事件在生命周期内最多触发一次。
+        // - repeatable:true：允许新的 occurrence 重复触发，但必须对应新的 identity
+        //   （例如新的 successTimestamp / requestId）。
+        // 这样可避免 condition 持续为 true 时，transient 结束后被立即重新触发。
+        if (lastIdentityRef.current[event.eventId] === identity) return false;
+        return true;
+      });
+
+    if (candidates.length === 0) return;
+
+    candidates.sort((a, b) => b.event.priority - a.event.priority);
+    const best = candidates[0];
+
+    if (activeEvent && best.event.priority <= activeEvent.priority) return;
+
+    lastIdentityRef.current[best.event.eventId] = best.identity;
+    activeEventStartRef.current[best.event.eventId] = now;
+    setActiveEventId(best.event.eventId);
+
+    // 业务事件可覆盖普通气泡
+    if (best.event.isBusinessEvent) {
+      openBubble('auto', config.bubbles[best.event.targetPetState]?.getText(appStatus, metrics) ?? '', best.event.durationMs);
+    }
+
+    clearTimer(eventTimerRef);
+    eventTimerRef.current = setTimeout(() => {
+      setActiveEventId((prev) => (prev === best.event.eventId ? null : prev));
+      cooldownUntilRef.current[best.event.eventId] = Date.now() + best.event.cooldownMs;
+    }, best.event.durationMs);
+  }, [appStatus, metrics, config.transientEvents, config.bubbles, activeEvent, activeEventId, closeBubble, openBubble, clearTimer]);
+
+  // 主动气泡调度（V2.1：陪伴闲聊克制，随机 60–120s 冷却，同类文案去重）
+  useEffect(() => {
+    if (!interaction.idleProactiveBubbles) return;
+    const now = Date.now();
+    const configs = interaction.proactiveBubbles ?? [];
+
+    const candidates = configs
+      .filter((cfg) => canShowProactiveBubble(cfg, now))
+      .sort((a, b) => b.priority - a.priority);
+
+    if (candidates.length === 0) return;
+
+    // 优先选择与上一次不同的文案，避免连续重复同一句闲聊
+    const preferred = candidates.find(
+      (cfg) => cfg.getText(appStatus, metrics) !== lastProactiveTextRef.current,
+    );
+    const candidate = preferred ?? candidates[0];
+
+    const id = candidate.id;
+    const text = candidate.getText(appStatus, metrics);
+    lastProactiveTextRef.current = text;
+    proactiveCountRef.current[id] = (proactiveCountRef.current[id] ?? 0) + 1;
+    cooldownUntilRef.current[id] =
+      now + randBetween(interaction.proactiveBubbleCooldownMs, interaction.proactiveBubbleMaxCooldownMs);
+    openBubble('proactive', text, candidate.durationMs ?? 4000);
+  }, [appStatus, metrics, interaction, canShowProactiveBubble, openBubble]);
+
+  // 用户活动监听
+  useEffect(() => {
+    const events = interaction.userActivityEvents;
+    const handler = () => recordUserActivity();
+    events.forEach((e) => document.addEventListener(e, handler, true));
+    return () => events.forEach((e) => document.removeEventListener(e, handler, true));
+  }, [interaction.userActivityEvents, recordUserActivity]);
+
+  const openClickBubble = useCallback(() => {
+    const now = Date.now();
+    if (now - lastClickAtRef.current < interaction.clickCooldownMs) return;
+    recordInteraction();
+    if (bubbleOpen && bubbleSource === 'click') {
+      closeBubble();
+      return;
+    }
+    const text = config.bubbles[displayPetState]?.getText(appStatus, metrics) ?? '';
+    openBubble('click', text, 0);
+    // 点击气泡不自动关闭，由用户点击外部或再次点击关闭
+  }, [interaction.clickCooldownMs, recordInteraction, bubbleOpen, bubbleSource, displayPetState, config.bubbles, appStatus, metrics, openBubble, closeBubble]);
+
+  const dismissTransientEvent = useCallback(
+    (eventId: string) => {
+      if (activeEventId !== eventId) return;
+      clearTimer(eventTimerRef);
+      const event = config.transientEvents?.find((e) => e.eventId === eventId);
+      if (event) {
+        cooldownUntilRef.current[eventId] = Date.now() + event.cooldownMs;
+      }
+      setActiveEventId(null);
+      activeEventStartRef.current[eventId] = 0;
+      if (bubbleSource === 'auto' || bubbleSource === 'proactive') {
+        closeBubble();
+      }
+    },
+    [activeEventId, bubbleSource, closeBubble, clearTimer, config.transientEvents],
+  );
+
+  useEffect(() => {
+    return () => {
+      clearTimer(eventTimerRef);
+      clearTimer(bubbleTimerRef);
+      clearTimer(reactionTimerRef);
+      clearTimer(proactiveTimerRef);
+    };
+  }, [clearTimer]);
+
+  return {
+    basePetState,
+    displayPetState,
+    bubbleOpen,
+    bubbleSource,
+    reactionActive,
+    reactionMode: interaction.reaction.mode,
+    reactionProfile: interaction.reaction.profile ?? 'sway',
+    // V2.2：仅当 reaction mode 为 sprite 时返回 spriteState，否则返回 undefined
+    reactionSpriteState: interaction.reaction.mode === 'sprite' ? interaction.reaction.spriteState : undefined,
+    reactionParticleCount: interaction.reaction.particleCount ?? 0,
+    openClickBubble,
+    closeBubble,
+    dismissTransientEvent,
+    triggerReaction,
+    recordInteraction,
+  };
+}

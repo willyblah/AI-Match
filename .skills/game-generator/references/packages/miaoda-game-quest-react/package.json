@@ -1,0 +1,49 @@
+{
+  "name": "miaoda-game-quest-react",
+  "version": "0.3.1",
+  "description": "React bindings for miaoda-game-quest-core quest progress and objectives.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-quest-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "narrative",
+      "progression",
+      "quest"
+    ],
+    "owns": [
+      "react-quest-controller",
+      "react-quest-projection"
+    ],
+    "doesNotOwn": [
+      "quest-semantics",
+      "dialogue-flow",
+      "dom-layout"
+    ],
+    "compatibleWith": [
+      "miaoda-game-quest-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-quest-core",
+        "condition": "The host does not need React subscriptions or controller projection."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

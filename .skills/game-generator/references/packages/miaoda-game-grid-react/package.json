@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-grid-react",
+  "version": "0.1.0",
+  "description": "React bindings for observable grid cells, selection, paths, and movement areas.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-grid-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  }
+}

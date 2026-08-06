@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-deck-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic deck/pile engine for card games: named zones, deterministic shuffle with optional authoritative RNG injection, automatic reshuffle, hand limits, atomic selected-card moves, saves, and pure snapshot operations for reducer/command state. Card effects and multiplayer visibility remain game-owned. No rendering or engine dependency.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-random-core": "0.1.0"
+  }
+}

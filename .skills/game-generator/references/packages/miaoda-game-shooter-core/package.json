@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-shooter-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic bullet / danmaku core: shot-pattern math (fan/ring/spiral), a firing-timing Emitter, and a bullet motion+lifecycle simulation. No rendering, no engine dependency. Backs shoot-em-up, bullet-hell, twin-stick and tower-defense style games.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

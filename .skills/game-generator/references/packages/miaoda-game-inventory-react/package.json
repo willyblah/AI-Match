@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-inventory-react",
+  "version": "0.3.1",
+  "description": "React bindings for miaoda-game-inventory-core containers, equipment, and wallets.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-inventory-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  }
+}

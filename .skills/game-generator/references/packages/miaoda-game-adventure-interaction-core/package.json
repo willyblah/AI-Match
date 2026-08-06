@@ -1,0 +1,51 @@
+{
+  "name": "miaoda-game-adventure-interaction-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic deterministic interaction rules for point-and-click adventures and detective AVG games.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./validation-manifest.schema.json": "./validation-manifest.schema.json"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "adventure",
+      "narrative"
+    ],
+    "owns": [
+      "adventure-action-legality",
+      "adventure-state-transitions",
+      "adventure-content-analysis",
+      "adventure-goal-path-witnesses",
+      "adventure-goal-assertions",
+      "adventure-goal-path-contracts",
+      "adventure-softlock-analysis",
+      "adventure-validation-manifests",
+      "adventure-ending-analysis"
+    ],
+    "doesNotOwn": [
+      "dialogue-flow",
+      "quest-progress",
+      "rendering"
+    ],
+    "compatibleWith": [
+      "miaoda-game-adventure-interaction-react",
+      "miaoda-game-adventure-scenario-bridge-core",
+      "miaoda-game-investigation-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-scenario-core",
+        "condition": "The content is primarily linear or branching dialogue rather than world verb/target interactions."
+      }
+    ],
+    "persistence": "snapshot"
+  }
+}

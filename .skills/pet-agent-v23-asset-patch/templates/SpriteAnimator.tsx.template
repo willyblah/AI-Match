@@ -1,0 +1,115 @@
+import { useEffect, useRef, useState } from 'react';
+
+export interface SpriteAnimatorProps {
+  /** Sprite Sheet 图片路径 */
+  src: string;
+  /** 单帧宽度 */
+  frameWidth: number;
+  /** 单帧高度 */
+  frameHeight: number;
+  /** 总帧数 */
+  frameCount: number;
+  /** 每秒帧数 */
+  fps: number;
+  /** 是否循环 */
+  loop: boolean;
+  /** 状态 key，变化时重置动画 */
+  stateKey: string;
+}
+
+/**
+ * 通用 Sprite 动画播放器
+ *
+ * 使用 background-position 逐帧播放横向 1×N Sprite Sheet。
+ * 通过 ResizeObserver 自动根据容器宽度缩放，避免移动端裁切。
+ */
+export function SpriteAnimator({
+  src,
+  frameWidth,
+  frameHeight,
+  frameCount,
+  fps,
+  loop,
+  stateKey,
+}: SpriteAnimatorProps) {
+  const [frameIndex, setFrameIndex] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number | null>(null);
+
+  // 状态变化时重置动画
+  useEffect(() => {
+    setFrameIndex(0);
+    lastTimeRef.current = null;
+  }, [stateKey]);
+
+  // 播放循环
+  useEffect(() => {
+    const step = (timestamp: number) => {
+      if (lastTimeRef.current === null) {
+        lastTimeRef.current = timestamp;
+      }
+      const elapsed = timestamp - lastTimeRef.current;
+      const frameDuration = 1000 / fps;
+
+      if (elapsed >= frameDuration) {
+        lastTimeRef.current = timestamp;
+        setFrameIndex((prev) => {
+          const next = prev + 1;
+          if (next >= frameCount) {
+            return loop ? 0 : frameCount - 1;
+          }
+          return next;
+        });
+      }
+
+      if (loop || frameIndex < frameCount - 1) {
+        rafRef.current = requestAnimationFrame(step);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [frameCount, fps, loop, stateKey, frameIndex]);
+
+  // 容器尺寸监听
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const scale = containerWidth / frameWidth;
+  const containerHeight = frameHeight * scale;
+  const backgroundX = -(frameIndex * frameWidth * scale);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full"
+      style={{
+        height: containerHeight,
+        backgroundImage: `url(${src})`,
+        backgroundSize: `${frameWidth * frameCount * scale}px ${frameHeight * scale}px`,
+        backgroundPosition: `${backgroundX}px 0`,
+        backgroundRepeat: 'no-repeat',
+        imageRendering: 'auto',
+      }}
+      aria-label={`动画 ${stateKey}`}
+    />
+  );
+}

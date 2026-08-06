@@ -1,0 +1,20 @@
+{
+  "name": "miaoda-game-pinball-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic pinball session lifecycle, ball save, multiball, tilt, and switch rule bindings.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-mode-core": "0.3.1",
+    "miaoda-game-objective-core": "0.3.1",
+    "miaoda-game-score-core": "0.3.1"
+  }
+}

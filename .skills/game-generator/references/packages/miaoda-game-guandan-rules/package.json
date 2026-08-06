@@ -1,0 +1,19 @@
+{
+  "name": "miaoda-game-guandan-rules",
+  "version": "0.3.1",
+  "description": "Complete-match Pagat-main Guandan state machine with tribute and safe views.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-deck-core": "0.3.1",
+    "miaoda-game-guandan-analysis-core": "0.3.1"
+  }
+}

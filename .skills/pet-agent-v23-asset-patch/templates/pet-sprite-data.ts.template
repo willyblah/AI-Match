@@ -1,0 +1,163 @@
+/**
+ * 应用宠物 Agent 配置
+ *
+ * 此文件由 Skill 根据目标应用自动生成。
+ * 请替换 TAppStatus 为实际应用状态类型，并填充业务映射与事件。
+ */
+
+export type PetState = 'idle' | 'working' | 'success' | 'remind';
+
+// V2.2：双击 reaction Sprite 是独立命名空间，不混入业务状态。
+export type ReactionSpriteState = 'double-tap';
+
+export type PetStateLifecycle = 'persistent' | 'transient';
+
+export interface PetStateMeta {
+  lifecycle: PetStateLifecycle;
+  defaultDurationMs?: number;
+}
+
+export interface SpriteConfig {
+  src: string;
+  frameWidth: number;
+  frameHeight: number;
+  frameCount: number;
+  fps: number;
+  loop: boolean;
+}
+
+export interface BubbleConfig {
+  getText: (appStatus: unknown, metrics?: Record<string, number>) => string;
+  getActions: (
+    appStatus: unknown,
+    actions: Record<string, () => void>,
+    dismissTransientEvent?: () => void
+  ) => Array<{ label: string; onClick: () => void; variant?: 'default' | 'outline' }>;
+}
+
+export interface AutoBubbleConfig<TAppStatus> {
+  durationMs: number;
+  shouldShow: (prev: TAppStatus, current: TAppStatus) => boolean;
+  getText: (status: TAppStatus) => string;
+}
+
+export interface ProactiveBubbleConfig<TAppStatus> {
+  id: string;
+  intervalMs: number;
+  cooldownMs: number;
+  maxPerSession: number;
+  condition: (status: TAppStatus, metrics: Record<string, number>, lastInteractionAt: number) => boolean;
+  getText: (status: TAppStatus, metrics: Record<string, number>) => string;
+  priority: number;
+}
+
+export interface ReactionConfig {
+  enabled: boolean;
+  durationMs?: number;
+  // V2.2：默认 compact，用户明确选择后才启用 expressive/sprite
+  mode: 'compact' | 'expressive' | 'sprite';
+  profile?: PetPersonality['doubleTap'];
+  cooldownMs?: number;
+  // V2.2：spriteState 属于 ReactionSpriteState，不混入 PetState
+  spriteState?: ReactionSpriteState;
+  particles?: boolean;
+  // V2.2：粒子数量由配置决定，不要写死
+  particleCount?: number;
+  reducedMotionFallback?: boolean;
+}
+
+export interface PetInteractionConfig<TAppStatus extends string> {
+  singleClickOpensBubble: boolean;
+  doubleClickReaction: boolean;
+  dragMoves: boolean;
+  idleProactiveBubbles: boolean;
+  clickCooldownMs: number;
+  doubleClickThresholdMs: number;
+  dragThresholdPx: number;
+  idleProactiveMinIdleMs: number;
+  userTypingGraceMs: number;
+  userActivityEvents: string[];
+  proactiveBubbleWindowMs: number;
+  autoBubbleCooldownMs: number;
+  proactiveBubbleCooldownMs: number;
+  reaction: ReactionConfig;
+  proactiveBubbles?: ProactiveBubbleConfig<TAppStatus>[];
+  personality?: PetPersonality;
+}
+
+export interface TransientEventConfig<TAppStatus> {
+  eventId: string;
+  targetPetState: PetState;
+  baseState: PetState;
+  priority: number;
+  condition: (status: TAppStatus, metrics: Record<string, number>) => boolean;
+  getIdentity?: (status: TAppStatus, metrics: Record<string, number>) => string;
+  durationMs: number;
+  cooldownMs: number;
+  repeatable: boolean;
+  isBusinessEvent?: boolean;
+}
+
+export type PetPersonality = {
+  archetype: 'calm' | 'playful' | 'shy' | 'proud' | 'focused' | 'warm';
+  energy: 'low' | 'medium' | 'high';
+  warmth: 'reserved' | 'balanced' | 'caring';
+  doubleTap: 'sway' | 'hop' | 'peek' | 'chin-up' | 'blink' | 'nuzzle';
+  bubbleStyle: 'quiet' | 'teasing' | 'concise' | 'encouraging';
+};
+
+export interface PetAppConfig<TAppStatus extends string> {
+  deriveBaseState: (status: TAppStatus) => PetState;
+  stateMeta: Record<PetState, PetStateMeta>;
+  sprites: Record<PetState, SpriteConfig>;
+  // V2.2：双击 reaction Sprite 单独存放，避免与业务状态混淆
+  reactionSprites?: Record<ReactionSpriteState, SpriteConfig>;
+  bubbles: Record<PetState, BubbleConfig>;
+  autoBubbles?: Partial<Record<TAppStatus, AutoBubbleConfig<TAppStatus>>>;
+  proactiveBubbles?: ProactiveBubbleConfig<TAppStatus>[];
+  transientEvents?: TransientEventConfig<TAppStatus>[];
+  interaction?: Partial<PetInteractionConfig<TAppStatus>>;
+  personality?: PetPersonality;
+}
+
+// 由 Skill 根据实际生成结果填充
+export const PET_SPRITES: Record<PetState, SpriteConfig> = {
+  idle: {
+    src: '/images/pet/idle.png',
+    frameWidth: 0, // 替换为实际值
+    frameHeight: 0,
+    frameCount: 0,
+    fps: 4,
+    loop: true,
+  },
+  working: {
+    src: '/images/pet/working.png',
+    frameWidth: 0,
+    frameHeight: 0,
+    frameCount: 0,
+    fps: 6,
+    loop: true,
+  },
+  success: {
+    src: '/images/pet/success.png',
+    frameWidth: 0,
+    frameHeight: 0,
+    frameCount: 0,
+    fps: 8,
+    loop: false,
+  },
+  remind: {
+    src: '/images/pet/remind.png',
+    frameWidth: 0,
+    frameHeight: 0,
+    frameCount: 0,
+    fps: 4,
+    loop: true,
+  },
+};
+
+// V2.2：双击 reaction Sprite 表，默认空；由 Skill 按需生成 double-tap 后填充。
+export const PET_REACTION_SPRITES: Partial<Record<ReactionSpriteState, SpriteConfig>> = {};
+
+export const DEFAULT_PERSONALITY =
+  '友好、简短、轻度活泼、有陪伴感，但不过度打扰用户。';

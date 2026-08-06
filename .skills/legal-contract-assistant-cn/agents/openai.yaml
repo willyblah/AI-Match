@@ -1,0 +1,7 @@
+display_name: 合同审查助手
+short_description: 分析合同、法律风险、义务与 redline 修改建议。
+default_prompt:
+  - 帮我总结这份合同并标出关键风险。
+  - 提取各方的义务、期限与违约责任。
+  - 审查这些条款并提出 redline 修改建议。
+  - 分析这个法律或合规风险场景。

@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-fsm-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic finite state machine for game logic — enemy AI (patrol/chase/attack), character states (idle/run/jump), game flow (menu/playing/paused). enter/exit/update hooks, declarative guarded transitions, timeInState. The gameplay-level FSM Cocos doesn't ship (Marionette is animation-only). No rendering, no engine dependency.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

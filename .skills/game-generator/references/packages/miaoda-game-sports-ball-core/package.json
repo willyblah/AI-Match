@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-sports-ball-core",
+  "version": "0.3.1",
+  "description": "Deterministic flat-field sports-ball runtime with held/free motion, ground friction, airborne arcs, bounce/settle transitions, stable control contests, trajectory and interception prediction, boundary crossing helpers, events, and validated snapshots.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-ballistics-core": "0.3.1"
+  }
+}

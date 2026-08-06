@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-paodekuai-rules",
+  "version": "0.3.1",
+  "description": "Fixed JJ-style three-player 48-card Pao De Kuai rules and legal-play analysis.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-deck-core": "0.3.1"
+  }
+}

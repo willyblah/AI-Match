@@ -1,0 +1,47 @@
+{
+  "name": "miaoda-game-save-react",
+  "version": "0.1.0",
+  "description": "React bindings for versioned save creation, migration, validation, and atomic restore state.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-react-dom": "0.3.1",
+    "miaoda-game-save-core": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "persistence"
+    ],
+    "owns": [
+      "react-save-controller",
+      "react-save-status"
+    ],
+    "doesNotOwn": [
+      "storage-backends",
+      "save-envelope-semantics",
+      "dom-layout"
+    ],
+    "compatibleWith": [
+      "miaoda-game-save-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-save-core",
+        "condition": "The host does not need React save status and controller wiring."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

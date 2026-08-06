@@ -1,0 +1,19 @@
+{
+  "name": "miaoda-game-mcr-mahjong-session-core",
+  "version": "0.3.1",
+  "description": "Deterministic deadlines, idempotent commands, and reconnect views for MCR Mahjong.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-command-core": "0.3.1",
+    "miaoda-game-mcr-mahjong-rules": "0.3.1"
+  }
+}

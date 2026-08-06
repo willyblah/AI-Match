@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-deckbuilder-core",
+  "version": "0.3.0",
+  "description": "Deterministic orchestration for single-player roguelike card battles: card instances, legal plays and targets, energy, player/enemy phases, deck flow, events, and snapshots with host-owned combat rules.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-deck-core": "0.3.1"
+  }
+}

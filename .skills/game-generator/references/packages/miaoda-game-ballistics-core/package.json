@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-ballistics-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic ballistic-motion core: launch-velocity solving (fire at a target with a chosen speed, angle, or arc apex — low and high solutions), gravity integration with linear drag, restitution bounces, and landing / trajectory prediction for aim guides. Orientation-free (gravity is a vector you pass in), so the same math drives a top-down volley with a height axis and a side-view cannon. No rendering, no engine dependency. Backs thrown grenades, artillery, basketball / tennis / golf arcs, jump trajectories and lob-aim indicator lines.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

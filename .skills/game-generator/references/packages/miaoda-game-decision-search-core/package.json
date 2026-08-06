@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-decision-search-core",
+  "version": "0.3.1",
+  "description": "Deterministic perfect-information game-tree search with iterative deepening, alpha-beta pruning, node budgets, principal variations, stable move ordering, and optional transposition tables.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

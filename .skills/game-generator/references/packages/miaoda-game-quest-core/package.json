@@ -1,0 +1,51 @@
+{
+  "name": "miaoda-game-quest-core",
+  "version": "0.3.1",
+  "description": "Engine-neutral event-driven quest runtime with prerequisites, multi-stage and parallel objectives, explicit exclusive branches, failure, idempotent reward claims, structured events, and validated versioned snapshots.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-objective-core": "0.3.1"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "narrative",
+      "progression",
+      "quest"
+    ],
+    "owns": [
+      "quest-stage-graphs",
+      "quest-branches",
+      "quest-reward-claims"
+    ],
+    "doesNotOwn": [
+      "dialogue-decisions",
+      "objective-algorithms",
+      "reward-granting"
+    ],
+    "compatibleWith": [
+      "miaoda-game-objective-core",
+      "miaoda-game-quest-react"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-objective-core",
+        "condition": "The requirement is one lightweight challenge or achievement without quest lifecycle."
+      },
+      {
+        "package": "miaoda-game-scenario-core",
+        "condition": "The requirement is transient branching dialogue rather than persistent quest progress."
+      }
+    ],
+    "persistence": "snapshot"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "miaoda-game-adventure-interaction-react",
+  "version": "0.3.1",
+  "description": "React DOM bindings for deterministic point-and-click adventure interactions.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-adventure-interaction-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "adventure",
+      "narrative"
+    ],
+    "owns": [
+      "react-adventure-controller",
+      "react-adventure-projection"
+    ],
+    "doesNotOwn": [
+      "adventure-rules",
+      "dialogue-flow",
+      "dom-layout"
+    ],
+    "compatibleWith": [
+      "miaoda-game-adventure-interaction-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-adventure-interaction-core",
+        "condition": "The host does not need React subscriptions or controller projection."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

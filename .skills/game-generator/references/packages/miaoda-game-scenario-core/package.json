@@ -1,0 +1,51 @@
+{
+  "name": "miaoda-game-scenario-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic story / event-script runtime: a safe expression evaluator, a compact text DSL, variable memory, and a pausable runner with label/goto jumps, if/else branches and player choices. No rendering, no engine dependency. Backs visual-novel / AVG, branching dialogue, cutscenes and event-triggered logic.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-expression-core": "0.1.0",
+    "miaoda-game-serialization-core": "0.1.0"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "dialogue",
+      "narrative"
+    ],
+    "owns": [
+      "branching-scenario-flow",
+      "scenario-memory",
+      "scenario-choice-checkpoints"
+    ],
+    "doesNotOwn": [
+      "quest-progress",
+      "world-interactions",
+      "rendering"
+    ],
+    "compatibleWith": [
+      "miaoda-game-expression-core",
+      "miaoda-game-scenario-react"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-quest-core",
+        "condition": "The requirement is persistent quest stages, prerequisites, failure, or reward claims."
+      },
+      {
+        "package": "miaoda-game-adventure-interaction-core",
+        "condition": "The requirement is executable world verb/target/item/topic interactions."
+      }
+    ],
+    "persistence": "snapshot"
+  }
+}

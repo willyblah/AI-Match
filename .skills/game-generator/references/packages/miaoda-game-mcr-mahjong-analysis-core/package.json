@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-mcr-mahjong-analysis-core",
+  "version": "0.3.1",
+  "description": "Pure TypeScript MCR Mahjong scoring, shanten, effective-tile, and discard analysis.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

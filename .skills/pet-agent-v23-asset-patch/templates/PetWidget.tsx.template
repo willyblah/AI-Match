@@ -1,0 +1,271 @@
+import { useEffect, useMemo, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { SpriteAnimator } from './SpriteAnimator';
+import { usePetPosition } from './usePetPosition';
+import { usePetBehavior } from './usePetBehavior';
+import { PET_SPRITES, PET_REACTION_SPRITES, type PetAppConfig, type ReactionSpriteState, type SpriteConfig } from './pet-config';
+
+export interface PetWidgetProps<TAppStatus extends string> {
+  config: PetAppConfig<TAppStatus>;
+  appStatus: TAppStatus;
+  metrics: Record<string, number>;
+  actions: Record<string, () => void>;
+}
+
+export function PetWidget<TAppStatus extends string>({
+  config,
+  appStatus,
+  metrics,
+  actions,
+}: PetWidgetProps<TAppStatus>) {
+  const widgetRef = useRef<HTMLDivElement>(null);
+  const { position, isDragging, beginDrag, updateDrag, endDrag, didMove } = usePetPosition(widgetRef);
+  const {
+    displayPetState,
+    bubbleOpen,
+    bubbleSource,
+    reactionActive,
+    reactionMode,
+    reactionProfile,
+    reactionSpriteState,
+    reactionParticleCount,
+    openClickBubble,
+    closeBubble,
+    dismissTransientEvent,
+    triggerReaction,
+    recordInteraction,
+  } = usePetBehavior(config, appStatus, metrics, actions);
+
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const lastClickAtRef = useRef<number>(0);
+  const clickCountRef = useRef<number>(0);
+  const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cfg = PET_SPRITES[displayPetState];
+  // V2.2：reaction Sprite 从独立的 reactionSprites 表读取，允许 PET_REACTION_SPRITES 作为回退
+  const reactionSprites = config.reactionSprites ?? PET_REACTION_SPRITES;
+  const bubbleConfig = config.bubbles[displayPetState];
+
+  const bubbleText = useMemo(
+    () => bubbleConfig.getText(appStatus, metrics),
+    [bubbleConfig, appStatus, metrics],
+  );
+
+  const bubbleActions = useMemo(
+    () =>
+      bubbleConfig.getActions(appStatus, actions, () => {
+        const activeEvent = config.transientEvents?.find((e) => e.targetPetState === displayPetState);
+        if (activeEvent) dismissTransientEvent(activeEvent.eventId);
+      }),
+    [bubbleConfig, appStatus, actions, displayPetState, config.transientEvents, dismissTransientEvent],
+  );
+
+  useEffect(() => {
+    if (!bubbleOpen || bubbleSource !== 'click') return;
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (
+        bubbleRef.current &&
+        !bubbleRef.current.contains(target) &&
+        widgetRef.current &&
+        !widgetRef.current.contains(target)
+      ) {
+        closeBubble();
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, [bubbleOpen, bubbleSource, closeBubble]);
+
+  const handleSingleClick = () => {
+    openClickBubble();
+  };
+
+  const handleDoubleClick = () => {
+    triggerReaction();
+    // 双击时关闭当前气泡，避免气泡与 reaction 同时出现
+    if (bubbleOpen) {
+      closeBubble();
+    }
+  };
+
+  const handleClick = () => {
+    const now = Date.now();
+    const threshold = config.interaction?.doubleClickThresholdMs ?? 300;
+    clickCountRef.current += 1;
+
+    if (clickCountRef.current === 1) {
+      clickTimeoutRef.current = setTimeout(() => {
+        handleSingleClick();
+        clickCountRef.current = 0;
+      }, threshold);
+    } else if (clickCountRef.current === 2) {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+      clickCountRef.current = 0;
+      if (now - lastClickAtRef.current <= threshold) {
+        handleDoubleClick();
+      } else {
+        handleSingleClick();
+      }
+    }
+    lastClickAtRef.current = now;
+  };
+
+  const handlePointerUp = () => {
+    endDrag();
+    if (!didMove()) {
+      handleClick();
+    } else {
+      // V2.1：拖拽结束不自动触发 reaction，仅稳定停留在最终位置（位置已由 endDrag 保存）
+      if (bubbleOpen) {
+        closeBubble();
+      }
+    }
+    recordInteraction();
+  };
+
+  const bubbleAbove = position.y > window.innerHeight * 0.5;
+
+  // V2.2：双击 reaction 由 personality + reaction config 驱动。
+  // reaction 不改变业务状态、不移动最终位置、不影响 Sprite 播放、不触发业务 action。
+  const reactionClass = reactionActive ? `pet-reaction pet-reaction-${reactionProfile}` : '';
+  const showParticles = reactionActive && reactionMode === 'expressive';
+
+  // Sprite 模式：仅在存在通过 QA 的 double-tap 状态资产时使用；reactionSpriteState 属于 ReactionSpriteState
+  const reactionSprite = reactionActive && reactionMode === 'sprite' && reactionSpriteState
+    ? (reactionSprites as Partial<Record<ReactionSpriteState, SpriteConfig>>)[reactionSpriteState]
+    : null;
+
+  return (
+    <div
+      ref={widgetRef}
+      className="fixed z-40 select-none"
+      style={{ left: position.x, top: position.y, touchAction: 'none' }}
+    >
+      {/* V2.2：性格化双击 reaction keyframes（示例参数，可由平台覆盖）。
+          prefers-reduced-motion 下退回 compact 微缩放、隐藏粒子。 */}
+      <style>{`
+        @keyframes pet-sway { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-3deg)} 75%{transform:rotate(3deg)} }
+        @keyframes pet-hop { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-12px)} 60%{transform:translateY(-8px)} }
+        @keyframes pet-peek { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px) scale(.97)} }
+        @keyframes pet-chin-up { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px) scale(1.03)} }
+        @keyframes pet-blink { 0%,100%{transform:scale(1)} 50%{transform:scaleY(.92)} }
+        @keyframes pet-nuzzle { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
+        .pet-reaction{animation-duration:.6s;animation-timing-function:ease-in-out;animation-fill-mode:both}
+        .pet-reaction-sway{animation-name:pet-sway}
+        .pet-reaction-hop{animation-name:pet-hop}
+        .pet-reaction-peek{animation-name:pet-peek}
+        .pet-reaction-chin-up{animation-name:pet-chin-up}
+        .pet-reaction-blink{animation-name:pet-blink}
+        .pet-reaction-nuzzle{animation-name:pet-nuzzle}
+        .pet-particle{position:absolute;width:8px;height:8px;border-radius:9999px;background:var(--primary);opacity:.8;animation:pet-particle .6s ease-out forwards}
+        @keyframes pet-particle { 0%{transform:translate(0,0) scale(1);opacity:.8} 100%{transform:translate(var(--dx,0),var(--dy,-24px)) scale(.4);opacity:0} }
+        @media (prefers-reduced-motion: reduce){
+          .pet-reaction{animation-name:none !important;transform:scale(1.02);transition:transform .3s ease}
+          .pet-particle{display:none !important}
+        }
+      `}</style>
+      {bubbleOpen && (
+        <div
+          ref={bubbleRef}
+          className={`absolute left-1/2 w-64 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-none border border-border bg-popover p-4 text-popover-foreground shadow-md md:w-72 ${
+            bubbleAbove ? 'bottom-full mb-2' : 'top-full mt-2'
+          }`}
+        >
+          <p className="text-sm leading-relaxed text-pretty">{bubbleText}</p>
+          {bubbleActions.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {bubbleActions.map((action) => (
+                <Button
+                  key={action.label}
+                  size="sm"
+                  variant={action.variant ?? 'default'}
+                  className="rounded-none text-xs shadow-none"
+                  onClick={() => {
+                    action.onClick();
+                    closeBubble();
+                  }}
+                >
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div
+        className={`relative w-28 cursor-grab rounded-none active:cursor-grabbing md:w-32 ${reactionClass}`}
+        onPointerDown={(e) => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+          beginDrag(e.clientX, e.clientY);
+          // 拖拽开始时关闭气泡
+          if (bubbleOpen) {
+            closeBubble();
+          }
+        }}
+        onPointerMove={(e) => {
+          if (isDragging) updateDrag(e.clientX, e.clientY);
+        }}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        {reactionSprite ? (
+          <SpriteAnimator
+            key={`reaction-${reactionSpriteState}`}
+            src={reactionSprite.src}
+            frameWidth={reactionSprite.frameWidth}
+            frameHeight={reactionSprite.frameHeight}
+            frameCount={reactionSprite.frameCount}
+            fps={reactionSprite.fps}
+            loop={false}
+            stateKey={`reaction-${reactionSpriteState}`}
+          />
+        ) : (
+          <SpriteAnimator
+            key={displayPetState}
+            src={cfg.src}
+            frameWidth={cfg.frameWidth}
+            frameHeight={cfg.frameHeight}
+            frameCount={cfg.frameCount}
+            fps={cfg.fps}
+            loop={cfg.loop}
+            stateKey={displayPetState}
+          />
+        )}
+        {showParticles && (
+          <>
+            {Array.from({ length: Math.max(0, Math.min(12, reactionParticleCount)) }).map((_, index) => {
+              const angle = ((Math.PI * 2) / reactionParticleCount) * index;
+              const distance = 16 + (index % 3) * 6;
+              const dx = Math.round(Math.cos(angle) * distance);
+              const dy = Math.round(Math.sin(angle) * distance) - 20;
+              const left = 20 + ((index * 61) % 60);
+              const top = 5 + ((index * 37) % 30);
+              return (
+                <span
+                  key={index}
+                  className="pet-particle"
+                  style={{
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    ['--dx' as string]: `${dx}px`,
+                    ['--dy' as string]: `${dy}px`,
+                  }}
+                />
+              );
+            })}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

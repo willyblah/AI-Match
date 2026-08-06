@@ -1,0 +1,45 @@
+{
+  "name": "miaoda-game-command-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic deterministic game-command runtime with validation, previews, atomic commits, structured events, serializable RNG, checkpoints, forks, undo barriers for revealed information, explicit player-view projection, and replay verification.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-random-core": "0.1.0"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "command",
+      "orchestration"
+    ],
+    "owns": [
+      "atomic-command-application",
+      "command-preview",
+      "command-replay"
+    ],
+    "doesNotOwn": [
+      "dialogue-authoring",
+      "input-dispatch",
+      "domain-rules"
+    ],
+    "compatibleWith": [
+      "miaoda-game-command-react"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-scenario-core",
+        "condition": "The requirement is authored branching story flow rather than atomic cross-system commands."
+      }
+    ],
+    "persistence": "snapshot"
+  }
+}

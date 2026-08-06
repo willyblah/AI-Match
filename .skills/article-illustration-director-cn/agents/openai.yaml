@@ -1,0 +1,4 @@
+interface:
+  display_name: "文章插图策划（国内版）"
+  short_description: "为中文文章规划并生成统一风格的正文插图"
+  default_prompt: "分析这篇中文文章并规划可编辑的正文插图分镜；如需生图，完成逐图生成、轮询、预览、版本和下载。"

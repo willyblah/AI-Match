@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-big-two-rules",
+  "version": "0.3.1",
+  "description": "Pagat basic four-player Chinese Big Two rules with complete legal plays and safe views.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-deck-core": "0.3.1"
+  }
+}

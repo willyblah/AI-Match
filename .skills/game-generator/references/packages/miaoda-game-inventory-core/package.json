@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-inventory-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic inventory / item toolkit: an item catalog (stack limits, kinds, equip slots, stat-modifier payloads), slot-based containers with auto-stacking + overflow + drag-swap, named equipment slots that surface active modifiers for a stat system, and container-to-container transfer plus an atomic currency trade (the storage-box deposit/withdraw and shop workhorse). Serializable, seed-free, no rendering, no engine dependency. Backs survival backpacks, ARPG loot inventories, roguelike item bags, shops and stashes.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

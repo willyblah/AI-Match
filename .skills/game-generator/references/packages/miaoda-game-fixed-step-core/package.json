@@ -1,0 +1,15 @@
+{
+  "name": "miaoda-game-fixed-step-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic fixed-timestep coordinator for deterministic game logic: accumulator, catch-up limits, dropped-tick accounting, interpolation alpha, pause, reset, and manual stepping.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

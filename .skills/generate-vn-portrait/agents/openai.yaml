@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate VN Portrait"
+  short_description: "VN half-body portrait assets"
+  default_prompt: "Use $generate-vn-portrait to create one 3:4 visual novel half-body character portrait with a flat chroma-key background."

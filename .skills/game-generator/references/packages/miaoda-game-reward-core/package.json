@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-reward-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic weighted-random reward toolkit: weighted tables with published odds, nested/recursive loot tables (multi-roll, unique-per-batch), independent per-entry drop rolls, and a reusable soft+hard pity counter plus a full gacha banner (rarity pity + featured 50/50 rate-up). Seeded and fully serializable for reproducible tests and save games. No rendering, no engine dependency. Backs gacha, ARPG loot, roguelike item pools, chest/card-pack openings and random quest rewards.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-random-core": "0.1.0"
+  }
+}

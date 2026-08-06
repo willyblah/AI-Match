@@ -1,0 +1,39 @@
+{
+  "name": "miaoda-game-save-core",
+  "version": "0.3.1",
+  "description": "Engine-neutral versioned save envelopes with typed chunks, sequential migrations, validation, canonical JSON checksums, unknown-chunk policy, and atomic state restoration.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-serialization-core": "0.1.0"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "persistence"
+    ],
+    "owns": [
+      "save-envelope-validation",
+      "save-version-migration",
+      "save-checksums"
+    ],
+    "doesNotOwn": [
+      "storage-backends",
+      "story-flow",
+      "domain-state"
+    ],
+    "compatibleWith": [
+      "miaoda-game-save-react"
+    ],
+    "useInsteadWhen": [],
+    "persistence": "envelope"
+  }
+}

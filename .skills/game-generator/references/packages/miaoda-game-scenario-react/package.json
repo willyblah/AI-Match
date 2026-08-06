@@ -1,0 +1,48 @@
+{
+  "name": "miaoda-game-scenario-react",
+  "version": "0.3.1",
+  "description": "React DOM bindings for branching dialogue and scenario flows.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-scenario-core": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  },
+  "miaodaGame": {
+    "engine": "react",
+    "domains": [
+      "dialogue",
+      "narrative"
+    ],
+    "owns": [
+      "react-scenario-controller",
+      "react-scenario-projection"
+    ],
+    "doesNotOwn": [
+      "scenario-semantics",
+      "dom-layout",
+      "storage-backends"
+    ],
+    "compatibleWith": [
+      "miaoda-game-scenario-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-scenario-core",
+        "condition": "The host does not need React subscriptions or controller projection."
+      }
+    ],
+    "persistence": "delegated"
+  }
+}

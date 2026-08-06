@@ -1,0 +1,46 @@
+{
+  "name": "miaoda-game-objective-core",
+  "version": "0.3.1",
+  "description": "Engine-agnostic gameplay objectives and achievement profiles with prerequisites, trusted event projection, and validated versioned persistence.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-serialization-core": "0.1.0"
+  },
+  "miaodaGame": {
+    "engine": "neutral",
+    "domains": [
+      "objective",
+      "progression"
+    ],
+    "owns": [
+      "objective-progress",
+      "objective-completion",
+      "objective-persistence"
+    ],
+    "doesNotOwn": [
+      "quest-stage-graphs",
+      "dialogue-flow",
+      "reward-granting"
+    ],
+    "compatibleWith": [
+      "miaoda-game-objective-react",
+      "miaoda-game-quest-core"
+    ],
+    "useInsteadWhen": [
+      {
+        "package": "miaoda-game-quest-core",
+        "condition": "Progress belongs to prerequisite quests, stage graphs, exclusive branches, failure, or reward claims."
+      }
+    ],
+    "persistence": "snapshot"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "miaoda-game-mcr-mahjong-strategy-core",
+  "version": "0.3.1",
+  "description": "Deterministic, safe-view-only heuristic bots for MCR Mahjong.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-mcr-mahjong-rules": "0.3.1",
+    "miaoda-game-serialization-core": "0.1.0",
+    "miaoda-game-decision-score-core": "0.1.0"
+  }
+}

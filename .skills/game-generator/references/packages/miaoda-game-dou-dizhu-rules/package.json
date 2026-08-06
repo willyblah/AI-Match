@@ -1,0 +1,18 @@
+{
+  "name": "miaoda-game-dou-dizhu-rules",
+  "version": "0.3.1",
+  "description": "Verified three-player 54-card Dou Dizhu rules with auction, 13 combination families, canonical legal-play enumeration, spring scoring, hidden views, and deterministic saves.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-deck-core": "0.3.1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "miaoda-game-turn-react",
+  "version": "0.3.1",
+  "description": "React bindings for miaoda-game-turn-core turn, phase, seat, and simultaneous-round state.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-react-dom": "0.3.1",
+    "miaoda-game-turn-core": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  }
+}

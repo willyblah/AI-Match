@@ -1,0 +1,135 @@
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+
+export interface PetPosition {
+  x: number;
+  y: number;
+}
+
+const STORAGE_KEY = 'app-pet-agent-position';
+const DEFAULT_MARGIN = 16;
+
+function loadPosition(): PetPosition | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PetPosition;
+    if (typeof parsed.x === 'number' && typeof parsed.y === 'number') {
+      return parsed;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+function savePosition(pos: PetPosition) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pos));
+  } catch {
+    // ignore
+  }
+}
+
+function getElementSize(element: HTMLElement | null): { width: number; height: number } {
+  if (element) {
+    const rect = element.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      return { width: rect.width, height: rect.height };
+    }
+  }
+  // 渲染前兜底，使用默认渲染尺寸
+  return { width: 128, height: 156 };
+}
+
+/**
+ * 宠物拖拽位置 Hook
+ *
+ * V1 变化：使用实际 DOM 尺寸计算边界，不再依赖固定 PET_SIZE。
+ */
+export function usePetPosition(elementRef: RefObject<HTMLElement | null>) {
+  const [position, setPosition] = useState<PetPosition>(() => {
+    const saved = loadPosition();
+    const { width, height } = getElementSize(elementRef.current);
+    const maxX = window.innerWidth - width - DEFAULT_MARGIN;
+    const maxY = window.innerHeight - height - DEFAULT_MARGIN;
+    if (saved) {
+      return {
+        x: Math.max(DEFAULT_MARGIN, Math.min(saved.x, maxX)),
+        y: Math.max(DEFAULT_MARGIN, Math.min(saved.y, maxY)),
+      };
+    }
+    return {
+      x: Math.max(DEFAULT_MARGIN, maxX),
+      y: Math.max(DEFAULT_MARGIN, maxY),
+    };
+  });
+
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
+  const movedRef = useRef(false);
+
+  const clampPosition = useCallback((pos: PetPosition): PetPosition => {
+    const { width, height } = getElementSize(elementRef.current);
+    const maxX = window.innerWidth - width - DEFAULT_MARGIN;
+    const maxY = window.innerHeight - height - DEFAULT_MARGIN;
+    return {
+      x: Math.max(DEFAULT_MARGIN, Math.min(pos.x, Math.max(DEFAULT_MARGIN, maxX))),
+      y: Math.max(DEFAULT_MARGIN, Math.min(pos.y, Math.max(DEFAULT_MARGIN, maxY))),
+    };
+  }, [elementRef]);
+
+  useEffect(() => {
+    const handler = () => {
+      setPosition((prev) => {
+        const clamped = clampPosition(prev);
+        savePosition(clamped);
+        return clamped;
+      });
+    };
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, [clampPosition]);
+
+  const beginDrag = useCallback((clientX: number, clientY: number) => {
+    setPosition((prev) => {
+      dragStartRef.current = { x: clientX, y: clientY, px: prev.x, py: prev.y };
+      movedRef.current = false;
+      return prev;
+    });
+    setIsDragging(true);
+  }, []);
+
+  const updateDrag = useCallback((clientX: number, clientY: number) => {
+    const start = dragStartRef.current;
+    if (!start) return;
+    const dx = clientX - start.x;
+    const dy = clientY - start.y;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      movedRef.current = true;
+    }
+    setPosition(clampPosition({ x: start.px + dx, y: start.py + dy }));
+  }, [clampPosition]);
+
+  const endDrag = useCallback(() => {
+    if (dragStartRef.current) {
+      setPosition((prev) => {
+        const clamped = clampPosition(prev);
+        savePosition(clamped);
+        return clamped;
+      });
+    }
+    dragStartRef.current = null;
+    setIsDragging(false);
+  }, [clampPosition]);
+
+  const didMove = useCallback(() => movedRef.current, []);
+
+  return {
+    position,
+    isDragging,
+    beginDrag,
+    updateDrag,
+    endDrag,
+    didMove,
+  };
+}

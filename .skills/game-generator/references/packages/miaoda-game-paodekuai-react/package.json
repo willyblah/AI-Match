@@ -1,0 +1,23 @@
+{
+  "name": "miaoda-game-paodekuai-react",
+  "version": "0.3.1",
+  "description": "React DOM bindings for the fixed three-player Pao De Kuai rules profile.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "miaoda-game-command-core": "0.3.1",
+    "miaoda-game-paodekuai-rules": "0.3.1",
+    "miaoda-game-react-dom": "0.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2 <20"
+  }
+}
