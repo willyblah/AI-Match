@@ -31,8 +31,8 @@ const FEATURES = [
   },
   {
     icon: BrainCircuit,
-    title: 'AHP 偏好建模',
-    desc: '仅需 5~8 道选择题，系统自动构建判断矩阵并计算您的个性化偏好权重。',
+    title: '偏好权重建模',
+    desc: '拖动滑块直接设定各维度偏好强度，系统自动归一化计算您的个性化偏好权重。',
   },
   {
     icon: Target,
@@ -47,8 +47,8 @@ const FEATURES = [
 ];
 
 const STEPS = [
-  { step: '01', title: '测试几道题', desc: '回答使用场景、任务、预算与能力偏好' },
-  { step: '02', title: '生成偏好画像', desc: 'AHP 算法计算您的七维偏好权重' },
+  { step: '01', title: '设定偏好', desc: '拖动滑块设定各维度的偏好权重' },
+  { step: '02', title: '生成偏好画像', desc: '系统归一化计算您的七维偏好权重' },
   { step: '03', title: '输入任务', desc: '选择任务类型并设置预算与频率' },
   { step: '04', title: '智能推荐', desc: '获得 Top 3 匹配方案与推荐理由' },
 ];
@@ -80,13 +80,13 @@ const HomePage: React.FC = () => {
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
             <Sparkles className="h-3.5 w-3.5" />
-            基于论文熵权-TOPSIS 与 AHP 层次分析法
+            基于论文熵权-TOPSIS 与偏好权重建模
           </div>
           <h1 className="text-balance text-3xl font-bold leading-tight text-foreground md:text-5xl">
             让每一个任务 <span className="gradient-text">找到最适合的 AI 工具</span>
           </h1>
           <p className="mx-auto mt-4 max-w-prose text-pretty text-sm text-muted-foreground md:text-base">
-            无需复杂问卷，只需回答几道简单选择题并输入任务，AI Match 即可基于多维能力画像与成本约束，
+            无需复杂问卷，只需拖动滑块设定偏好权重并输入任务，AI Match 即可基于多维能力画像与成本约束，
             为你推荐 Top 3 最适合的 AI 工具方案。
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -198,7 +198,7 @@ const HomePage: React.FC = () => {
               现在就开始，找到你的最优 AI 方案
             </h2>
             <p className="mx-auto mt-3 max-w-prose text-sm text-muted-foreground">
-              回答 5~8 道选择题，仅需一分钟，即可获得专属 AI 工具推荐。
+              拖动滑块设定偏好权重，仅需一分钟，即可获得专属 AI 工具推荐。
             </p>
             <Link to="/survey" className="mt-6 inline-block">
               <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90">

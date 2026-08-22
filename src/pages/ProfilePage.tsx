@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, ShieldCheck, AlertTriangle, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MainLayout } from '@/components/layouts/MainLayout';
@@ -17,9 +17,9 @@ const ProfilePage: React.FC = () => {
     return (
       <MainLayout>
         <div className="mx-auto max-w-md py-20 text-center">
-          <p className="text-muted-foreground">请先完成偏好问卷</p>
+          <p className="text-muted-foreground">请先设定偏好权重</p>
           <Button className="mt-4 bg-gradient-primary text-primary-foreground hover:opacity-90" onClick={() => navigate('/survey')}>
-            去填写问卷
+            去设定偏好
           </Button>
         </div>
       </MainLayout>
@@ -77,41 +77,10 @@ const ProfilePage: React.FC = () => {
             </Card>
           </div>
 
-          {/* 一致性检验 */}
-          <Card className="glass-card mt-4 p-5">
-            <div className="flex flex-wrap items-center gap-4">
-              <div
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
-                  profile.consistent ? 'bg-chart-5/15 text-chart-5' : 'bg-destructive/15 text-destructive'
-                }`}
-              >
-                {profile.consistent ? <ShieldCheck className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-                <span>{profile.consistent ? '一致性检验通过' : '一致性未通过，建议调整问卷'}</span>
-              </div>
-              <div className="grid flex-1 grid-cols-3 gap-3 text-center">
-                <div className="rounded-lg bg-secondary/50 p-2.5">
-                  <p className="text-[10px] text-muted-foreground">最大特征值 λmax</p>
-                  <p className="text-sm font-semibold text-foreground">{profile.lambdaMax.toFixed(4)}</p>
-                </div>
-                <div className="rounded-lg bg-secondary/50 p-2.5">
-                  <p className="text-[10px] text-muted-foreground">一致性指标 CI</p>
-                  <p className="text-sm font-semibold text-foreground">{profile.ci.toFixed(4)}</p>
-                </div>
-                <div className="rounded-lg bg-secondary/50 p-2.5">
-                  <p className="text-[10px] text-muted-foreground">一致性比例 CR</p>
-                  <p className="text-sm font-semibold text-foreground">{profile.cr.toFixed(4)}</p>
-                </div>
-              </div>
-            </div>
-            <p className="mt-3 text-xs text-muted-foreground">
-              采用特征值法计算判断矩阵最大特征值与特征向量，CR &lt; 0.1 视为一致性可接受（n=7 时 RI=1.32）。
-            </p>
-          </Card>
-
           {/* 操作 */}
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button variant="secondary" onClick={() => navigate('/survey')}>
-              重新测试
+              重新设定
             </Button>
             <Button
               size="lg"

@@ -1,17 +1,14 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { DimensionKey, UserProfile, TaskTemplate, Recommendation } from '@/lib/types';
-import { computeAhpWeights, computeRecommendations } from '@/lib/engine';
-import {
-  buildPreferenceScores,
-  buildJudgmentMatrix,
-  generateProfileDescription,
-} from '@/lib/survey';
+import { computeRecommendations } from '@/lib/engine';
+import { normalizeWeights, generateProfileDescription } from '@/lib/survey';
 import { AI_TOOLS } from '@/lib/data';
 
 interface AppState {
   profile: UserProfile | null;
   hasProfile: boolean;
-  setProfileFromAnswers: (answers: Record<string, string | string[]>) => void;
+  // 由用户拖动滑块设定的原始权重（0~100）计算偏好画像
+  setProfileFromWeights: (raw: Record<DimensionKey, number>) => void;
   // 当前任务
   selectedTask: TaskTemplate | null;
   setSelectedTask: (task: TaskTemplate | null) => void;
@@ -40,37 +37,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [hasResult, setHasResult] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
-  const setProfileFromAnswers = useCallback((answers: Record<string, string | string[]>) => {
-    const scores = buildPreferenceScores(answers);
-    const matrix = buildJudgmentMatrix(scores);
-    const ahp = computeAhpWeights(matrix);
-    const description = generateProfileDescription(ahp.weights);
-
-    const scenarioRaw = Array.isArray(answers.scenario) ? answers.scenario[0] : answers.scenario;
-    const scenario = scenarioRaw || 'office';
-    const mainTask = Array.isArray(answers.mainTask)
-      ? answers.mainTask.join('、')
-      : answers.mainTask || '';
-    const budgetRaw = Array.isArray(answers.budget) ? answers.budget[0] : answers.budget;
-    const freqRaw = Array.isArray(answers.frequency) ? answers.frequency[0] : answers.frequency;
-    const budgetVal = Number(budgetRaw || '30');
-    const freqVal = Number(freqRaw || '100');
-
-    setProfile({
-      scenario,
-      mainTask,
-      budget: budgetVal,
-      frequency: String(freqVal),
-      weights: ahp.weights,
-      lambdaMax: ahp.lambdaMax,
-      ci: ahp.ci,
-      cr: ahp.cr,
-      consistent: ahp.consistent,
-      description,
-    });
-    setBudget(budgetVal);
-    setFrequency(freqVal);
-  }, []);
+  const setProfileFromWeights = useCallback(
+    (raw: Record<DimensionKey, number>) => {
+      const weights = normalizeWeights(raw);
+      const description = generateProfileDescription(weights);
+      setProfile({
+        scenario: 'custom',
+        mainTask: '自定义偏好',
+        budget,
+        frequency: String(frequency),
+        weights,
+        description,
+      });
+    },
+    [budget, frequency]
+  );
 
   const runRecommendation = useCallback(() => {
     if (!profile || !selectedTask) return;
@@ -107,7 +88,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     () => ({
       profile,
       hasProfile: !!profile,
-      setProfileFromAnswers,
+      setProfileFromWeights,
       selectedTask,
       setSelectedTask,
       budget,
@@ -123,7 +104,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }),
     [
       profile,
-      setProfileFromAnswers,
+      setProfileFromWeights,
       selectedTask,
       budget,
       frequency,

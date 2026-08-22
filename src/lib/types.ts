@@ -102,12 +102,8 @@ export interface UserProfile {
   mainTask: string;
   budget: number;
   frequency: string;
-  // 7 维 AHP 权重
+  // 7 维偏好权重（用户拖动滑块设定后归一化，总和为 1）
   weights: Record<DimensionKey, number>;
-  lambdaMax: number;
-  ci: number;
-  cr: number;
-  consistent: boolean;
   description: string;
 }
 

@@ -1,146 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ArrowRight, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Slider } from '@/components/ui/slider';
 import { MainLayout } from '@/components/layouts/MainLayout';
-import { SURVEY_QUESTIONS } from '@/lib/survey';
 import { useApp } from '@/contexts/AppContext';
+import { DIMENSIONS, DIMENSION_KEYS } from '@/lib/types';
+import type { DimensionKey } from '@/lib/types';
+
+const DEFAULT_RAW: Record<DimensionKey, number> = DIMENSION_KEYS.reduce(
+  (acc, k) => {
+    acc[k] = 50;
+    return acc;
+  },
+  {} as Record<DimensionKey, number>
+);
 
 const SurveyPage: React.FC = () => {
   const navigate = useNavigate();
-  const { setProfileFromAnswers } = useApp();
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
+  const { setProfileFromWeights } = useApp();
+  const [raw, setRaw] = useState<Record<DimensionKey, number>>({ ...DEFAULT_RAW });
 
-  const question = SURVEY_QUESTIONS[current];
-  const isLast = current === SURVEY_QUESTIONS.length - 1;
-  const progress = ((current + 1) / SURVEY_QUESTIONS.length) * 100;
+  const total = useMemo(() => DIMENSION_KEYS.reduce((acc, k) => acc + raw[k], 0), [raw]);
 
-  const isAnswered = () => {
-    const a = answers[question.id];
-    if (question.type === 'multi') return Array.isArray(a) && a.length > 0;
-    return !!a;
+  const normalized = useMemo<Record<DimensionKey, number>>(() => {
+    const sum = total || 1;
+    return DIMENSION_KEYS.reduce(
+      (acc, k) => {
+        acc[k] = raw[k] / sum;
+        return acc;
+      },
+      {} as Record<DimensionKey, number>
+    );
+  }, [raw, total]);
+
+  const handleChange = (key: DimensionKey, value: number) => {
+    setRaw((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSelect = (value: string) => {
-    if (question.type === 'multi') {
-      const prev = Array.isArray(answers[question.id]) ? (answers[question.id] as string[]) : [];
-      const next = prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value];
-      setAnswers((s) => ({ ...s, [question.id]: next }));
-    } else {
-      setAnswers((s) => ({ ...s, [question.id]: value }));
-    }
-  };
+  const handleReset = () => setRaw({ ...DEFAULT_RAW });
 
-  const isSelected = (value: string) => {
-    const a = answers[question.id];
-    if (question.type === 'multi') return Array.isArray(a) && a.includes(value);
-    return a === value;
-  };
-
-  const handleNext = () => {
-    if (isLast) {
-      setProfileFromAnswers(answers);
-      navigate('/profile');
-    } else {
-      setCurrent((c) => c + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (current > 0) setCurrent((c) => c - 1);
+  const handleSubmit = () => {
+    setProfileFromWeights(raw);
+    navigate('/profile');
   };
 
   return (
     <MainLayout>
       <div className="mx-auto max-w-2xl">
-        {/* 进度 */}
-        <div className="mb-6">
-          <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>
-              第 {current + 1} / {SURVEY_QUESTIONS.length} 题
-            </span>
-            <span>{Math.round(progress)}%</span>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          <div className="mb-6 text-center">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
+              <SlidersHorizontal className="h-3.5 w-3.5" /> 拖动滑块设定偏好权重
+            </div>
+            <h1 className="text-balance text-2xl font-bold text-foreground md:text-3xl">设定您的偏好权重</h1>
+            <p className="mx-auto mt-2 max-w-prose text-pretty text-sm text-muted-foreground">
+              直接拖动每个维度的滑块即可表达您的偏好强度，系统会自动归一化为偏好权重，无需填写问卷。
+            </p>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-            <motion.div
-              className="h-full rounded-full bg-gradient-primary"
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.4 }}
-            />
+
+          <Card className="glass-card p-6 md:p-8">
+            <div className="flex flex-col gap-6">
+              {DIMENSIONS.map((d) => (
+                <div key={d.key}>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">{d.label}</span>
+                    <span className="text-xs font-semibold text-primary">
+                      权重 {(normalized[d.key] * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Slider
+                      value={[raw[d.key]]}
+                      min={0}
+                      max={100}
+                      step={1}
+                      onValueChange={(v) => handleChange(d.key, v[0])}
+                      className="flex-1"
+                    />
+                    <span className="w-8 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
+                      {raw[d.key]}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="mt-6 flex items-center justify-between">
+            <Button variant="ghost" onClick={handleReset}>
+              <RotateCcw className="mr-1 h-4 w-4" /> 重置
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              className="bg-gradient-primary text-primary-foreground hover:opacity-90"
+            >
+              生成偏好画像 <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
           </div>
-        </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={question.id}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.25 }}
-          >
-            <Card className="glass-card p-6 md:p-8">
-              <h2 className="text-balance text-xl font-bold text-foreground md:text-2xl">
-                {question.title}
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">{question.subtitle}</p>
-
-              <div className="mt-6 grid gap-3">
-                {question.options.map((opt) => {
-                  const selected = isSelected(opt.value);
-                  return (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => handleSelect(opt.value)}
-                      className={cn(
-                        'flex items-center justify-between gap-3 rounded-xl border p-4 text-left transition-all',
-                        selected
-                          ? 'border-primary bg-primary/10 glow-primary'
-                          : 'border-border bg-background/40 hover:border-primary/40 hover:bg-secondary/50'
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          'text-sm font-medium',
-                          selected ? 'text-foreground' : 'text-muted-foreground'
-                        )}
-                      >
-                        {opt.label}
-                      </span>
-                      <div
-                        className={cn(
-                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors',
-                          selected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
-                        )}
-                      >
-                        {selected && <Check className="h-3 w-3" />}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </Card>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* 导航 */}
-        <div className="mt-6 flex items-center justify-between">
-          <Button variant="ghost" onClick={handlePrev} disabled={current === 0}>
-            <ChevronLeft className="mr-1 h-4 w-4" /> 上一题
-          </Button>
-          <Button
-            onClick={handleNext}
-            disabled={!isAnswered()}
-            className="bg-gradient-primary text-primary-foreground hover:opacity-90"
-          >
-            {isLast ? '生成偏好画像' : '下一题'}
-            {!isLast && <ChevronRight className="ml-1 h-4 w-4" />}
-          </Button>
-        </div>
+        </motion.div>
       </div>
     </MainLayout>
   );
