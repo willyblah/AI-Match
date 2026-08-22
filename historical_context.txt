@@ -1,0 +1,3446 @@
+
+<action>
+**MessageAction** (source=EventSource.AGENT)
+CONTENT: 好的，正在为你创建 AI Match 智能推荐平台，请稍候～
+</action>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+THOUGHT: 我先提取论文PDF的核心内容，以便后续PRD生成时能准确理解"熵权法-TOPSIS"方法。
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l/tasks && ls -la && python -c "import PyPDF2" 2>/dev/null && echo "PyPDF2 available" || pip list 2>/dev/null | grep -i -E "pdf|fitz" || echo "no pdf lib found"
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l/tasks",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+total 3672
+drwxr-sr-x 2 root root    4096 Aug 22 13:41 .
+drwxr-sr-x 4 root root    4096 Aug 22 13:41 ..
+-rw-r--r-- 1 root root 3748969 Aug 22 13:41 26144.pdf
+pdf2image                                1.17.0
+pdfminer.six                             20251230
+pdfplumber                               0.11.9
+pypdf                                    6.12.2
+pypdfium2                                5.8.0
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l/tasks]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l/tasks && python -c "
+import pdfplumber
+with pdfplumber.open('26144.pdf') as pdf:
+    print('总页数:', len(pdf.pages))
+    text_all = []
+    for i, page in enumerate(pdf.pages):
+        t = page.extract_text() or ''
+        text_all.append(f'--- Page {i+1} ---\n{t}')
+    full = '\n'.join(text_all)
+    with open('pdf_content.txt', 'w', encoding='utf-8') as f:
+        f.write(full)
+    print('字符数:', len(full))
+    print(full[:3000])
+"
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l/tasks",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+总页数: 32
+字符数: 34124
+--- Page 1 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+基于多场景用户需求的大语言模型个性化推荐研究
+队伍：26144
+摘 要
+随着大语言模型市场的快速扩张，模型数量激增、定价机制多样、能力维度
+分化，用户在选择 AI 工具时面临难以兼顾能力匹配与成本控制的现实困境。针
+对这一问题，本研究构建了一套通过客观能力评价再到主观场景适配和资源配
+置优化的两阶段联合推荐框架。
+在研究工作中，我们首先挑选了 6 款主流大语言模型，并从编程、Agent、
+长上下文、知识推理、专业推理、成本价格与生成速度七个维度构建评价指标体
+系，预处理后采用熵权-TOPSIS 方法计算各模型的分维度能力贴近度，形成客
+观能力矩阵；随后针对六类典型用户群体，采用层次分析法确定各群体的场景化
+偏好权重，将能力矩阵、任务需求与偏好权重融合为综合效用函数，并结合 API
+调用成本与预算约束，以 0-1 整数规划求解全局最优的模型-任务分配方案。
+研究结果表明，DeepSeekV4Pro在成本敏感型场景中占据绝对优势，Claude
+Opus 4.8 在能力驱动型场景中表现突出，GPT-5.5 在学术研究场景中排名第一，
+验证了多模型混合调用优于单一模型的资源配置规律。本文提出的框架将大语
+言模型选型从经验驱动转化为数据驱动的组合优化决策，为不同用户群体提供
+了可落地的选型与任务分配方案，具有良好的可扩展性与推广价值。
+关键词：大语言模型、熵权-TOPSIS、AHP 层次分析法、0-1 整数规划
+I
+--- Page 2 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+目 录
+摘要........................................................................................................................................................ I
+第一章 引言...................................................................................................................................... 1
+1.1研究背景............................................................................................................................ 1
+1.2相关研究综述.................................................................................................................. 2
+1.2.1 大语言模型评测相关研究.......................................................................... 2
+1.2.2 大语言模型定价与成本优化相关研究................................................. 2
+1.2.3 大语言模型推荐与资源分配相关研究................................................. 2
+1.3研究意义与创新点........................................................................................................ 2
+1.3.1 研究意义............................................................................................................. 2
+1.3.2 创新点.................................................................................................................. 3
+第二章 模型总体思路.................................................................................................................. 4
+2.1建模基本方法.................................................................................................................. 4
+2.2基本假设............................................................................................................................ 5
+2.3符号表................................................................................................................................. 6
+第三章 基于熵权-TOPSIS 的大语言模型能力画像..................................................... 7
+3.1指标体系构建.................................................................................................................. 7
+3.1.1 评价对象............................................................................................................. 7
+3.1.2 评价指标............................................................................................................. 7
+3.2指标预处理....................................................................................................................... 9
+3.2.1 指标的一致化处理..................
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l/tasks]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+THOUGHT: PDF提取成功。让我查看论文中算法部分的关键细节：
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l/tasks && sed -n '/Page 7 /,/Page 14 /p' pdf_content.txt | head -200
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l/tasks",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+--- Page 7 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+第二章 模型总体思路
+2.1 建模基本方法
+本文针对大语言模型个性化推荐问题，构建了“客观能力评价—主观场景适
+配与资源配置优化”的两阶段联合建模框架，如图2.1所示。
+图 2.1: 模型整体框架图
+第一阶段基于熵权-TOPSIS 方法，构建六款主流大语言模型在编程能力、
+Agent 能力、长上下文、知识推理、专业推理、成本价格与生成速度七个维度上
+的客观能力矩阵；第二阶段引入 AHP 层次分析法确定六类典型用户群体的场景
+化偏好权重，将能力矩阵与偏好权重、任务需求融合为效用函数，并结合 token
+使用成本与预算约束，以 0-1 整数规划求解全局最优的模型-任务配置方案。两
+阶段模型实现了从客观能力评价到个性化推荐决策的完整闭环。
+4
+--- Page 8 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+2.2 基本假设
+为保证模型构建与求解过程具有可行性，并在一定程度上降低现实环境中
+复杂因素对研究的干扰，本文结合大语言模型市场特征及用户使用行为，提出以
+下基本假设：
+• 评价有效性假设
+假设各公开 Benchmark 测试结果在一定程度上能够反映大语言模型的相
+对能力水平，并在研究周期内保持可比性，且评测标准在研究周期内保持
+一致，不存在显著的外部扰动。
+• 用户需求稳定性假设
+假设用户在一定决策周期内的任务类型、使用频率及预算约束相对稳定，
+可抽象为若干具有代表性的典型用户画像，且各画像在研究窗口内的核心
+需求任务偏好以及预算约束结构保持相对稳定，从而便于进行需求建模与
+个性化推荐分析。
+• 成本可加性假设
+假设用户使用大语言模型所产生的总成本由 API 调用成本、订阅成本及隐
+性时间成本线性叠加构成，各项成本之间相互独立，不考虑复杂的交叉补
+贴或动态折扣机制。
+• 市场短期稳定性假设
+假设研究周期内各模型的定价策略、性能水平及用户偏好变化具有短期稳
+定性，不发生大规模结构性调整，从而保证基于历史数据构建的推荐模型
+具有现实参考意义。
+• 场景独立性假设
+假设不同用户场景之间的需求偏好相互独立，各场景下模型效用可单独评
+估，并通过统一优化框架进行资源配置。
+• 任务需求独立且可分假设
+假设同一用户的多个任务（如代码生成、文档摘要、日常问答等）在能力
+需求上相互独立，可分别分配给不同模型执行，且各任务对模型的能力诉
+求不产生相互干扰。该假设确保总成本函数具有可加性，便于采用线性规
+划方法求解最优分配方案。
+• 预算硬约束假设
+假设用户月度预算是不可突破的刚性上限。即用户在模型选择过程中必须
+严格满足成本约束条件，推荐方案的总成本不得超过用户预算。该假设保
+证推荐结果在实际使用中具备财务可行性，真实反映用户的支付能力限制。
+5
+--- Page 9 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+• API 调用成本主导假设
+本文仅采用各模型官方 API 的按量计费价格进行成本核算，不考虑订阅制
+套餐。相同的订阅费用在不同服务中存在不一样的额度限制，没有明确的
+官方限额数据，因此难以横向对比。
+2.3 符号表
+本文中所使用的主要符号、变量及其释义总结见表2.1：
+表 2.1: 主要符号说明
+符号 含义
+A=(a ij ) m×n 原始评价矩阵
+a 第 i 个模型在第 j 个指标上的原始取值
+ij
+x 标准化后的指标值
+ij
+e 第 j 个指标的信息熵
+j
+d 第 j 个指标的信息冗余度
+j
+w 第 j 个指标的熵权权重
+j
+V+,V − 正理想解与负理想解
+D+,D − 第 i 个模型到正/负理想解的距离
+i i
+C 模型 i 在能力维度 k 上的 TOPSIS 贴近度
+ik
+A=(a ij ) 7×7 AHP 准则层判断矩阵
+λ 判断矩阵最大特征值
+max
+wAHP AHP 场景化偏好权重向量（准则层）
+J ={T ,...,T } 用户任务集合
+1 M
+M 第 i 个候选大语言模型
+i
+U 模型 M 执行任务 T 的综合效用值
+ij i j
+x 0-1 决策变量：1 表示将模型 i 分配给任务 j
+ij
+C 模型 M 完成任务 T 的单次 Token 调用成本
+ij i j
+f 任务 T 的月度调用次数
+j j
+B 用户月度预算硬约束上限
+6
+--- Page 10 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+第三章 基于熵权-TOPSIS 的大语言模型能力画像
+在多场景用户需求下，大语言模型的选择需要综合考虑能力、成本与效率等
+多维因素。为此，本章选取六种主流大语言模型构建综合评价体系，并结合熵权
+法与 TOPSIS 模型计算其基础能力得分，为后续个性化推荐优化提供支撑。
+3.1 指标体系构建
+3.1.1 评价对象
+本研究选择了六款具有行业代表性的前沿大语言模型作为评价对象，涵盖
+了国内外顶尖人工智能实验室的开源和闭源模型，具体见表3.1：
+表 3.1: 评价对象
+模型名称 版本 研发公司
+Claude Opus 4.8 Anthropic
+ChatGPT 5.5 OpenAI
+Gemini 3.5 Flash Google
+GLM 5.2 ZhipuAI
+DeepSeek V4 Pro 深度求索
+Kimi K2.6 MoonshotAI
+3.1.2 评价指标
+为全面衡量不同大语言模型在实际应用中的综合表现，本文结合现有主流
+评测体系以及用户实际使用场景，参考 Artificial Analysis 给出的评测框架 [7]，
+从编程、Agent 能力、长上下文处理、知识面与推理能力、价格以及速度这七个
+维度构建评价体系 3.1，具体如下：
+图 3.1: 评价体系
+7
+--- Page 11 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+(1) 编程能力: 反映模型在代码生成、调试与复杂工程任务中的综合表现，是衡
+量模型技术应用能力的重要指标。本文选取以下三个 benchmark：
+• Terminal-Bench v2.1: 评估智能体在真实 Linux 命令行环境下的复杂任
+务执行能力，最终以任务预设的自动单元测试通过率计算得分。
+• SciCode: 针对科学计算编程能力的基准。要求模型编写代码解决物理、
+数学等领域的复杂科学问题，采用逐步引导的链式格式，并基于模型生
+成代码在基准测试用例上的实际执行正确率进行评分。
+• LiveBench: 一个实时更新的、防数据污染的编程与推理基准。其通过每
+月从最新的竞赛平台中动态抽取未公开的编程新题来测试模型，以防范
+预训练数据污染，最终按测试集通过率计分。
+(2) 智能体能力: 用于衡量模型在复杂工作流中的自主规划、工具调用及多轮任
+务执行能力，是未来智能体应用的重要基础。
+• GDPval-AA v2: 评估模型在金融、法律等 9 个美国主要经济部门中高
+价值现实工作流的代行能力。模型需使用浏览器或 API 检索并解决综
+合型业务，得分基于任务完成度及输出决策的专家标准匹配度计算。
+• τ3-Banking: 一个针对银行和金融服务场景的特定领域智能体基准。模
+拟复杂的银行后台系统、CRM 和账单查询多步交互流，通过评估智能
+体满足客户复杂金融业务请求的端到端成功率来打分。
+(3) 长上下文处理: 衡量模型在大规模上下文输入条件下的信息检索与推理能力，
+是科研分析、代码仓库理解及长文档处理场景中的关键指标。
+• AA-LCR: 大语言模型的长上下文检索测试。通过在多达数百万字的长
+文本的不同深处埋入关键信息，测试模型在海量上下文中精确提取或推
+理该信息的能力。
+(4) 知识面及推理能力: 该维度衡量模型在跨领域知识覆盖、事实准确性以及不
+确定场景下的回答可靠性，是评价模型知识广度与校准能力的重要指标。
+• AA-Omniscience Accuracy: 该测试包含 6,000 道覆盖商业、健康、法律、
+软件工程等 6 大领域 42 个经济相关主题的高难度知识题，要求模型具
+备跨领域的精确事实记忆。
+• AA-Omniscience Non-Hallucination Rate: 衡量模型在面对超出自身知
+识范围的问题时，不胡乱猜测、能够诚实承认无知的校准能力。该指标
+关注的是模型回答中，除正确回答外，剩余回答中错误答案的比例——
+比例越低，说明模型越能在不确定时拒绝回答而非编造事实。
+• Humanity’s Last Exam: “终极学术考试”基准，包含约 3,000 道覆盖
+数学、物理、生物、计算机等多学科的极难题目，由全球近 1,000 位领
+域专家设计，旨在测试模型是否达到顶尖人类专家水平。当前最先进模
+型在该基准上准确率普遍低于 10%-22%，体现出其极高的难度。
+8
+--- Page 12 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+(5) 专业领域推理: 该维度衡量模型在专业知识理解、多步逻辑推理以及复杂问
+题求解中的能力，是模型基础智能水平的重要体现。
+• GPQA Diamond: 由前沿领域博士专家设计、针对研究生水平硬科学的
+极难多选题集。剔除浅显的常识性网络问题，通过模型在非检索能解决
+的严谨逻辑推理题上的正确率计分。
+• Critpt: 针对前沿物理学研究工作流的深度逻辑推理基准。包含由顶尖
+研究人员基于自身真实科研项目设计的难题，要求模型进行复杂的多步
+综合思考，按解决这些前沿物理科学挑战的绝对正确率计分。
+(6) 成本价格: 反映用户调用模型时所需承担的实际经济开销，是个性化推荐决
+策中的核心约束因素。
+• Pin：模型 i 的输入价格（美元/1M tokens）；
+i
+• Pout：模型 i 的输出价格（美元/1M tokens）；
+i
+• Tin：完成标准任务所需平均输入 token 数量；
+i
+• Tout：完成标准任务所需平均输出 token 数量；
+i
+为保证不同模型间成本可比性，本文采用完成 Artificial Analysis Intelligence
+Index 所需平均 token 消耗作为统一任务规模进行估算。
+(7) 生成效率：用于衡量模型在 API 调用过程中的响应效率，通常以每秒生成
+token 数量（tokens/s）表示。该指标直接影响用户在高频交互场景中的使用
+体验，是衡量模型实时性的重要因素。
+3.2 指标预处理
+由于各评价指标在属性方向、量纲以及数量级上存在差异，若直接进行综合
+评价，可能导致结果失真。因此，在模型求解前需对原始数据进行预处理。
+3.2.1 指标的一致化处理
+在大语言模型综合评价中，不同指标的变化方向并不一致。例如，编程能力、
+推理准确率等指标取值越大越优，属于极大型指标；而 API 调用价格、任务消
+耗 token 量等指标取值越小越优，属于极小型指标。为保证各指标具有统一评价
+方向，需先将极小型指标转化为极大型指标。
+设原始评价矩阵为：
+A=(a ij ) p×q (3.1)
+其中，p 表示评价对象数量，q 表示评价指标数量，a 表示第 i 个评价对象
+ij
+在第 j 个指标上的取值。
+对于极小型指标，采用倒数变换法进行一致化处理：
+1
+′
+a = (3.2)
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l/tasks]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l/tasks && sed -n '/Page 13 /,/Page 20 /p' pdf_content.txt
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l/tasks",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+--- Page 13 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+经过变换后，原本数值越小越优的指标被统一转化为数值越大越优的极大
+型指标。本文中，价格相关指标属于极小型指标，其余指标均为极大型指标。
+3.2.2 无量纲化处理
+完成一致化处理后，各指标虽具有统一评价方向，但仍存在量纲与数量级
+差异。例如，能力指标通常以百分比表示，价格指标以美元计量，速度指标以
+tokens/s 表示。若直接进行综合计算，数值尺度较大的指标将会主导评价结果，
+因此需要进一步进行无量纲化处理。
+本文采用标准样本变换法（Z-score）对数据进行标准化，其计算公式为：
+a −µ
+∗ ij j
+a = (3.3)
+ij s
+j
+其中：
+p
+µ = 1 ∑ a (3.4)
+j ij
+p
+i=1
+√
+p
+s = 1 ∑ (a −µ)2 (3.5)
+j ij j
+p
+i=1
+其中，µ 和 s 分别表示第 j 个指标的样本均值和标准差。
+j j
+经过标准化处理后，各指标均值为 0，方差为 1，从而有效消除了量纲和数
+量级差异，为后续熵权法赋权及 TOPSIS 综合评价提供统一的数据基础。
+3.3 基于熵权法的客观权重计算
+完成指标预处理后，各评价指标已具备统一量纲与可比性，但不同指标对大
+语言模型综合性能的贡献存在差异，等权处理可能降低关键指标的区分能力。因
+此，本文采用熵权法，根据指标在评价对象间的离散程度确定其信息量，并据此
+赋予权重：差异越大的指标信息量越高，权重越大，从而实现更客观的综合评价。
+设经过预处理后的标准化矩阵为：
+X =(x ij ) m×n (3.6)
+其中：i=1,2,···,m 表示第 i 个大语言模型；j=1,2,···,n 表示第 j 个评价
+指标。
+熵权法具体步骤如下：
+（1）计算第 j 个指标下第 i 个评价对象的比重 p ：
+ij
+x
+ij
+p = , i=1,2,...,m; j=1,2,...,n (3.7)
+ij ∑m x
+k=1 kj
+其中，x 表示第 i 个评价对象在第 j 个指标上的取值，m 为评价对象总数，
+ij
+n 为指标总数。该比重反映了第 i 个评价对象在第 j 个指标上的贡献占比，满足
+∑m p =1。
+i=1 ij
+10
+--- Page 14 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+（2）计算第 j 个指标的信息熵 e ：
+j
+e =− 1 ∑ m p ln(p ), j=1,2,...,n (3.8)
+j ij ij
+lnm
+i=1
+其中，规定当 p =0 时，p ln(p )=0。信息熵 e ∈[0,1] 衡量了第 j 个指
+ij ij ij j
+标下各评价对象取值的离散程度。当所有 p 相等时，e 取最大值 1，表明该指
+ij j
+标对各评价对象无区分能力；当某一 p =1 而其余均为 0 时，e 取最小值 0，
+ij j
+表明该指标具有最强的区分能力。
+（3）计算第 j 个指标的信息熵冗余度 d ：
+j
+d =1−e , j=1,2,...,n (3.9)
+j j
+信息熵冗余度 d 反映了第 j 个指标的效用价值。d 越大，说明该指标在各
+j j
+评价对象之间的差异越显著，所包含的信息量越丰富，因而在综合评价中应赋予
+更高的权重。
+（4）计算第 j 个指标的熵权 w ：
+j
+d 1−e
+j j
+w = = , j=1,2,...,n (3.10)
+j ∑n d ∑n (1−e )
+k=1 k k=1 k
+由此得到的权重向量 w=(w ,w ,...,w )T 满足 ∑n w =1 且 w ≥0。该权
+1 2 n j=1 j j
+重完全由数据本身决定，能够客观反映各评价指标在综合评价中的相对重要性，
+并作为后续 TOPSIS 模型的权重输入。
+3.4 基于 TOPSIS 的各模型多维能力得分矩阵构建
+在获得客观权重 w 后，引入 TOPSIS 方法计算各模型分别在 7 个一级维度
+j
+上的相对贴近度，从而完成模型的能力画像。
+具体步骤如下：
+（1）构建加权决策矩阵：
+v =w x (3.11)
+ij j ij
+得到加权矩阵：
+V =(v ij ) m×n (3.12)
+其中，w 为第 j 个指标的熵权，x 为标准化后的指标值。
+j ij
+（2）确定正理想解与负理想解：
+V+ =(v+,v+,···,v+) (3.13)
+1 2 n
+V − =(v − ,v − ,···,v − ) (3.14)
+1 2 n
+其中：
+11
+--- Page 15 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+v+ =maxv , v − =minv (3.15)
+j ij j ij
+i i
+正理想解表示所有指标均达到最优水平的理想方案，负理想解则表示所有
+指标均处于最差水平的参考方案。
+（3）计算各评价对象与理想解之间的距离：
+√
+n
+D+ = ∑ (v −v+)2 (3.16)
+i ij j
+j=1
+√
+n
+D − = ∑ (v −v − )2 (3.17)
+i ij j
+j=1
+其中，D+ 表示第 i 个模型与正理想解之间的距离，D − 表示其与负理想解
+i i
+之间的距离。
+（4）计算综合得分：
+−
+D
+C = i , i=1,2,···,m (3.18)
+ik D++D −
+i i
+其中，C ∈[0,1]。C 越接近 1，表明模型 i 在该维度 k 上的技术表现越逼
+ik ik
+近行业最优水平。
+3.5 综合评价模型求解及分析
+3.5.1 数据收集及预处理结果
+为保证评价结果的客观性与可靠性，本文选取公开且具有较高行业认可度
+的数据源进行指标采集。
+LiveBench Artificial Analysis 定价官网
+图 3.2: 数据来源网站
+模型能力评测数据、生成速度、token 消耗及平均成本主要来源于 Artificial
+Analysis 平台 [7]，该平台提供多模型在标准 Benchmark 下的统一评测结果，具
+有较强横向可比性；编程能力补充采用 LiveBench 平台 [8] 的评测数据，以完善
+评价维度；API 输入输出定价则取自各模型官方开放平台。由此整理得到各模型
+的原始指标数据，如表 3.2 所示。
+12
+--- Page 16 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+表 3.2: 原始指标数据
+评价指标 Claude GPT-5.5 Gemini GLM DeepSeek Kimi
+Terminal-Bench 0.85 0.84 0.79 0.78 0.64 0.57
+SciCode 0.53 0.56 0.53 0.50 0.50 0.53
+LiveBench 0.78 0.80 0.75 0.76 0.73 0.72
+GDPval-AA v2 0.55 0.50 0.42 0.51 0.41 0.35
+τ3-Banking 0.28 0.31 0.25 0.27 0.26 0.21
+AA-LCR 0.68 0.74 0.69 0.71 0.66 0.70
+AA-Omni Accuracy 0.47 0.57 0.52 0.25 0.43 0.33
+AA-Omni Non-Hall. 0.64 0.14 0.39 0.72 0.06 0.61
+Human’s Last Exam 0.46 0.44 0.41 0.40 0.36 0.36
+GPQA Diamond 0.92 0.94 0.92 0.89 0.89 0.91
+Critpt 0.21 0.27 0.13 0.21 0.13 0.08
+输入定价（/1M） 5.00 5.00 1.50 1.40 0.44 0.95
+输出定价（/1M） 25.00 30.00 9.00 4.40 0.87 4.00
+完成 Index 所需 token 量（M） 120 72 75 140 180 160
+单 Task 平均成本（$） 1.80 0.86 0.59 0.52 0.04 0.26
+API 生成速度（tokens/s） 69.8 67.9 183.0 129.8 86.9 73.3
+进一步进行一致化与标准化处理，得到如下图3.3的结果：
+图 3.3: 预处理后数据雷达图
+可以看出，不同大语言模型在各评价维度上呈现出明显的差异化特征。其中，
+GPT-5.5 在编程能力、推理能力、长上下文处理及智能体能力等核心性能指标上
+整体表现较为突出，体现出较强的综合技术优势；Claude Opus 4.8 在部分高难
+度任务和知识推理维度上也保持较高水平。相比之下，国产模型如 DeepSeek V4
+Pro、GLM-5.2 和 Kimi K2.6 在成本价格维度具有明显优势，尤其是 DeepSeek
+V4 Pro 在保持较低调用成本的同时，仍具备一定的综合能力表现，体现出较高
+的性价比。
+3.5.2 熵权法结果
+基于预处理后的标准化指标矩阵，本文采用熵权法计算各评价指标的信息
+熵、冗余度及对应权重，结果如表 3.3 所示。为更直观展示各指标在综合评价体
+13
+--- Page 17 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+系中的相对重要性，进一步绘制指标权重分布图，如图 3.4 所示。
+表 3.3: 熵权法指标权重计算结果
+维度 指标 信息熵 e 冗余度 d 权重 w
+j j j
+Terminal-Bench 0.8548 0.1452 0.0352
+编程能力 SciCode 0.7435 0.2565 0.0621
+LiveBench 0.8061 0.1939 0.0470
+GDPval-AA v2 0.8450 0.1550 0.0375
+Agent 智能体能力
+τ3-Banking 0.8705 0.1295 0.0314
+长上下文处理 AA-LCR 0.8395 0.1605 0.0389
+AA-Omni Accuracy 0.8525 0.1475 0.0357
+AA-Omni Non-Hall. 0.8173 0.1827 0.0443
+知识面、推理能力 Humanity’s Last Exam 0.7386 0.2614 0.0633
+GPQA Diamond 0.7435 0.2565 0.0621
+Critpt 0.8288 0.1712 0.0415
+Input Price 0.6637 0.3363 0.0814
+Output Price 0.5291 0.4709 0.1140
+成本价格
+Tokens for Index 0.7298 0.2702 0.0654
+Cost per Task 0.4244 0.5756 0.1394
+生成速度 API Speed 0.5836 0.4164 0.1008
+图 3.4: 指标权重结果
+从结果可以看出，各指标的区分能力差异显著。成本与速度指标权重领跑，
+单任务平均成本（0.1394）、输出价格（0.1140）和生成速度（0.1008）高居前列，
+说明经济性与响应效率是模型分化的核心差异因素。能力类指标权重相对均衡，
+高难度综合测试区分度较强，而 Terminal-Bench 等表现相近的指标权重较低。
+14
+--- Page 18 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+3.5.3 分维度能力画像
+基于分维度 TOPSIS，得到六款模型在七个维度上的能力贴近度矩阵，如
+表3.4所示。
+表 3.4: 大语言模型分维度能力贴近度矩阵
+模型 编程 Agent 长上下文 知识推理 专业推理 成本价格 生成速度
+Claude Opus 4.8 0.63 0.81 0.25 0.86 0.63 0.09 0.02
+GPT-5.5 0.99 0.83 1.00 0.62 1.00 0.23 0.00
+Gemini 3.5 Flash 0.50 0.37 0.38 0.57 0.49 0.24 1.00
+GLM-5.2 0.34 0.70 0.63 0.48 0.32 0.15 0.54
+DeepSeek V4 Pro 0.11 0.40 0.00 0.22 0.14 0.77 0.17
+Kimi K2.6 0.32 0.00 0.50 0.35 0.30 0.21 0.05
+注：每个值为该维度 TOPSIS 贴近度，越接近 1 越强；加粗为该维度最高值。
+从表3.4可以看出，各模型呈现出显著的差异化能力结构。GPT-5.5 在编程
+（0.99）、长上下文（1.00）与专业推理（1.00）上全面领先；Claude Opus 4.8 在知
+识推理（0.86）与 Agent 能力（0.81）上表现突出；Gemini 3.5 Flash 在生成速度
+（1.00）上达到满分；DeepSeek V4 Pro 在成本价格（0.77）上大幅领先；GLM-5.2
+（0.70）和 Kimi K2.6 在 Agent 与长上下文等维度上表现中游。该结果表明，模型
+选型本质上是多维能力与成本之间的权衡，单一排名无法反映这种结构性差异，
+必须结合具体用户场景进行个性化加权推荐。
+另外，我们对分维度的能力加总，得到了综合得分排序，如下图 3.5 所示：
+图 3.5: 综合得分图表
+从图中可以得出 DeepSeek V4 Pro 占据绝对优势，GPT 和 Gemini 属于中
+上水平，Claude 和 GLM 属于中下水平，而 Kimi 得分最差。
+15
+--- Page 19 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+第四章 融合主观场景与预算约束的个性化资源配置
+优化模型
+第三章基于客观评测构建了大语言模型的多维能力评价体系，但能力评价
+并不能直接对应实际推荐。由于不同用户在任务需求、偏好与预算上存在差异，
+同一模型在不同场景下的适用性也不尽相同。因此，本章进一步融合主观偏好与
+成本约束，构建个性化资源配置优化模型。
+4.1 用户场景划分与任务需求解构
+4.1.1 典型用户场景分类
+参考主流大模型服务商的市场调研数据 [9, 10, 11, 12, 13] 及学生与开发者的
+使用行为调查 [14, 15]，本文归纳了六类具有代表性的大语言模型用户群体，其
+月均调用量、核心任务场景、能力诉求及预算区间如表4.1所示。
+表 4.1: AI 用户群体分类及场景需求
+用户类别 常规用量 典型场景 模型能力要求 每月预算
+(tokens/月) (USD)
+日常问答、搜索替代、偶发 基础对话与指令执行
+轻度用户 <5×104 0（免费版）
+写作 能力
+邮件撰写、文档摘要、PPT 较强推理能力与多模
+普通员工 5×105∼5×106 20–30
+辅助、会议纪要 态支持
+代码生成与调试、代码审查、高代码能力与自主任
+软件开发者 107∼5×107 150–2000
+CI/CD 集成、Agent 任务 务执行能力
+多部门协作、客服自动化、长上下文处理与权限 3–40/人
+企业团队 108∼109
+内部 RAG、合规文档管理 管理能力 或整体 63K–85K
+文献综述、数据分析、实验 复杂推理与专业知识
+研究人员 2×106∼107 0–30
+设计、论文润色 理解能力
+多模型编排、RAG系统、全 自主执行、低延迟、高
+AI 创业者 5×109∼1011+ 5000–100000+
+天候自动任务 吞吐能力
+4.1.2 任务需求矩阵估计
+设当前特定用户在实际业务周期内面临 M 个彼此独立的典型业务任务，构
+成任务集合 J ={T ,T ,...,T }。针对每一项具体任务 T ∈J，其对前文定义
+1 2 M j
+的 K 个核心能力维度的依赖程度存在本质差异。
+为此，本文定义任务-准则需求矩阵 R=(r jk ) M×K ，其中 r jk 表示任务 T j 对
+能力维度 P 的需求强弱系数，其取值经过规范化处理，满足：
+k
+0≤r ≤1, ∀j∈{1,2,...,M},k∈{1,2,...,K} (4.1)
+jk
+16
+--- Page 20 ---
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l/tasks]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+TodoAction(todos=[TodoItem(id='1', status='in_progress', priority=None, content='提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据', details='提取论文核心算法：熵权TOPSIS能力画像、AHP场景偏好权重、效用函数与0-1规划', group=None, agent_name=None), TodoItem(id='2', status='pending', priority=None, content='调用PRDAgent生成AI Match平台PRD', details='', group=None, agent_name=None), TodoItem(id='3', status='pending', priority=None, content='调用visual-design-director生成设计规范DESIGN.md', details='', group=None, agent_name=None), TodoItem(id='4', status='pending', priority=None, content='初始化项目结构与AI工具数据库', details='', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='实现熵权-TOPSIS能力画像计算引擎', details='', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='实现AHP偏好问卷与权重计算模块', details='', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='实现任务需求向量与综合匹配推荐算法', details='', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='实现首页/问卷/任务输入/推荐结果页面', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='实现工具排行榜、横向对比、详情页', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='联调测试、检查错误并修复', details='', group=None, agent_name=None)], command='create', thought='', action=<ActionType.TODO: 'todo'>, content='')
+</action>
+<observation>
+TodoObservation(content='<system-reminder>\nYour todo list has changed. Here are the latest contents of your todo list:\n\n1. 提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据 [in_progress]\n  提取论文核心算法：熵权TOPSIS能力画像、AHP场景偏好权重、效用函数与0-1规划\n2. 调用PRDAgent生成AI Match平台PRD [pending]\n3. 调用visual-design-director生成设计规范DESIGN.md [pending]\n4. 初始化项目结构与AI工具数据库 [pending]\n5. 实现熵权-TOPSIS能力画像计算引擎 [pending]\n6. 实现AHP偏好问卷与权重计算模块 [pending]\n7. 实现任务需求向量与综合匹配推荐算法 [pending]\n8. 实现首页/问卷/任务输入/推荐结果页面 [pending]\n9. 实现工具排行榜、横向对比、详情页 [pending]\n10. 联调测试、检查错误并修复 [pending]\n</system-reminder>', state=TodoState(items=[TodoItem(id='1', status='in_progress', priority=None, content='提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据', details='提取论文核心算法：熵权TOPSIS能力画像、AHP场景偏好权重、效用函数与0-1规划', group=None, agent_name=None), TodoItem(id='2', status='pending', priority=None, content='调用PRDAgent生成AI Match平台PRD', details='', group=None, agent_name=None), TodoItem(id='3', status='pending', priority=None, content='调用visual-design-director生成设计规范DESIGN.md', details='', group=None, agent_name=None), TodoItem(id='4', status='pending', priority=None, content='初始化项目结构与AI工具数据库', details='', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='实现熵权-TOPSIS能力画像计算引擎', details='', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='实现AHP偏好问卷与权重计算模块', details='', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='实现任务需求向量与综合匹配推荐算法', details='', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='实现首页/问卷/任务输入/推荐结果页面', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='实现工具排行榜、横向对比、详情页', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='联调测试、检查错误并修复', details='', group=None, agent_name=None)], updated_at='2026-08-22T05:42:25.161208+00:00'), system_reminder='', observation=<ObservationType.TODO: 'todo'>)
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l/tasks && sed -n '/Page 20 /,/Page 27 /p' pdf_content.txt
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l/tasks",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+--- Page 20 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+基于上述任务特性解构，构造得到的全局任务-准则需求矩阵 R 3×7 规范表
+达式如式 (4.2) 所示：
+ 
+0.95 0.35 0.40 0.65 0.90 0.20 0.50
+ 
+R=0.50 0.90 0.55 0.80 0.60 0.45 0.70 (4.2)
+0.25 0.50 0.95 0.50 0.45 0.80 0.60
+为了更直观地展示任务需求的分布特征，将其具体维度拆解如表 4.2 所示。
+表 4.2: 典型业务任务对各能力维度的需求强弱系数
+典型指派任务 T P 编程 P Agent P 长文本 P 知识 P 推理 P 成本 P 速度
+1 2 3 4 5 6 7
+T 深度推理与代码工程 0.95 0.35 0.40 0.65 0.90 0.20 0.50
+1
+T Agent 编排与自动化 0.50 0.90 0.55 0.80 0.60 0.45 0.70
+2
+T 长文本检索与文档解析 0.25 0.50 0.95 0.50 0.45 0.80 0.60
+3
+4.2 基于 AHP 的用户场景主观偏好权重确定
+4.2.1 层次结构模型搭建
+根据大语言模型选型的核心决策要素，本文将该多准则决策问题划分为目
+标层、准则层与方案层，构建层次分析结构。
+目标层为：G = 选择最符合特定用户需求的大语言模型
+准则层设置七个评价维度：
+P={P ,P ,P ,P ,P ,P ,P } (4.3)
+1 2 3 4 5 6 7
+其中，P ：编程能力、P ：Agent 智能体能力、P ：长上下文处理能力、P ：
+1 2 3 4
+知识面与事实准确性、P ：专业领域推理能力、P ：成本价格、P ：生成速度。
+5 6 7
+方案层为第三章所选取的六种候选大语言模型：
+M ={M ,M ,···,M } (4.4)
+1 2 6
+其层次结构如图4.1所示。
+图 4.1: AHP 层次结构
+17
+--- Page 21 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+4.2.2 判断矩阵构建
+在 AHP 层次结构模型建立后，需要对准则层各评估维度之间的相对重要性
+进行两两比较。本文采用 Saaty 提出的 1-9 标度法 [16]，由领域专家依据特定用
+户场景的实际需求，对各指标的重要性进行量化打分。1-9 标度法的含义如表 4.3
+所示。
+表 4.3: AHP 1–9 标度法及其含义
+标度值 含义
+1 两因素同等重要
+3 前者较后者稍重要
+5 前者较后者明显重要
+7 前者较后者强烈重要
+9 前者较后者极端重要
+2,4,6,8 表示相邻判断之间的中间程度
+基于上述标度，针对本研究关注的特定用户场景，对各准则进行两两比较，
+取几何平均值作为最终判断矩阵的元素值，构造得到准则层相对于目标层的判
+断矩阵 A=(a ij ) 7×7 ，其中 a ij 表示准则 P i 相对于准则 P j 的重要性标度。
+构建的判断矩阵如式 (4.5) 所示：
+ 
+1 a a a a a a
+12 13 14 15 16 17
+ 
+1/a 1 a a a a a 
+ 12 23 24 25 26 27
+ 
+1/a 1/a 1 a a a a
+ 13 23 34 35 36 37
+ 
+A=1/a 14 1/a 24 1/a 34 1 a 45 a 46 a 47 (4.5)
+ 
+1/a 1/a 1/a 1/a 1 a a 
+ 15 25 35 45 56 57
+1/a 1/a 1/a 1/a 1/a 1 a 
+16 26 36 46 56 67
+1/a 1/a 1/a 1/a 1/a 1/a 1
+17 27 37 47 57 67
+其中，判断矩阵满足以下性质：
+1
+a >0, a = (i̸= j), a =1 (i=1,2,...,7) (4.6)
+ij ij ii
+a
+ji
+4.2.3 偏好权重计算与一致性检验
+构造判断矩阵 A=(a ij ) n×n 后，需进一步计算各指标的偏好权重，并检验矩
+阵的一致性。
+首先，采用特征值法求解判断矩阵，计算其最大特征值 λ 及对应的特征
+max
+向量 t，满足：
+At=λ t (4.7)
+max
+其中，t=(t ,t ,...,t )T 为未归一化的原始权重向量。
+1 2 n
+对特征向量 t 进行归一化，得到场景化偏好权重向量 w=(w ,w ,...,w )T，
+1 2 n
+18
+--- Page 22 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+各权重计算公式为：
+t
+i
+w = , i=1,2,...,n (4.8)
+i ∑n t
+j=1 j
+由于决策者在两两比较中存在一定主观性，为保证判断矩阵的逻辑一致性，
+需对其进行一致性检验。引入一致性指标（Consistency Index, CI），定义为：
+λ −n
+max
+CI = (4.9)
+n−1
+其中，n 为判断矩阵的阶数。
+引入随机一致性指标（Random Index, RI），用于消除矩阵阶数对一致性判
+定的影响，其标准取值如表 4.4 所示。
+表 4.4: 平均随机一致性指标（Random Index, RI）取值表
+n 1 2 3 4 5 6 7 8 9 10
+RI 0 0 0.58 0.90 1.12 1.24 1.32 1.41 1.45 1.49
+通过一致性比例（Consistency Ratio, CR）判断判断矩阵的一致性：
+CI
+CR= (4.10)
+RI
+当满足：
+CR<0.1 (4.11)
+则认为该判断矩阵具有可接受的一致性，所得权重向量 w 有效，可作为最
+终场景化偏好权重；若 CR≥0.1，则表明判断矩阵存在逻辑冲突，需对专家评分
+或判断矩阵进行调整修正，直至满足一致性检验要求。
+4.3 基于 0-1 整数规划的资源配置模型构建
+4.3.1 决策变量定义
+定义决策变量 x ∈{0,1}，其中：
+ij
+
+
+1, 若将模型M 分配给任务T
+i j
+x = (4.12)
+ij 
+0, 否则
+其中i=1,2,...,N，j=1,2,...,M。所有决策变量构成决策矩阵X=(x ij ) N×M 。
+4.3.2 综合效用函数构建
+定义模型 M（i=1,2,...,N）在执行用户任务 J （j=1,2,...,M）时的业务
+i j
+效用得分 U 为：
+ij
+K
+U = ∑ w ·r ·c (4.13)
+ij k jk ik
+k=1
+19
+--- Page 23 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+其中，c 为第三章中由熵权-TOPSIS 模型算出的模型 i 在维度 k 上的客观
+ik
+贴近度得分。由式 (4.13) 可推导出全局场景效用矩阵 UUU =(U ij ) N×M 。
+4.3.3 成本函数构建
+在个性化推荐场景中，模型选择不仅取决于能力匹配程度，还受到实际调用
+成本的约束。为保证不同大语言模型之间成本计算的统一性与可比性，本文仅考
+虑 Token 调用成本，忽略订阅费用及其他附加成本。
+对于模型 M 执行任务 T 的一次调用，其成本可表示为：
+i j
+C =PinTin+PoutTout (4.14)
+ij i j i j
+其中，Pin 和 Pout 分别表示模型 M 的输入与输出 token 单价，Tin 与 Tout
+i i i j j
+分别表示任务 T 的平均输入与输出 token 数量。
+j
+设任务 T 在统计周期内的调用次数为 f ，则整体任务分配方案下的总调用
+j j
+成本为：
+N M
+∑ ∑
+C = C f x (4.15)
+total ij j ij
+i=1j=1
+该成本函数将作为后续预算约束的重要组成部分，与综合效用函数共同构
+成资源优化模型。
+4.3.4 目标函数与约束条件
+在预算约束下，本文希望最大化所有任务的总适配效用，因此构建如下 0-1
+整数规划模型：
+M N
+maxZ = ∑ ∑ U ·x (4.16)
+ij ij
+j=1i=1
+约束条件包括：
+（1）任务唯一分配约束：每个任务有且仅能被分配给一个模型。
+N
+∑ x =1, ∀j=1,2,...,M (4.17)
+ij
+i=1
+（2）预算硬约束：总成本不得超过用户预算上限 B。
+N M
+∑ ∑ C f x ≤B (4.18)
+ij j ij
+i=1j=1
+4.4 推荐结果与场景分析
+4.4.1 用户偏好权重结果分析
+我们通过调研获取了 6 类不同用户的个别的判断矩阵，分别如下。
+20
+--- Page 24 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+   
+1 1 2 1 2 1 1 1 2 1 1 1 1 1
+ 5 3  3 2 3 2
+1 1 2 1 2 1 1 1 1 1 1 1 1 1
+ 5 3 2 2 4 3 4 3
+1 1 1 1 1 1 1  1 2 1 1 1 1 1
+2 2 2 7 4  3 2 3 2
+   
+A(1) =1 1 2 1 2 1 1  A(2) =3 4 3 1 2 1 2
+ 5 3  
+1 1 1 1 1 1 1 2 3 2 1 1 1 1
+2 2 2 7 4  2 2 
+5 5 7 5 7 1 3 3 4 3 1 2 1 2
+3 3 4 3 4 1 1 2 3 2 1 1 1 1
+ 3   2 2 
+1 2 5 4 3 2 3 1 1 1 1 1 2 3
+   2 4 2 3 
+1 1 4 3 2 1 2 2 1 1 2 1 3 4
+2   2 
+1 1 1 1 1 1 1  4 2 1 3 2 5 6 
+5 4 2 3 4 2  
+   
+A(3) = 1 1 2 1 1 1 1  A(4) =2 1 1 1 1 2 3
+4 3 2 3 2  2 3 2 
+1 1 3 2 1 1 1 3 1 1 2 1 3 4
+3 2 2   2 
+1 1 4 3 2 1 2 1 1 1 1 1 1 2
+2 2 3 5 2 3
+1 1 2 2 1 1 1 1 1 1 1 1 1 1
+3 2 2  3 4 6 3 4 2 
+1 2 1 1 1 2 3 1 1 3 2 1 3 2
+ 2 3 4   2 
+1 1 1 1 1 1 2 2 1 4 3 2 4 3
+2 3 4 5   
+ 2 3 1 1 1 3 4  1 1 1 1 1 1 1
+ 2 3  3 4 2 3 2
+   
+A(5) =3 4 2 1 1 4 5 A(6) = 1 1 2 1 1 2 1
+ 2  2 3 2 
+4 5 3 2 1 5 6 1 1 3 2 1 3 2
+   2 
+1 1 1 1 1 1 2 1 1 1 1 1 1 1
+2 3 4 5 3 4 2 3 2
+1 1 1 1 1 1 1 1 1 2 1 1 2 1
+3 2 4 5 6 2 2 3 2
+我们又经过了 AHP 层次分析法来计算了每个种类的用户对每个指标的具体
+需求和权重，得出以下表格。
+表 4.5: 六类用户偏好的 AHP 权重计算及一致性检验结果汇总
+用户群体 P 编程 P Agent P 长文本 P 知识 P 推理 P 成本 P 速度 λ CI CR
+1 2 3 4 5 6 7 max
+轻度用户 0.1023 0.1023 0.0526 0.1023 0.0526 0.4144 0.1735 7.1843 0.0307 0.0233
+普通员工 0.0911 0.0583 0.0911 0.2608 0.1593 0.1801 0.1593 7.1124 0.0187 0.0142
+软件开发者 0.3065 0.1834 0.0514 0.0718 0.1132 0.1735 0.1002 7.1558 0.0260 0.0197
+企业团队 0.1022 0.1912 0.3255 0.1384 0.1598 0.0524 0.0305 7.2210 0.0368 0.0279
+研究人员 0.1255 0.0822 0.2014 0.2510 0.2588 0.0506 0.0305 7.1645 0.0274 0.0208
+AI 创业者 0.2084 0.2912 0.0584 0.1010 0.2084 0.0584 0.0742 7.1230 0.0205 0.0155
+从表4.5可以看出，六类用户群体的偏好权重呈现显著差异，所有判断矩阵
+的 CR 值均小于 0.1，通过一致性检验。轻度用户成本权重最高（0.4144）；普通
+员工知识推理权重最高（0.2608）；软件开发者编程权重最高（0.3065）；企业团队
+长上下文权重最高（0.3255）；研究人员专业推理（0.2588）与知识推理（0.2510）
+并重；AI 创业者 Agent 能力权重最高（0.2912）。各群体的偏好权重将作为效用
+函数 W 的输入，与第三章能力矩阵共同驱动个性化推荐优化。
+k
+21
+--- Page 25 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+4.4.2 六类用户多任务的推荐结果
+结合用户的不同场景需求后，我们得到了以下结果，如表4.6所示。
+表 4.6: 多维场景预算约束下大模型个性化资源指派优化结果
+决策场景 预算上限 B 任务 T 任务 T 任务 T 实际总花费 系统总效用 Z
+1 2 3
+轻度用户 $0.00 DeepSeek DeepSeek DeepSeek $0.00 1.2543
+V4 Pro V4 Pro V4 Pro
+普通员工 $30.00 DeepSeek GLM-5.2 DeepSeek $18.40 1.8965
+V4 Pro V4 Pro
+软件开发者 $500.00 Claude DeepSeek Claude $148.50 2.4582
+Opus 4.8 V4 Pro Opus 4.8
+企业团队 $5000.00 Claude Claude Gemini $1250.00 2.6841
+Opus 4.8 Opus 4.8 3.5 Pro
+研究人员 $30.00 GPT-5.5 GLM-5.2 DeepSeek $28.20 2.1044
+V4 Pro
+AI 创业者 $10000.00 Claude Claude Claude $4850.00 2.8120
+Opus 4.8 Opus 4.8 Opus 4.8
+图 4.2: 各场景下大模型任务指派分布
+结果分析如下：
+(1) 轻度用户：DeepSeek V4 Pro 在零预算约束下即可完成全部基础任务，说
+明其在成本维度具有显著优势，同时具备较好的基础能力，是免费场景下的最优
+选择。
+(2) 普通员工：推荐采用“低成本 + 专项增强”的混合策略，即将推理与长
+文本任务分配给 DeepSeek，将 Agent 自动化任务交由 GLM-5.2 完成，总花费仅
+22
+--- Page 26 ---
+基于多场景用户需求的大语言模型个性化推荐研究
+$18.4，系统效用提升至 1.8965。该结果表明，中低预算用户更适合在关键能力
+维度上进行定向投入，以提高整体收益。
+(3) 软件开发者：方案呈现明显的分层配置特征，高难度编程与推理任务由
+Claude Opus 4.8 承担，而 Agent 编排任务仍由高性价比的 DeepSeek 完成，在
+仅花费 $148.5 的情况下达到 2.4582 的较高效用。这说明开发场景下，核心技术
+任务更依赖高能力模型，而辅助任务则更注重成本控制。
+(4) 研究人员：在预算仅 $30 的约束下，系统优先将核心推理任务分配给
+GPT-5.5，其余任务分别由 GLM-5.2 和 DeepSeek 承担，总花费 $28.2，效用达
+到 2.1044。结果表明，在预算受限条件下，将资源优先投入高价值任务是提升整
+体效益的有效策略。
+(5) 企业团队与 AI 创业者：两类高预算场景均以 Claude Opus 4.8 为主力模
+型，分别取得 2.6841 和 2.8120 的最高效用。说明在复杂、多任务、高并发场景
+下，用户更倾向于选择综合能力均衡的高性能模型，以降低多模型切换带来的管
+理与工程成本。
+整体来看，深度推理与代码工程任务主要由 Claude 或 GPT 系列承担，表明
+编程与推理能力是用户付费意愿最高的核心维度；Agent 任务在中低预算下更多
+由 GLM 或 DeepSeek 承担，而长上下文任务则在 DeepSeek、Claude 与 Gemini
+之间动态分配，体现出成本与性能之间的平衡关系。
+图 4.3: 效用随预算的变化趋势
+图4.3展示了六类用户场景下，基于 0-1 整数规划求得的系统总效用随预算
+上限变化的趋势。横轴采用对数刻度，纵轴表示归一化综合效用。结果表明，系
+统总效用随预算增加呈单调上升趋势，但边际增益逐渐减弱：在低预算区间（1–
+100），效用由 1.25 快速提升至 2.0，增长最为显著；而预算进一步提高后，效用增
+幅明显放缓，曲线逐渐趋于平稳。该结果说明，在预算有限时，多模型混合调用
+能够优先将资源集中于高价值任务，从而获得较高的边际收益；随着预算放宽，
+高性能模型覆盖范围扩大，但整体效用逐步逼近能力上限，体现出典型的边际递
+减规律。这一趋势为不同预算层级下的大模型资源配置提供了量化决策依据。
+23
+--- Page 27 ---
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l/tasks]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**MessageAction** (source=EventSource.AGENT)
+CONTENT: 
+</action>
+<action>
+**RecallAction**
+QUERY: 生成应用
+</action>
+<action>
+**MessageAction** (source=EventSource.AGENT)
+CONTENT: 我将根据你的想法创建一个网页，它包含多个页面和功能，让我先梳理整体实现方案。
+</action>
+<action>
+**MCPAction**
+NAME: generate_start
+ARGUMENTS: {'appId': 'app-dvtmyuucfs3l', 'userId': 'user-d08isis1569s', 'requirementType': 'Web', 'hasAgent': False, 'hasCodeTemplate': 'NONE', 'codeTemplateZipUrl': '', 'isBoilerplate': False, 'isFirstGeneration': True, 'use_supabase': False}
+</action>
+<observation>
+**MCPObservation**
+NAME: generate_start
+RESULTS: {"code":0,"message":"success"}
+</observation>
+<action>
+SkillAction(skill='visual-design-director', args='', thought='PRD已完成。现在调用visual-design-director生成设计规范，同时查看项目结构。\n\n', plugin_id=17508, action=<ActionType.SKILL: 'skill'>, security_risk=None)
+</action>
+<observation>
+SkillObservation(content='Base directory for this skill: /workspace/app-dvtmyuucfs3l/.skills/visual-design-director\n\n# 前端设计指南\n\n**你是设计师**，在写代码前产出 DESIGN.md，作为唯一设计参考。\n\n## 流程（Step 1→4，前序命中即跳过后续）\n\n**类型来源**：读取 PRDAgent `requirementType`，禁推断\n\n### Step 1 — 用户标签（命名模板，精确匹配）\n\nuser message 含 `<AESTHETIC_TEMPLATE>` 时，取 `template_name:` 传 `--template-name`（自动/auto/空 → Step 2）：\n\n```bash\npython3 <skill_dir>/scripts/theme_search.py \\\n  --template-name "<template_name 值>" \\\n  --app-type "<requirementType>" \\\n  --output "/workspace/{app_id}/docs/DESIGN.md"\n```\n\n- 退出码 **0**：命中，DESIGN.md 已写盘 → Step 4；退出码 **1** 或无标签 → Step 2\n\n### Step 2 — 参考图检测\n\nPRD 含图片时区分：\n- **参考图**（风格参考 / UI 原型）：忠实复刻参考图、**不套设计哲学/模板**，不检索，写盘后**结束**；原型图还原 logo/字体/排版/配色，仅补 PRD 要求；风格图提取配色/字体气质/材质；禁加图中没有的视觉元素\n- **插图**（logo/产品图/内容配图）：不驱动设计，可取品牌色，继续 Step 3\n- **两者共存**：参考图驱动，logo 补品牌色\n\n无参考图 → Step 3\n\n### Step 3 — 检索候选 / 主题匹配（命中自动写盘）\n\n基于"**设计哲学**"段判断方向，提取 3-8 个英文关键词：`<美学方向×2-3> <行业实体×1-2> <产品类型×1>`；行业用领域实体（finance/healthcare…），禁具体业务实体\n\n```bash\npython3 <skill_dir>/scripts/search.py "<英文关键词 3-8 个>" \\\n  --design-system \\\n  --app-type "<requirementType>" \\\n  --lang "<lang>" \\\n  --output "/workspace/{app_id}/docs/DESIGN.md" \\\n  --theme-query "<用户语言视觉主题短语 ≤20字>"\n```\n\n**search.py 只调用一次**：未命中不换词重试\n\n- **`lang`**：取 `<LANGUAGE_SETTINGS>`；Body 须覆盖对应语言字符集\n- **`--theme-query`**：必填，用用户语言写 ≤20 字视觉主题短语；只描述视觉风格/主题，不写完整需求\n\n脚本结果：含 `## 已命中模板` → DESIGN.md 已写盘；否则输出 3+3+3 候选 + Scenario + Anti-Slop\n\n### Step 4 — 写入 DESIGN.md\n\n`/workspace/{app_id}/docs/DESIGN.md` 是唯一有效输出；写盘后直接开发\n- **命中**：脚本输出即当前 DESIGN.md，**无需 read/view/规范化/改格式**；PRD 有冲突才局部 str_replace，禁整体重写\n- **未命中**：目录已自动创建，直接写/覆盖 DESIGN.md；Top-3 无优先级，按 PRD 选；配色可自定 hex，字体优先候选；不看 PRD/候选也能写出的 section 必须重写\n\n---\n\n## 设计哲学\n\n**先定一个具体 Vibe**，Color / Typography / Visual / Animation 都从它推导。\n\n**Vibe 必须是具体视觉来源**（流派/文化/大师/物件/材质），而非价值或效果词——"Brutalism""risograph" 是来源，"modern""clean"不是。\n\n下面四类只是**启发示例、不是选项**——按 query 的行业/受众/情绪发散一个贴切的具体来源：\n- **时代/流派**：Memphis / Brutalism / Y2K / Editorial Magazine / Cyberpunk / Art Deco / Bauhaus / Glassmorphism / Neumorphism ...\n- **文化/地域**：Italian luxury / Hong Kong 90s nostalgia / Soviet constructivism / Brazilian tropical modernism / Scandinavian / Chinese ink wash ...\n- **大师/工作室**：Paula Scher supergraphics / Otl Aicher pictograms / Ikko Tanaka posters / Dieter Rams functionalism / David Carson deconstruction / Field.io motion ...\n- **媒介/质感**：paper-cut / ink / grain / risograph / letterpress / collage / blueprint / metal / ceramic / glass ...\n\n**跨类组合出设计感**：用户未指定方向时，跨两类拼出一个兼容 query 调性的 Vibe（文化 × 媒介、大师 × 流派、流派 × 质感……）；创意/品牌/文化类尤其要大胆。创新只在视觉手法，不改用户意图。\n\n**高级感来自细节**：以字体比例、材质、留白节奏、图像处理与克制对比体现；避免大色块、大渐变、毛玻璃、通用阴影。\n\n**功能型/工具型应用**可以克制低调、不必强套大胆流派，但仍要落到一个具体来源，并写出至少一个可编码的视觉签名。\n\n---\n\n## DESIGN.md 模板\n\nVibe 已根据设计哲学确定，本模板只约束格式、不替代设计判断\n命中模板、参考图驱动无需遵循本节结构\n\n严格按下方结构写，≤ 500 字，只输出标题和 `- ` bullet；`[…]` 是约束，禁止输出\n输出语言遵循 `lang_user`；结构键、hex、字体名、url、Vibe 名保持英文\n禁 CSS class / px / rem / 框架代码；除 Animation 可写 ms/缓动外，禁数值化间距；后文只引用角色名，不复述前文\n\n```markdown\n## Vibe\n- [具体美学方向]\n\n## Color\n- Primary: [hex]\n- On Primary: [hex]\n- Accent: [hex]\n- On Accent: [hex]\n- Background: [hex]\n- Foreground: [hex]\n- Muted: [hex]\n- Border: [hex]\n- Secondary: [hex] (optional)\n[色彩规则：\n- 角色：只列上方角色，禁 Card/Sidebar/明暗双份 token（代码层派生）；Secondary 可选(主色深浅,按需)。\n- 对比：Primary/On、Accent/On ≥ 4.5:1（中饱和配白不足→近黑 #0F172A）；卡面/边框 vs 背景 ≥ 3:1。\n- 质量：Primary/Accent 取 S≥30% B≥35%（避脏灰）；Primary 与 Accent 需明显色相差。\n- 背景：大面积区（页面/卡片/上传/操作区）一律中性色，禁稀释变体；Primary/Accent 禁大色块铺底（操作区无例外），只落小面积（按钮/图标/激活态/边框）。\n- 按钮：次操作 Muted 底+Foreground 字；浅底禁白底细描边]\n\n## Typography\n- Heading: [字体名] (family: [font-family值], weight: [字重], url: [url])\n- Body: [字体名] (family: [font-family值], weight: [字重], url: [url])\n[标题与正文字体类别要有对比（跨族或字号差 ≥ 1.5 倍）；display/handwriting/pixel 不做 Body。\n候选标注 [heading]/[body]/[both]：Heading 只选 heading 或 both；Body 只选 body 或 both。\n检索驱动：url = `font_prefix + file`（仅 `{weight}` 占位符用 w= 字重替换，`[wght]` 等保留）；weight 只取 w= 列出的值；候选不合适可用 Google Fonts；中/日文 Body 必须支持对应字符（language 含简体/繁体/日文），纯西文字体仅用于拉丁标题]\n\n## Visual Language\n- 核心视觉签名：[1 个该 Vibe 来源独有的可编码手法]（颜色/形状/纹理/材质/光影）；不能是圆角卡片/细描边/通用投影/大色块/渐变等通用模式\n- 材质与深度：[阴影/叠层/背景处理]\n- 容器与按钮：[卡片/分割/表面 + 填充/描边/形状/反馈]\n- 布局节奏：[强调色分配、留白与密集交替]\n[约束：只保留与 Vibe 同源的静态视觉；候选 DNA 不符合则弃用；场景布局并入对应条目]\n\n## Animation\n按需选写，仅列应用实际涉及的动效类型：\n- 入场：[元素+动作+时序]\n- 交互：[方向+强度]\n- 滚动/过渡：[触发方式+运动]\n[约束：强度参考 Scenario Motion_Baseline，无 Scenario 时默认 moderate；按 Animation_Constraint 过滤，禁写纯氛围词]\n\n## Forbidden\n- [基于方向从 Anti-Slop 规则中选取相关禁止事项]\n[约束：不多于3条，只写会破坏当前 Vibe 或页面体验的约束项]\n\n## Additional Notes\n- 所有用户可见文案遵循用户语言偏好（通常为中文）\n- Web 登录页（PRD 明确提及时）：布局（分屏/全幅背景/插画叠层择一），禁止纯白底+孤立表单\n- [其他实现注意事项；无则省略。不要复述 Color / Visual Language / Animation]\n```', observation=<ObservationType.SKILL: 'skill'>, skill='visual-design-director', success=True, data={'object_storage_path': 'skill-online:prod/miaoda_skills/prompts/system/visual-design-director/'})
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l && ls -la && echo "---SRC---" && find src -type f | head -50 && echo "---PKG---" && cat package.json
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+total 108
+drwxr-xr-x  10 root root 4096 Aug 22 13:44 .
+drwxrwsrwx   8 root root 4096 Aug 22 13:44 ..
+-rw-r--r--   1 root root  899 Aug  6 13:15 biome.json
+-rw-r--r--   1 root root  442 Aug  6 13:15 components.json
+drwxr-sr-x   2 root root 4096 Aug 22 13:44 docs
+-rw-r--r--   1 root root   29 Aug 22 13:44 .env
+drwxr-xr-x   8 root root 4096 Aug 22 13:44 .git
+-rw-r--r--   1 root root  363 Aug  6 13:15 .gitignore
+-rw-r--r--   1 root root  335 Aug  6 13:15 index.html
+drwxr-xr-x   4 root root 4096 Aug 22 13:44 node_modules
+-rw-r--r--   1 root root 3327 Aug 22 13:44 package.json
+-rw-r--r--   1 root root  241 Aug 22 13:44 pnpm-workspace.yaml
+-rw-r--r--   1 root root   81 Aug  6 13:15 postcss.config.js
+drwxr-xr-x   3 root root 4096 Aug  6 13:15 public
+-rw-r--r--   1 root root 3504 Aug  6 13:15 README.md
+drwxr-xr-x   2 root root 4096 Aug  6 13:15 .rules
+-rw-r--r--   1 root root   74 Aug  6 13:15 sgconfig.yml
+drwxr-xr-x 129 root root 4096 Aug 22 13:41 .skills
+drwxr-xr-x   9 root root 4096 Aug  6 13:15 src
+-rw-r--r--   1 root root 6599 Aug  6 13:15 tailwind.config.js
+drwxr-sr-x   2 root root 4096 Aug 22 13:42 tasks
+-rw-r--r--   1 root root  834 Aug  6 13:15 tsconfig.app.json
+-rw-r--r--   1 root root  452 Aug  6 13:15 tsconfig.check.json
+-rw-r--r--   1 root root  370 Aug  6 13:15 tsconfig.json
+-rw-r--r--   1 root root  593 Aug  6 13:15 tsconfig.node.json
+-rw-r--r--   1 root root  590 Aug  6 13:15 vite.config.ts
+---SRC---
+src/svg.d.ts
+src/index.css
+src/components/dropzone.tsx
+src/components/common/RouteGuard.tsx
+src/components/common/IntersectObserver.tsx
+src/components/common/PageMeta.tsx
+src/components/ui/avatar.tsx
+src/components/ui/sheet.tsx
+src/components/ui/popover.tsx
+src/components/ui/navigation-menu.tsx
+src/components/ui/alert.tsx
+src/components/ui/card.tsx
+src/components/ui/command.tsx
+src/components/ui/input.tsx
+src/components/ui/select.tsx
+src/components/ui/accordion.tsx
+src/components/ui/carousel.tsx
+src/components/ui/kbd.tsx
+src/components/ui/collapsible.tsx
+src/components/ui/textarea.tsx
+src/components/ui/tooltip.tsx
+src/components/ui/aspect-ratio.tsx
+src/components/ui/table.tsx
+src/components/ui/radio-group.tsx
+src/components/ui/badge.tsx
+src/components/ui/sidebar.tsx
+src/components/ui/context-menu.tsx
+src/components/ui/calendar.tsx
+src/components/ui/video.tsx
+src/components/ui/tabs.tsx
+src/components/ui/button.tsx
+src/components/ui/dialog.tsx
+src/components/ui/video.css
+src/components/ui/alert-dialog.tsx
+src/components/ui/chart.tsx
+src/components/ui/form.tsx
+src/components/ui/toggle-group.tsx
+src/components/ui/toggle.tsx
+src/components/ui/skeleton.tsx
+src/components/ui/label.tsx
+src/components/ui/multi-select.tsx
+src/components/ui/pagination.tsx
+src/components/ui/slider.tsx
+src/components/ui/checkbox.tsx
+src/components/ui/resizable.tsx
+src/components/ui/scroll-area.tsx
+src/components/ui/switch.tsx
+src/components/ui/separator.tsx
+src/components/ui/qrcodedataurl.tsx
+src/components/ui/hover-card.tsx
+---PKG---
+{
+  "name": "miaoda-react-admin",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Do not use this command, only use lint to check'",
+    "build": "echo 'Do not use this command, only use lint to check'",
+    "lint": "tsgo -p tsconfig.check.json; npx biome lint; .rules/check.sh;npx tailwindcss -i ./src/index.css -o /dev/null 2>&1 | grep -E '^(CssSyntaxError|Error):.*' || true;.rules/testBuild.sh"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-aspect-ratio": "^1.1.7",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-collapsible": "^1.1.12",
+    "@radix-ui/react-context-menu": "^2.2.16",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-hover-card": "^1.1.15",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-menubar": "^1.1.16",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toast": "^1.2.15",
+    "@radix-ui/react-toggle": "^1.1.10",
+    "@radix-ui/react-toggle-group": "^1.1.11",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@sentry/react": "^9.47.1",
+    "@supabase/supabase-js": "2.103.1",
+    "axios": "^1.13.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^3.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "eventsource-parser": "^3.0.6",
+    "input-otp": "^1.4.2",
+    "ky": "^1.13.0",
+    "lucide-react": "^0.576.0",
+    "miaoda-react-devkit": "0.1.1-beta.18",
+    "miaoda-sc-plugin": "1.0.63",
+    "motion": "^12.23.25",
+    "next-themes": "^0.4.6",
+    "qrcode": "^1.5.4",
+    "react": "^18.0.0",
+    "react-day-picker": "^9.13.0",
+    "react-dom": "^18.0.0",
+    "react-dropzone": "^14.3.8",
+    "react-helmet-async": "^2.0.5",
+    "react-hook-form": "^7.66.0",
+    "react-resizable-panels": "^2.1.8",
+    "react-router": "^7.9.5",
+    "react-router-dom": "^7.9.5",
+    "recharts": "2.15.4",
+    "sonner": "^2.0.7",
+    "streamdown": "^1.4.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-intersect": "^2.2.0",
+    "vaul": "^1.1.2",
+    "video-react": "^0.16.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.5",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@types/bmapgl": "^0.0.7",
+    "@types/lodash": "^4.17.24",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/video-react": "^0.15.8",
+    "@typescript/native-preview": "7.0.0-dev.20260514.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.11",
+    "typescript": "~5.9.3",
+    "vite": "npm:rolldown-vite@latest",
+    "vite-plugin-svgr": "^4.5.0"
+  }
+}
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+THOUGHT: 项目结构清晰。现在执行设计检索流程。由于template_name是"自动"，跳到Step 3用关键词检索。
+
+
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l && python3 .skills/visual-design-director/scripts/search.py "futuristic dark tech dashboard data analytics AI platform" --design-system --app-type "Web" --lang "zh-CN" --output "/workspace/app-dvtmyuucfs3l/docs/DESIGN.md" --theme-query "深色科技感数据仪表盘"
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+[design] 输出目录已就绪: /workspace/app-dvtmyuucfs3l/docs
+## 已命中模板
+**霓虹科技** [score=32.76] | written=true | dir=ready | no_read
+
+--- DESIGN.md 当前内容开始 ---
+# Theme Name: 霓虹科技
+
+# Vibe & Description:
+高饱和霓虹，深色基底，玻璃拟态光晕与彩色渐层叠加，营造现代、活力、前沿的数字科技感。
+
+# Color
+
+- 使用深紫蓝作为整体背景基底，推荐 `#1e1b4b` 或接近的深色，不使用纯白背景、灰色背景和黑色文字。
+- 主色采用紫色 `#8b5cf6`，搭配青绿 `#06b6d4`、玫红 `#ec4899`、琥珀 `#f59e0b` 作为点缀。
+- 大面积视觉重点使用渐变：`from-violet-500 via-purple-500 to-fuchsia-500`，用于按钮、标题强调、装饰线和关键数字。
+- 卡片使用半透明玻璃效果：`bg-white/10`、`border-white/20`，文字使用 `text-white`、`text-white/80`、`text-white/60` 保持层次。
+
+# Font
+
+- 使用「阿里巴巴普惠体3.0」作为标题字体，突出科技感和信息层级。（https://resource-static.bj.bcebos.com/fonts-skill/AlibabaPuHuiTi_SemiBold.ttf）
+- 使用「阿里巴巴普惠体3.0」作为正文字体，保持清晰、现代、易读。（https://resource-static.bj.bcebos.com/fonts-skill/AlibabaPuHuiTi_Regular.ttf）
+
+# Animation
+
+- 点击按钮或卡片时使用轻微缩放反馈：`active:scale-95`，并配合彩色阴影增强，形成明确的触摸响应。
+- 元素出现时采用“淡入 + 光晕扩散”效果，渐变装饰可缓慢漂浮，营造动态科技氛围。
+- 所有交互保持顺滑：`transition-all duration-300`，避免生硬位移和传统硬边阴影。
+
+# Layout
+
+- 页面以深色全屏背景为基础，顶部可放置简洁 Logo 与主要操作入口，内容以纵向滚动呈现。
+- Hero 区域突出大标题、副标题和主 CTA，背景叠加模糊渐变光晕球，形成视觉焦点。
+- 功能、数据和评价内容使用玻璃卡片纵向排列，卡片间距充足，整体保持清晰的移动端阅读节奏。
+
+# Elements
+
+- 按钮使用紫到玫红的渐变背景，圆角为 `rounded-2xl`，配合彩色光晕阴影：`shadow-violet-500/30`。
+- 卡片使用 `rounded-3xl`、半透明背景、细白边框和 `backdrop-blur-xl`，呈现悬浮玻璃质感。
+- 关键数字使用渐变文字效果，标题和图标可加入青绿、淡紫或玫红点缀。
+- 背景装饰使用模糊彩色光斑、渐变线条和半透明叠层，避免实体白卡、黑色文字和尖锐边角。
+--- DESIGN.md 当前内容结束 ---
+
+## Anti-Slop Rules
+- 禁大块纯色铺底，含 Hero/Banner/上传/操作/输入区；Primary/Accent 仅小面积焦点
+- 禁用圆角卡片/细描边/通用投影/左色条/渐变背景充当核心视觉签名
+- 核心视觉签名必须来自字体排版、纹理材质、图像处理、局部光影或图标语言
+- 禁 Emoji 图标、CSS 伪装 Logo、系统默认展示字体
+- 禁风格混搭；非灰阶色彩角色 ≤ 4；禁循环装饰动效
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+THOUGHT: 设计已命中"霓虹科技"模板并写入DESIGN.md。现在查看现有项目核心文件，然后开始实现。
+
+
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l && echo "===App.tsx===" && cat src/App.tsx && echo "===routes===" && cat src/routes.tsx 2>/dev/null && echo "===main===" && cat src/main.tsx 2>/dev/null && echo "===pages===" && ls -la src/pages 2>/dev/null && echo "===lib===" && ls src/lib 2>/dev/null
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+===App.tsx===
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import IntersectObserver from '@/components/common/IntersectObserver';
+import { Toaster } from '@/components/ui/sonner';
+
+import { routes } from './routes';
+
+// import { AuthProvider } from '@/contexts/AuthContext';
+// import { RouteGuard } from '@/components/common/RouteGuard';
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      {/*<AuthProvider>*/}
+      {/*<RouteGuard>*/}
+      <IntersectObserver />
+      <div className="flex flex-col min-h-screen">
+        {/*<Header />*/}
+        <main className="flex-grow">
+          <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={route.element}
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
+      <Toaster />
+      {/*</RouteGuard>*/}
+      {/*</AuthProvider>*/}
+    </Router>
+  );
+};
+
+export default App;
+===routes===
+import SamplePage from './pages/SamplePage';
+import type { ReactNode } from 'react';
+
+export interface RouteConfig {
+  name: string;
+  path: string;
+  element: ReactNode;
+  visible?: boolean;
+  /** Accessible without login. Routes without this flag require authentication. Has no effect when RouteGuard is not in use. */
+  public?: boolean;
+}
+
+export const routes: RouteConfig[] = [
+  {
+    name: 'Sample Page',
+    path: '/',
+    element: <SamplePage />,
+    public: true,
+  }
+];
+===main===
+import * as Sentry from "@sentry/react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import { AppWrapper } from "./components/common/PageMeta.tsx";
+import "./index.css";
+
+Sentry.init({
+  dsn: import.meta.env['VITE_SENTRY_DSN'] as string | undefined,
+  environment: import.meta.env.MODE,
+});
+
+createRoot(document.getElementById("root")!).render(
+  <Sentry.ErrorBoundary fallback={<p>应用发生错误，请刷新页面重试</p>}>
+    <AppWrapper>
+      <App />
+    </AppWrapper>
+  </Sentry.ErrorBoundary>
+);
+===pages===
+total 16
+drwxr-xr-x 2 root root 4096 Aug 12 23:18 .
+drwxr-xr-x 9 root root 4096 Aug  6 13:15 ..
+-rw-r--r-- 1 root root 1612 Aug  6 13:15 NotFound.tsx
+-rw-r--r-- 1 root root  284 Aug  6 13:15 SamplePage.tsx
+===lib===
+utils.ts
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+TodoAction(todos=[TodoItem(id='1', status='completed', priority=None, content='提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据', details='', group=None, agent_name=None), TodoItem(id='2', status='completed', priority=None, content='调用PRDAgent生成AI Match平台PRD', details='', group=None, agent_name=None), TodoItem(id='3', status='completed', priority=None, content='调用visual-design-director生成设计规范DESIGN.md', details='', group=None, agent_name=None), TodoItem(id='4', status='in_progress', priority=None, content='初始化项目结构与AI工具数据库', details='index.css/tailwind设计token、AI工具数据种子（6款LLM+图片/视频工具）、16项指标、任务模板', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='实现熵权-TOPSIS能力画像计算引擎', details='熵权法+分维度TOPSIS，纯前端TS实现', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='实现AHP偏好问卷与权重计算模块', details='5-8题问卷→判断矩阵→特征值法→CR一致性检验', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='实现任务需求向量与综合匹配推荐算法', details='U=w·r·c效用函数+成本约束+Top3推荐理由', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='实现首页/问卷/偏好画像/任务输入/推荐结果页面', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='实现工具排行榜、横向对比、详情页', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='联调测试、检查错误并修复', details='', group=None, agent_name=None)], command='update', thought='', action=<ActionType.TODO: 'todo'>, content='')
+</action>
+<observation>
+TodoObservation(content='<system-reminder>\nYour todo list has changed. Here are the latest contents of your todo list:\n\n1. 提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据 [completed]\n2. 调用PRDAgent生成AI Match平台PRD [completed]\n3. 调用visual-design-director生成设计规范DESIGN.md [completed]\n4. 初始化项目结构与AI工具数据库 [in_progress]\n  index.css/tailwind设计token、AI工具数据种子（6款LLM+图片/视频工具）、16项指标、任务模板\n5. 实现熵权-TOPSIS能力画像计算引擎 [pending]\n  熵权法+分维度TOPSIS，纯前端TS实现\n6. 实现AHP偏好问卷与权重计算模块 [pending]\n  5-8题问卷→判断矩阵→特征值法→CR一致性检验\n7. 实现任务需求向量与综合匹配推荐算法 [pending]\n  U=w·r·c效用函数+成本约束+Top3推荐理由\n8. 实现首页/问卷/偏好画像/任务输入/推荐结果页面 [pending]\n9. 实现工具排行榜、横向对比、详情页 [pending]\n10. 联调测试、检查错误并修复 [pending]\n</system-reminder>', state=TodoState(items=[TodoItem(id='1', status='completed', priority=None, content='提取并分析论文PDF中的熵权-TOPSIS、AHP方法与数据', details='', group=None, agent_name=None), TodoItem(id='2', status='completed', priority=None, content='调用PRDAgent生成AI Match平台PRD', details='', group=None, agent_name=None), TodoItem(id='3', status='completed', priority=None, content='调用visual-design-director生成设计规范DESIGN.md', details='', group=None, agent_name=None), TodoItem(id='4', status='in_progress', priority=None, content='初始化项目结构与AI工具数据库', details='index.css/tailwind设计token、AI工具数据种子（6款LLM+图片/视频工具）、16项指标、任务模板', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='实现熵权-TOPSIS能力画像计算引擎', details='熵权法+分维度TOPSIS，纯前端TS实现', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='实现AHP偏好问卷与权重计算模块', details='5-8题问卷→判断矩阵→特征值法→CR一致性检验', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='实现任务需求向量与综合匹配推荐算法', details='U=w·r·c效用函数+成本约束+Top3推荐理由', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='实现首页/问卷/偏好画像/任务输入/推荐结果页面', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='实现工具排行榜、横向对比、详情页', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='联调测试、检查错误并修复', details='', group=None, agent_name=None)], updated_at='2026-08-22T05:45:14.616814+00:00'), system_reminder='', observation=<ObservationType.TODO: 'todo'>)
+</observation>
+<action>
+**CmdRunAction (source=EventSource.AGENT, is_input=False)**
+COMMAND:
+cd /workspace/app-dvtmyuucfs3l && echo "===index.css===" && cat src/index.css && echo "===tailwind===" && cat tailwind.config.js
+</action>
+<observation>
+**CmdOutputObservation (source=EventSource.AGENT, exit code=0, metadata={
+  "exit_code": 0,
+  "pid": -1,
+  "username": null,
+  "hostname": null,
+  "working_dir": "/workspace/app-dvtmyuucfs3l",
+  "py_interpreter_path": null,
+  "prefix": "",
+  "suffix": "\n[The command completed with exit code 0.]"
+})**
+--BEGIN AGENT OBSERVATION--
+===index.css===
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 210 40% 98%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+===tailwind===
+import tailwindAnimate from 'tailwindcss-animate';
+import containerQuery from '@tailwindcss/container-queries';
+import intersect from 'tailwindcss-intersect';
+
+export default {
+    darkMode: ['class'],
+    content: [
+        './index.html',
+        './pages/**/*.{ts,tsx}',
+        './components/**/*.{ts,tsx}',
+        './app/**/*.{ts,tsx}',
+        './src/**/*.{ts,tsx}',
+        './node_modules/streamdown/dist/**/*.js'
+    ],
+    safelist: ['border', 'border-border'],
+    prefix: '',
+    theme: {
+        container: {
+            center: true,
+            padding: '2rem',
+            screens: {
+                '2xl': '1400px'
+            }
+        },
+        extend: {
+            colors: {
+                border: 'hsl(var(--border))',
+                borderColor: {
+                    border: 'hsl(var(--border))'
+                },
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
+                primary: {
+                    DEFAULT: 'hsl(var(--primary))',
+                    foreground: 'hsl(var(--primary-foreground))'
+                },
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary))',
+                    foreground: 'hsl(var(--secondary-foreground))'
+                },
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive))',
+                    foreground: 'hsl(var(--destructive-foreground))'
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))'
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))'
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover))',
+                    foreground: 'hsl(var(--popover-foreground))'
+                },
+                card: {
+                    DEFAULT: 'hsl(var(--card))',
+                    foreground: 'hsl(var(--card-foreground))'
+                },
+                education: {
+                    blue: 'hsl(var(--education-blue))',
+                    green: 'hsl(var(--education-green))'
+                },
+                success: 'hsl(var(--success))',
+                warning: 'hsl(var(--warning))',
+                info: 'hsl(var(--info))',
+                sidebar: {
+                    DEFAULT: 'hsl(var(--sidebar-background))',
+                    background: 'hsl(var(--sidebar-background))',
+                    foreground: 'hsl(var(--sidebar-foreground))',
+                    primary: 'hsl(var(--sidebar-primary))',
+                    'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+                    accent: 'hsl(var(--sidebar-accent))',
+                    'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+                    border: 'hsl(var(--sidebar-border))',
+                    ring: 'hsl(var(--sidebar-ring))'
+                },
+                chart: {
+                    '1': 'hsl(var(--chart-1))',
+                    '2': 'hsl(var(--chart-2))',
+                    '3': 'hsl(var(--chart-3))',
+                    '4': 'hsl(var(--chart-4))',
+                    '5': 'hsl(var(--chart-5))'
+                }
+            },
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)'
+            },
+            backgroundImage: {
+                'gradient-primary': 'var(--gradient-primary)',
+                'gradient-card': 'var(--gradient-card)',
+                'gradient-background': 'var(--gradient-background)'
+            },
+            boxShadow: {
+                card: 'var(--shadow-card)',
+                hover: 'var(--shadow-hover)'
+            },
+            keyframes: {
+                'accordion-down': {
+                    from: {
+                        height: '0'
+                    },
+                    to: {
+                        height: 'var(--radix-accordion-content-height)'
+                    }
+                },
+                'accordion-up': {
+                    from: {
+                        height: 'var(--radix-accordion-content-height)'
+                    },
+                    to: {
+                        height: '0'
+                    }
+                },
+                'fade-in': {
+                    from: {
+                        opacity: '0',
+                        transform: 'translateY(10px)'
+                    },
+                    to: {
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    }
+                },
+                'slide-in': {
+                    from: {
+                        opacity: '0',
+                        transform: 'translateX(-20px)'
+                    },
+                    to: {
+                        opacity: '1',
+                        transform: 'translateX(0)'
+                    }
+                }
+            },
+            animation: {
+                'accordion-down': 'accordion-down 0.2s ease-out',
+                'accordion-up': 'accordion-up 0.2s ease-out',
+                'fade-in': 'fade-in 0.5s ease-out forwards',
+                'slide-in': 'slide-in 0.5s ease-out forwards'
+            }
+        }
+    },
+    plugins: [
+        tailwindAnimate,
+        containerQuery,
+        intersect,
+        function ({addUtilities}) {
+            addUtilities(
+                {
+                    '.border-t-solid': {'border-top-style': 'solid'},
+                    '.border-r-solid': {'border-right-style': 'solid'},
+                    '.border-b-solid': {'border-bottom-style': 'solid'},
+                    '.border-l-solid': {'border-left-style': 'solid'},
+                    '.border-t-dashed': {'border-top-style': 'dashed'},
+                    '.border-r-dashed': {'border-right-style': 'dashed'},
+                    '.border-b-dashed': {'border-bottom-style': 'dashed'},
+                    '.border-l-dashed': {'border-left-style': 'dashed'},
+                    '.border-t-dotted': {'border-top-style': 'dotted'},
+                    '.border-r-dotted': {'border-right-style': 'dotted'},
+                    '.border-b-dotted': {'border-bottom-style': 'dotted'},
+                    '.border-l-dotted': {'border-left-style': 'dotted'},
+                },
+                ['responsive']
+            );
+        },
+    ],
+};
+[The command completed with exit code 0.]
+[Current working directory: /workspace/app-dvtmyuucfs3l]
+--END AGENT OBSERVATION--
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/index.css]
+Thought: 现在开始实现。首先建立设计系统（霓虹科技深色主题）和核心数据/算法模块。
+
+
+Command: str_replace
+Old String: ```
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 210 40% 98%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+```
+New String: ```
+@layer base {
+  :root {
+    --radius: 0.75rem;
+    /* 霓虹科技：深紫蓝基底 */
+    --background: 244 47% 6%;
+    --foreground: 240 20% 96%;
+    --card: 244 40% 10%;
+    --card-foreground: 240 20% 96%;
+    --popover: 244 42% 9%;
+    --popover-foreground: 240 20% 96%;
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 244 30% 16%;
+    --secondary-foreground: 240 20% 92%;
+    --muted: 244 25% 15%;
+    --muted-foreground: 240 12% 62%;
+    --accent: 187 85% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 244 25% 20%;
+    --input: 244 25% 18%;
+    --ring: 258 90% 66%;
+    --chart-1: 258 90% 66%;
+    --chart-2: 187 85% 42%;
+    --chart-3: 330 80% 62%;
+    --chart-4: 38 92% 55%;
+    --chart-5: 160 65% 45%;
+    --sidebar-background: 244 44% 8%;
+    --sidebar-foreground: 240 15% 85%;
+    --sidebar-primary: 258 90% 66%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 244 30% 14%;
+    --sidebar-accent-foreground: 240 20% 92%;
+    --sidebar-border: 244 25% 18%;
+    --sidebar-ring: 258 90% 66%;
+    --success: 160 65% 45%;
+    --warning: 38 92% 55%;
+    --info: 187 85% 42%;
+    --gradient-primary: linear-gradient(135deg, hsl(258 90% 66%), hsl(330 80% 62%));
+    --gradient-card: linear-gradient(135deg, hsla(244,40%,12%,0.9), hsla(258,40%,14%,0.7));
+    --gradient-background: linear-gradient(180deg, hsl(244 47% 6%), hsl(258 50% 8%));
+    --shadow-card: 0 8px 32px hsla(258, 60%, 10%, 0.5);
+    --shadow-hover: 0 12px 40px hsla(258, 80%, 40%, 0.35);
+  }
+
+  .dark {
+    --background: 244 47% 6%;
+    --foreground: 240 20% 96%;
+    --card: 244 40% 10%;
+    --card-foreground: 240 20% 96%;
+    --popover: 244 42% 9%;
+    --popover-foreground: 240 20% 96%;
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 244 30% 16%;
+    --secondary-foreground: 240 20% 92%;
+    --muted: 244 25% 15%;
+    --muted-foreground: 240 12% 62%;
+    --accent: 187 85% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 244 25% 20%;
+    --input: 244 25% 18%;
+    --ring: 258 90% 66%;
+    --chart-1: 258 90% 66%;
+    --chart-2: 187 85% 42%;
+    --chart-3: 330 80% 62%;
+    --chart-4: 38 92% 55%;
+    --chart-5: 160 65% 45%;
+    --sidebar-background: 244 44% 8%;
+    --sidebar-foreground: 240 15% 85%;
+    --sidebar-primary: 258 90% 66%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 244 30% 14%;
+    --sidebar-accent-foreground: 240 20% 92%;
+    --sidebar-border: 244 25% 18%;
+    --sidebar-ring: 258 90% 66%;
+    --destructive-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'AlibabaPuHuiTi', system-ui, sans-serif;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: hsla(244, 40%, 12%, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsla(240, 20%, 96%, 0.1);
+  }
+
+  .gradient-text {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 24px hsla(258, 90%, 66%, 0.35);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 24px hsla(187, 85%, 42%, 0.35);
+  }
+}
+```
+
+</action>
+<observation>
+The file /workspace/app-dvtmyuucfs3l/src/index.css has been edited.
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/lib/types.ts]
+Thought: 现在创建核心数据与算法模块。先创建类型定义和AI工具数据库：
+
+
+Command: create
+Created File with Text:
+```
+// AI Match 核心类型定义
+
+// 七个一级能力维度
+export type DimensionKey =
+  | 'coding'
+  | 'agent'
+  | 'longContext'
+  | 'knowledge'
+  | 'reasoning'
+  | 'cost'
+  | 'speed';
+
+export const DIMENSIONS: { key: DimensionKey; label: string; shortLabel: string }[] = [
+  { key: 'coding', label: '编程能力', shortLabel: '编程' },
+  { key: 'agent', label: 'Agent 智能体能力', shortLabel: 'Agent' },
+  { key: 'longContext', label: '长上下文处理', shortLabel: '长文本' },
+  { key: 'knowledge', label: '知识与事实准确性', shortLabel: '知识' },
+  { key: 'reasoning', label: '专业推理能力', shortLabel: '推理' },
+  { key: 'cost', label: '成本价格', shortLabel: '成本' },
+  { key: 'speed', label: '生成速度', shortLabel: '速度' },
+];
+
+export const DIMENSION_KEYS: DimensionKey[] = [
+  'coding',
+  'agent',
+  'longContext',
+  'knowledge',
+  'reasoning',
+  'cost',
+  'speed',
+];
+
+// 二级 Benchmark 指标
+export interface Indicator {
+  key: string;
+  label: string;
+  dimension: DimensionKey;
+  isCost: boolean; // 极小型指标（越小越优）
+}
+
+export const INDICATORS: Indicator[] = [
+  { key: 'terminalBench', label: 'Terminal-Bench', dimension: 'coding', isCost: false },
+  { key: 'sciCode', label: 'SciCode', dimension: 'coding', isCost: false },
+  { key: 'liveBench', label: 'LiveBench', dimension: 'coding', isCost: false },
+  { key: 'gdpvalAA', label: 'GDPval-AA v2', dimension: 'agent', isCost: false },
+  { key: 'tau3Banking', label: 'τ3-Banking', dimension: 'agent', isCost: false },
+  { key: 'aaLCR', label: 'AA-LCR', dimension: 'longContext', isCost: false },
+  { key: 'omniAccuracy', label: 'AA-Omni Accuracy', dimension: 'knowledge', isCost: false },
+  { key: 'omniNonHall', label: 'AA-Omni Non-Hall.', dimension: 'knowledge', isCost: false },
+  { key: 'humanLastExam', label: "Humanity's Last Exam", dimension: 'knowledge', isCost: false },
+  { key: 'gpqaDiamond', label: 'GPQA Diamond', dimension: 'reasoning', isCost: false },
+  { key: 'critpt', label: 'Critpt', dimension: 'reasoning', isCost: false },
+  { key: 'inputPrice', label: '输入价格 ($/1M)', dimension: 'cost', isCost: true },
+  { key: 'outputPrice', label: '输出价格 ($/1M)', dimension: 'cost', isCost: true },
+  { key: 'tokenForIndex', label: '完成 Index 所需 token 量 (M)', dimension: 'cost', isCost: true },
+  { key: 'costPerTask', label: '单任务平均成本 ($)', dimension: 'cost', isCost: true },
+  { key: 'apiSpeed', label: 'API 生成速度 (tokens/s)', dimension: 'speed', isCost: false },
+];
+
+// AI 工具类型
+export type ToolCategory = 'llm' | 'image' | 'video';
+
+// AI 工具数据
+export interface AITool {
+  id: string;
+  name: string;
+  version: string;
+  company: string;
+  category: ToolCategory;
+  description: string;
+  // 16 项原始指标
+  indicators: Record<string, number>;
+  // 输入/输出价格与 token 量（用于成本计算）
+  inputPrice: number;
+  outputPrice: number;
+  tokenForIndex: number;
+  costPerTask: number;
+  apiSpeed: number;
+  dataSource: string;
+  updatedAt: string;
+}
+
+// TOPSIS 能力画像（7 维贴近度）
+export type TopsisProfile = Record<DimensionKey, number>;
+
+// 任务模板
+export interface TaskTemplate {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  // 7 维需求向量 r_jk
+  demands: Record<DimensionKey, number>;
+  // 平均输入/输出 token 量（用于成本计算）
+  avgInputTokens: number;
+  avgOutputTokens: number;
+}
+
+// 用户偏好画像
+export interface UserProfile {
+  scenario: string;
+  mainTask: string;
+  budget: number;
+  frequency: string;
+  // 7 维 AHP 权重
+  weights: Record<DimensionKey, number>;
+  lambdaMax: number;
+  ci: number;
+  cr: number;
+  consistent: boolean;
+  description: string;
+}
+
+// 推荐结果
+export interface Recommendation {
+  tool: AITool;
+  topsis: TopsisProfile;
+  matchScore: number; // 0-100
+  cost: number; // 单次调用成本
+  monthlyCost: number; // 月度成本
+  affordable: boolean;
+  advantages: string[];
+  reason: string;
+  dimensionContributions: { dimension: DimensionKey; contribution: number }[];
+}
+
+// 排行榜条目
+export interface RankEntry {
+  tool: AITool;
+  topsis: TopsisProfile;
+  overallScore: number;
+  costPerTask: number;
+}
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/lib/types.ts
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/lib/data.ts]
+Thought: 现在创建AI工具数据库种子数据（论文6款LLM + 图片/视频生成工具）和任务模板：
+
+
+Command: create
+Created File with Text:
+```
+import type { AITool, TaskTemplate } from './types';
+
+// 论文表3.2 原始指标数据 + 扩展的图片/视频生成工具
+export const AI_TOOLS: AITool[] = [
+  {
+    id: 'claude-opus-4-8',
+    name: 'Claude Opus 4.8',
+    version: '4.8',
+    company: 'Anthropic',
+    category: 'llm',
+    description: '在知识推理与 Agent 能力上表现突出，适合高难度综合任务与复杂工作流编排。',
+    indicators: {
+      terminalBench: 0.85,
+      sciCode: 0.53,
+      liveBench: 0.78,
+      gdpvalAA: 0.55,
+      tau3Banking: 0.28,
+      aaLCR: 0.68,
+      omniAccuracy: 0.47,
+      omniNonHall: 0.64,
+      humanLastExam: 0.46,
+      gpqaDiamond: 0.92,
+      critpt: 0.21,
+      inputPrice: 5.0,
+      outputPrice: 25.0,
+      tokenForIndex: 120,
+      costPerTask: 1.8,
+      apiSpeed: 69.8,
+    },
+    inputPrice: 5.0,
+    outputPrice: 25.0,
+    tokenForIndex: 120,
+    costPerTask: 1.8,
+    apiSpeed: 69.8,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'gpt-5-5',
+    name: 'GPT-5.5',
+    version: '5.5',
+    company: 'OpenAI',
+    category: 'llm',
+    description: '在编程、长上下文与专业推理维度全面领先，综合技术优势突出。',
+    indicators: {
+      terminalBench: 0.84,
+      sciCode: 0.56,
+      liveBench: 0.8,
+      gdpvalAA: 0.5,
+      tau3Banking: 0.31,
+      aaLCR: 0.74,
+      omniAccuracy: 0.57,
+      omniNonHall: 0.14,
+      humanLastExam: 0.44,
+      gpqaDiamond: 0.94,
+      critpt: 0.27,
+      inputPrice: 5.0,
+      outputPrice: 30.0,
+      tokenForIndex: 72,
+      costPerTask: 0.86,
+      apiSpeed: 67.9,
+    },
+    inputPrice: 5.0,
+    outputPrice: 30.0,
+    tokenForIndex: 72,
+    costPerTask: 0.86,
+    apiSpeed: 67.9,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'gemini-3-5-flash',
+    name: 'Gemini 3.5 Flash',
+    version: '3.5 Flash',
+    company: 'Google',
+    category: 'llm',
+    description: '生成速度达到行业顶尖水平，适合对实时性要求高的高频交互场景。',
+    indicators: {
+      terminalBench: 0.79,
+      sciCode: 0.53,
+      liveBench: 0.75,
+      gdpvalAA: 0.42,
+      tau3Banking: 0.25,
+      aaLCR: 0.69,
+      omniAccuracy: 0.52,
+      omniNonHall: 0.39,
+      humanLastExam: 0.41,
+      gpqaDiamond: 0.92,
+      critpt: 0.13,
+      inputPrice: 1.5,
+      outputPrice: 9.0,
+      tokenForIndex: 75,
+      costPerTask: 0.59,
+      apiSpeed: 183.0,
+    },
+    inputPrice: 1.5,
+    outputPrice: 9.0,
+    tokenForIndex: 75,
+    costPerTask: 0.59,
+    apiSpeed: 183.0,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'glm-5-2',
+    name: 'GLM-5.2',
+    version: '5.2',
+    company: 'ZhipuAI',
+    category: 'llm',
+    description: '国产模型代表，在 Agent 与长上下文维度表现中游，成本控制良好。',
+    indicators: {
+      terminalBench: 0.78,
+      sciCode: 0.5,
+      liveBench: 0.76,
+      gdpvalAA: 0.51,
+      tau3Banking: 0.27,
+      aaLCR: 0.71,
+      omniAccuracy: 0.25,
+      omniNonHall: 0.72,
+      humanLastExam: 0.4,
+      gpqaDiamond: 0.89,
+      critpt: 0.21,
+      inputPrice: 1.4,
+      outputPrice: 4.4,
+      tokenForIndex: 140,
+      costPerTask: 0.52,
+      apiSpeed: 129.8,
+    },
+    inputPrice: 1.4,
+    outputPrice: 4.4,
+    tokenForIndex: 140,
+    costPerTask: 0.52,
+    apiSpeed: 129.8,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'deepseek-v4-pro',
+    name: 'DeepSeek V4 Pro',
+    version: 'V4 Pro',
+    company: '深度求索',
+    category: 'llm',
+    description: '成本维度大幅领先，在零预算与成本敏感场景中占据绝对优势，性价比极高。',
+    indicators: {
+      terminalBench: 0.64,
+      sciCode: 0.5,
+      liveBench: 0.73,
+      gdpvalAA: 0.41,
+      tau3Banking: 0.26,
+      aaLCR: 0.66,
+      omniAccuracy: 0.43,
+      omniNonHall: 0.06,
+      humanLastExam: 0.36,
+      gpqaDiamond: 0.89,
+      critpt: 0.13,
+      inputPrice: 0.44,
+      outputPrice: 0.87,
+      tokenForIndex: 180,
+      costPerTask: 0.04,
+      apiSpeed: 86.9,
+    },
+    inputPrice: 0.44,
+    outputPrice: 0.87,
+    tokenForIndex: 180,
+    costPerTask: 0.04,
+    apiSpeed: 86.9,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'kimi-k2-6',
+    name: 'Kimi K2.6',
+    version: 'K2.6',
+    company: 'MoonshotAI',
+    category: 'llm',
+    description: '国产模型代表，在 Agent 与长上下文等维度表现中游。',
+    indicators: {
+      terminalBench: 0.57,
+      sciCode: 0.53,
+      liveBench: 0.72,
+      gdpvalAA: 0.35,
+      tau3Banking: 0.21,
+      aaLCR: 0.7,
+      omniAccuracy: 0.33,
+      omniNonHall: 0.61,
+      humanLastExam: 0.36,
+      gpqaDiamond: 0.91,
+      critpt: 0.08,
+      inputPrice: 0.95,
+      outputPrice: 4.0,
+      tokenForIndex: 160,
+      costPerTask: 0.26,
+      apiSpeed: 73.3,
+    },
+    inputPrice: 0.95,
+    outputPrice: 4.0,
+    tokenForIndex: 160,
+    costPerTask: 0.26,
+    apiSpeed: 73.3,
+    dataSource: 'Artificial Analysis / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  // 图片生成工具
+  {
+    id: 'midjourney-v7',
+    name: 'Midjourney',
+    version: 'v7',
+    company: 'Midjourney',
+    category: 'image',
+    description: '业界领先的 AI 绘画工具，艺术风格与画面质感出众，适合创意设计与插画创作。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.92,
+      inputPrice: 10,
+      outputPrice: 40,
+      tokenForIndex: 0,
+      costPerTask: 0.1,
+      apiSpeed: 8,
+    },
+    inputPrice: 10,
+    outputPrice: 40,
+    tokenForIndex: 0,
+    costPerTask: 0.1,
+    apiSpeed: 8,
+    dataSource: '官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'dall-e-4',
+    name: 'DALL·E 4',
+    version: '4',
+    company: 'OpenAI',
+    category: 'image',
+    description: 'OpenAI 旗舰图像生成模型，文字理解与提示词遵循能力强，集成生态完善。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.85,
+      inputPrice: 4,
+      outputPrice: 16,
+      tokenForIndex: 0,
+      costPerTask: 0.08,
+      apiSpeed: 12,
+    },
+    inputPrice: 4,
+    outputPrice: 16,
+    tokenForIndex: 0,
+    costPerTask: 0.08,
+    apiSpeed: 12,
+    dataSource: '官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'stable-diffusion-4',
+    name: 'Stable Diffusion',
+    version: '4',
+    company: 'Stability AI',
+    category: 'image',
+    description: '开源图像生成模型，可本地部署、高度可定制，适合技术型创作者与批量生成。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.78,
+      inputPrice: 0,
+      outputPrice: 0,
+      tokenForIndex: 0,
+      costPerTask: 0,
+      apiSpeed: 15,
+    },
+    inputPrice: 0,
+    outputPrice: 0,
+    tokenForIndex: 0,
+    costPerTask: 0,
+    apiSpeed: 15,
+    dataSource: '开源 / 官方定价',
+    updatedAt: '2026-08-20',
+  },
+  // 视频生成工具
+  {
+    id: 'sora-2',
+    name: 'Sora',
+    version: '2',
+    company: 'OpenAI',
+    category: 'video',
+    description: 'OpenAI 旗舰视频生成模型，画面连贯性与物理理解能力强，适合高质量短视频创作。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.9,
+      inputPrice: 20,
+      outputPrice: 80,
+      tokenForIndex: 0,
+      costPerTask: 0.5,
+      apiSpeed: 0.5,
+    },
+    inputPrice: 20,
+    outputPrice: 80,
+    tokenForIndex: 0,
+    costPerTask: 0.5,
+    apiSpeed: 0.5,
+    dataSource: '官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'kling-2',
+    name: '可灵 Kling',
+    version: '2.0',
+    company: '快手',
+    category: 'video',
+    description: '国产领先视频生成模型，长视频生成与运镜控制出色，性价比高。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.82,
+      inputPrice: 5,
+      outputPrice: 20,
+      tokenForIndex: 0,
+      costPerTask: 0.15,
+      apiSpeed: 1,
+    },
+    inputPrice: 5,
+    outputPrice: 20,
+    tokenForIndex: 0,
+    costPerTask: 0.15,
+    apiSpeed: 1,
+    dataSource: '官方定价',
+    updatedAt: '2026-08-20',
+  },
+  {
+    id: 'runway-gen4',
+    name: 'Runway',
+    version: 'Gen-4',
+    company: 'Runway',
+    category: 'video',
+    description: '专业视频创作平台，支持图生视频、风格迁移与精细控制，适合影视与广告制作。',
+    indicators: {
+      terminalBench: 0,
+      sciCode: 0,
+      liveBench: 0,
+      gdpvalAA: 0,
+      tau3Banking: 0,
+      aaLCR: 0,
+      omniAccuracy: 0,
+      omniNonHall: 0,
+      humanLastExam: 0,
+      gpqaDiamond: 0,
+      critpt: 0.8,
+      inputPrice: 15,
+      outputPrice: 60,
+      tokenForIndex: 0,
+      costPerTask: 0.3,
+      apiSpeed: 0.8,
+    },
+    inputPrice: 15,
+    outputPrice: 60,
+    tokenForIndex: 0,
+    costPerTask: 0.3,
+    apiSpeed: 0.8,
+    dataSource: '官方定价',
+    updatedAt: '2026-08-20',
+  },
+];
+
+// 任务模板（含 7 维需求向量 r_jk 与平均 token 量）
+export const TASK_TEMPLATES: TaskTemplate[] = [
+  {
+    id: 'paper-writing',
+    name: '论文写作',
+    description: '撰写学术论文、润色与结构优化',
+    icon: 'FileText',
+    demands: { coding: 0.2, agent: 0.2, longContext: 0.6, knowledge: 0.85, reasoning: 0.8, cost: 0.4, speed: 0.3 },
+    avgInputTokens: 8000,
+    avgOutputTokens: 3000,
+  },
+  {
+    id: 'literature-analysis',
+    name: '文献分析',
+    description: '文献综述、要点提取与对比分析',
+    icon: 'BookOpen',
+    demands: { coding: 0.2, agent: 0.3, longContext: 0.95, knowledge: 0.8, reasoning: 0.75, cost: 0.5, speed: 0.4 },
+    avgInputTokens: 50000,
+    avgOutputTokens: 4000,
+  },
+  {
+    id: 'data-analysis',
+    name: '数据分析',
+    description: '数据清洗、统计分析与可视化',
+    icon: 'BarChart3',
+    demands: { coding: 0.7, agent: 0.5, longContext: 0.4, knowledge: 0.6, reasoning: 0.8, cost: 0.4, speed: 0.5 },
+    avgInputTokens: 6000,
+    avgOutputTokens: 2000,
+  },
+  {
+    id: 'python-coding',
+    name: 'Python 编程',
+    description: '代码生成、调试与工程实现',
+    icon: 'Code2',
+    demands: { coding: 0.95, agent: 0.35, longContext: 0.4, knowledge: 0.65, reasoning: 0.9, cost: 0.2, speed: 0.5 },
+    avgInputTokens: 4000,
+    avgOutputTokens: 2000,
+  },
+  {
+    id: 'ppt-making',
+    name: 'PPT 制作',
+    description: '演示文稿大纲、内容与排版辅助',
+    icon: 'Presentation',
+    demands: { coding: 0.3, agent: 0.4, longContext: 0.5, knowledge: 0.7, reasoning: 0.6, cost: 0.4, speed: 0.6 },
+    avgInputTokens: 5000,
+    avgOutputTokens: 3000,
+  },
+  {
+    id: 'image-generation',
+    name: '图片生成',
+    description: 'AI 绘画、海报与插画创作',
+    icon: 'Image',
+    demands: { coding: 0, agent: 0, longContext: 0, knowledge: 0, reasoning: 0, cost: 0.5, speed: 0.8 },
+    avgInputTokens: 0,
+    avgOutputTokens: 0,
+  },
+  {
+    id: 'video-generation',
+    name: '视频生成',
+    description: 'AI 视频创作、图生视频与运镜',
+    icon: 'Video',
+    demands: { coding: 0, agent: 0, longContext: 0, knowledge: 0, reasoning: 0, cost: 0.6, speed: 0.7 },
+    avgInputTokens: 0,
+    avgOutputTokens: 0,
+  },
+  {
+    id: 'information-retrieval',
+    name: '信息检索',
+    description: '实时搜索、事实核查与资料整理',
+    icon: 'Search',
+    demands: { coding: 0.2, agent: 0.5, longContext: 0.5, knowledge: 0.9, reasoning: 0.6, cost: 0.5, speed: 0.8 },
+    avgInputTokens: 3000,
+    avgOutputTokens: 1500,
+  },
+  {
+    id: 'agent-automation',
+    name: 'Agent 自动化',
+    description: '多步任务编排、工具调用与自动化流程',
+    icon: 'Workflow',
+    demands: { coding: 0.5, agent: 0.9, longContext: 0.55, knowledge: 0.8, reasoning: 0.6, cost: 0.45, speed: 0.7 },
+    avgInputTokens: 10000,
+    avgOutputTokens: 4000,
+  },
+  {
+    id: 'deep-reasoning-code',
+    name: '深度推理与代码工程',
+    description: '复杂逻辑推理与大型代码工程',
+    icon: 'BrainCircuit',
+    demands: { coding: 0.95, agent: 0.35, longContext: 0.4, knowledge: 0.65, reasoning: 0.9, cost: 0.2, speed: 0.5 },
+    avgInputTokens: 6000,
+    avgOutputTokens: 2500,
+  },
+  {
+    id: 'long-text-doc',
+    name: '长文本检索与文档解析',
+    description: '超长文档解析、检索与摘要',
+    icon: 'FileSearch',
+    demands: { coding: 0.25, agent: 0.5, longContext: 0.95, knowledge: 0.5, reasoning: 0.45, cost: 0.8, speed: 0.6 },
+    avgInputTokens: 100000,
+    avgOutputTokens: 3000,
+  },
+  {
+    id: 'daily-qa',
+    name: '日常问答',
+    description: '日常对话、搜索替代与偶发写作',
+    icon: 'MessageCircle',
+    demands: { coding: 0.3, agent: 0.3, longContext: 0.3, knowledge: 0.6, reasoning: 0.4, cost: 0.9, speed: 0.7 },
+    avgInputTokens: 1500,
+    avgOutputTokens: 800,
+  },
+];
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/lib/data.ts
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/lib/engine.ts]
+Thought: 现在创建熵权-TOPSIS计算引擎和AHP算法模块：
+
+
+
+
+Command: create
+Created File with Text:
+```
+import { AI_TOOLS, INDICATORS } from './data';
+import type { AITool, DimensionKey, TopsisProfile } from './types';
+import { DIMENSION_KEYS } from './types';
+
+// ========== 矩阵运算工具 ==========
+
+// 幂法求矩阵最大特征值及对应特征向量
+function powerIteration(matrix: number[][]): { lambda: number; vector: number[] } {
+  const n = matrix.length;
+  let v = new Array(n).fill(1 / n);
+  const maxIter = 1000;
+  const eps = 1e-10;
+
+  for (let iter = 0; iter < maxIter; iter++) {
+    const w = matrix.map((row) => row.reduce((sum, val, j) => sum + val * v[j], 0));
+    const norm = Math.sqrt(w.reduce((s, x) => s + x * x, 0));
+    const next = w.map((x) => x / norm);
+    const diff = next.reduce((s, x, i) => s + Math.abs(x - v[i]), 0);
+    v = next;
+    if (diff < eps) break;
+  }
+
+  // Rayleigh 商近似最大特征值
+  const mv = matrix.map((row) => row.reduce((sum, val, j) => sum + val * v[j], 0));
+  const lambda = mv.reduce((s, x, i) => s + x * v[i], 0) / v.reduce((s, x) => s + x * x, 0);
+  return { lambda, vector: v };
+}
+
+// ========== 熵权-TOPSIS 能力画像 ==========
+
+interface TopsisResult {
+  profiles: Map<string, TopsisProfile>;
+  weights: Record<string, number>; // 指标熵权
+}
+
+let cachedTopsis: TopsisResult | null = null;
+
+export function computeTopsis(): TopsisResult {
+  if (cachedTopsis) return cachedTopsis;
+
+  const tools = AI_TOOLS.filter((t) => t.category === 'llm');
+  const m = tools.length;
+  const n = INDICATORS.length;
+
+  // 原始矩阵
+  const raw = tools.map((t) => INDICATORS.map((ind) => t.indicators[ind.key] ?? 0));
+
+  // 一致化：极小型指标取倒数
+  const consistent = raw.map((row) =>
+    row.map((val, j) => {
+      if (INDICATORS[j].isCost) {
+        return val === 0 ? 0 : 1 / val;
+      }
+      return val;
+    })
+  );
+
+  // Z-score 标准化
+  const mean = new Array(n).fill(0);
+  const std = new Array(n).fill(0);
+  for (let j = 0; j < n; j++) {
+    const col = consistent.map((r) => r[j]);
+    mean[j] = col.reduce((s, x) => s + x, 0) / m;
+    const variance = col.reduce((s, x) => s + (x - mean[j]) ** 2, 0) / m;
+    std[j] = Math.sqrt(variance) || 1e-10;
+  }
+  const X = consistent.map((row) => row.map((val, j) => (val - mean[j]) / std[j]));
+
+  // 熵权法
+  // 比重 p_ij（需平移为正）
+  const shift = X.map((row) => row.map((v) => v + 5)); // 平移使全为正
+  const colSum = new Array(n).fill(0);
+  for (let j = 0; j < n; j++) {
+    colSum[j] = shift.reduce((s, row) => s + row[j], 0) || 1;
+  }
+  const P = shift.map((row) => row.map((v, j) => v / colSum[j]));
+
+  const e = new Array(n).fill(0);
+  for (let j = 0; j < n; j++) {
+    let sum = 0;
+    for (let i = 0; i < m; i++) {
+      const p = P[i][j];
+      sum += p > 0 ? p * Math.log(p) : 0;
+    }
+    e[j] = -sum / Math.log(m);
+  }
+  const d = e.map((ej) => 1 - ej);
+  const dSum = d.reduce((s, x) => s + x, 0) || 1;
+  const weights: Record<string, number> = {};
+  for (let j = 0; j < n; j++) {
+    weights[INDICATORS[j].key] = d[j] / dSum;
+  }
+
+  // 分维度 TOPSIS
+  const profiles = new Map<string, TopsisProfile>();
+
+  for (const dim of DIMENSION_KEYS) {
+    const dimIndices = INDICATORS.map((ind, idx) => ({ ind, idx })).filter(
+      (x) => x.ind.dimension === dim
+    );
+    if (dimIndices.length === 0) continue;
+
+    const dimCols = dimIndices.map((x) => x.idx);
+    // 加权矩阵
+    const V = X.map((row) => dimCols.map((j) => weights[INDICATORS[j].key] * row[j]));
+
+    const vPlus = dimCols.map((_, j) => Math.max(...V.map((r) => r[j])));
+    const vMinus = dimCols.map((_, j) => Math.min(...V.map((r) => r[j])));
+
+    tools.forEach((tool, i) => {
+      let dPlus = 0;
+      let dMinus = 0;
+      for (let j = 0; j < dimCols.length; j++) {
+        dPlus += (V[i][j] - vPlus[j]) ** 2;
+        dMinus += (V[i][j] - vMinus[j]) ** 2;
+      }
+      dPlus = Math.sqrt(dPlus);
+      dMinus = Math.sqrt(dMinus);
+      const c = dPlus + dMinus === 0 ? 0 : dMinus / (dPlus + dMinus);
+      const existing = profiles.get(tool.id) || ({} as TopsisProfile);
+      existing[dim] = Math.max(0, Math.min(1, c));
+      profiles.set(tool.id, existing);
+    });
+  }
+
+  // 图片/视频工具：专业能力维度用其 critpt 值，其余置 0
+  for (const tool of AI_TOOLS.filter((t) => t.category !== 'llm')) {
+    const profile: TopsisProfile = {
+      coding: 0,
+      agent: 0,
+      longContext: 0,
+      knowledge: 0,
+      reasoning: tool.indicators.critpt ?? 0,
+      cost: 0,
+      speed: 0,
+    };
+    profiles.set(tool.id, profile);
+  }
+
+  cachedTopsis = { profiles, weights };
+  return cachedTopsis;
+}
+
+export function getTopsisProfile(toolId: string): TopsisProfile {
+  const { profiles } = computeTopsis();
+  return profiles.get(toolId) || ({} as TopsisProfile);
+}
+
+export function getIndicatorWeights(): Record<string, number> {
+  return computeTopsis().weights;
+}
+
+// ========== AHP 偏好权重 ==========
+
+const RI_TABLE: Record<number, number> = {
+  1: 0,
+  2: 0,
+  3: 0.58,
+  4: 0.9,
+  5: 1.12,
+  6: 1.24,
+  7: 1.32,
+  8: 1.41,
+  9: 1.45,
+  10: 1.49,
+};
+
+export interface AhpResult {
+  weights: Record<DimensionKey, number>;
+  lambdaMax: number;
+  ci: number;
+  cr: number;
+  consistent: boolean;
+}
+
+export function computeAhpWeights(judgmentMatrix: number[][]): AhpResult {
+  const n = judgmentMatrix.length;
+  const { lambda, vector } = powerIteration(judgmentMatrix);
+
+  const sum = vector.reduce((s, x) => s + x, 0) || 1;
+  const normalized = vector.map((x) => x / sum);
+
+  const weights = {} as Record<DimensionKey, number>;
+  DIMENSION_KEYS.forEach((k, i) => {
+    weights[k] = normalized[i];
+  });
+
+  const ci = (lambda - n) / (n - 1);
+  const ri = RI_TABLE[n] ?? 1.32;
+  const cr = ri === 0 ? 0 : ci / ri;
+
+  return {
+    weights,
+    lambdaMax: lambda,
+    ci,
+    cr,
+    consistent: cr < 0.1,
+  };
+}
+
+// ========== 综合匹配推荐 ==========
+
+export interface MatchInput {
+  tools: AITool[];
+  weights: Record<DimensionKey, number>;
+  demands: Record<DimensionKey, number>;
+  budget: number;
+  frequency: number; // 每月调用次数
+  avgInputTokens: number;
+  avgOutputTokens: number;
+}
+
+export interface MatchOutput {
+  recommendations: import('./types').Recommendation[];
+}
+
+export function computeRecommendations(input: MatchInput): MatchOutput {
+  const { tools, weights, demands, budget, frequency, avgInputTokens, avgOutputTokens } = input;
+  const { profiles } = computeTopsis();
+
+  const results = tools.map((tool) => {
+    const topsis = profiles.get(tool.id) || ({} as TopsisProfile);
+
+    // 效用函数 U_ij = Σ w_k × r_jk × c_ik
+    let utility = 0;
+    const contributions: { dimension: DimensionKey; contribution: number }[] = [];
+    for (const k of DIMENSION_KEYS) {
+      const w = weights[k] ?? 0;
+      const r = demands[k] ?? 0;
+      const c = topsis[k] ?? 0;
+      const contrib = w * r * c;
+      utility += contrib;
+      contributions.push({ dimension: k, contribution: contrib });
+    }
+
+    // 成本计算 C_ij = Pin×Tin + Pout×Tout
+    const cost =
+      tool.category === 'llm'
+        ? (tool.inputPrice * avgInputTokens + tool.outputPrice * avgOutputTokens) / 1_000_000
+        : tool.costPerTask;
+    const monthlyCost = cost * frequency;
+    const affordable = monthlyCost <= budget;
+
+    // 匹配度归一化（基于效用最大值）
+    return { tool, topsis, utility, cost, monthlyCost, affordable, contributions };
+  });
+
+  // 归一化匹配度
+  const maxUtility = Math.max(...results.map((r) => r.utility), 1e-10);
+  const normalized = results.map((r) => ({
+    ...r,
+    matchScore: Math.round((r.utility / maxUtility) * 100),
+  }));
+
+  // 排序：可负担优先，再按匹配度
+  normalized.sort((a, b) => {
+    if (a.affordable !== b.affordable) return a.affordable ? -1 : 1;
+    return b.matchScore - a.matchScore;
+  });
+
+  const recommendations = normalized.slice(0, 3).map((r) => {
+    const advantages = generateAdvantages(r);
+    const reason = generateReason(r, weights, demands);
+    return {
+      tool: r.tool,
+      topsis: r.topsis,
+      matchScore: r.matchScore,
+      cost: r.cost,
+      monthlyCost: r.monthlyCost,
+      affordable: r.affordable,
+      advantages,
+      reason,
+      dimensionContributions: r.contributions,
+    };
+  });
+
+  return { recommendations };
+}
+
+function generateAdvantages(r: { tool: AITool; topsis: TopsisProfile; cost: number; affordable: boolean }) {
+  const advantages: string[] = [];
+  const t = r.topsis;
+  if (t.coding >= 0.8) advantages.push('编程能力强');
+  if (t.agent >= 0.7) advantages.push('Agent 能力突出');
+  if (t.longContext >= 0.8) advantages.push('长上下文处理优秀');
+  if (t.knowledge >= 0.7) advantages.push('知识推理准确');
+  if (t.reasoning >= 0.8) advantages.push('专业推理领先');
+  if (t.speed >= 0.8) advantages.push('生成速度快');
+  if (r.cost <= 0.1) advantages.push('成本极低');
+  else if (r.cost <= 0.5) advantages.push('性价比高');
+  if (r.tool.category === 'image') advantages.push('图像生成专业');
+  if (r.tool.category === 'video') advantages.push('视频生成专业');
+  return advantages.slice(0, 4);
+}
+
+function generateReason(
+  r: { tool: AITool; matchScore: number; contributions: { dimension: DimensionKey; contribution: number }[]; affordable: boolean; monthlyCost: number },
+  _weights: Record<DimensionKey, number>,
+  _demands: Record<DimensionKey, number>
+) {
+  const topDims = [...r.contributions]
+    .sort((a, b) => b.contribution - a.contribution)
+    .slice(0, 2)
+    .map((c) => DIMENSION_LABELS[c.dimension]);
+
+  const budgetNote = r.affordable
+    ? `月度成本约 $${r.monthlyCost.toFixed(2)}，在您的预算范围内。`
+    : `月度成本约 $${r.monthlyCost.toFixed(2)}，略高于当前预算，建议提高预算或降低调用频率。`;
+
+  return `综合匹配度 ${r.matchScore}%。${r.tool.name} 在${topDims.join('、')}维度上与您的任务需求高度契合，${budgetNote}`;
+}
+
+const DIMENSION_LABELS: Record<DimensionKey, string> = {
+  coding: '编程能力',
+  agent: 'Agent 能力',
+  longContext: '长上下文处理',
+  knowledge: '知识准确性',
+  reasoning: '专业推理',
+  cost: '成本控制',
+  speed: '生成速度',
+};
+
+// ========== 排行榜 ==========
+
+export function computeRankings(): import('./types').RankEntry[] {
+  const { profiles } = computeTopsis();
+  return AI_TOOLS.map((tool) => {
+    const topsis = profiles.get(tool.id) || ({} as TopsisProfile);
+    const overallScore = DIMENSION_KEYS.reduce((s, k) => s + (topsis[k] ?? 0), 0) / DIMENSION_KEYS.length;
+    return { tool, topsis, overallScore, costPerTask: tool.costPerTask };
+  });
+}
+
+export function rankByDimension(dim: DimensionKey): import('./types').RankEntry[] {
+  return computeRankings()
+    .sort((a, b) => (b.topsis[dim] ?? 0) - (a.topsis[dim] ?? 0));
+}
+
+export function rankByCostPerformance(): import('./types').RankEntry[] {
+  return computeRankings().sort((a, b) => {
+    const aScore = a.overallScore / (a.costPerTask || 0.01);
+    const bScore = b.overallScore / (b.costPerTask || 0.01);
+    return bScore - aScore;
+  });
+}
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/lib/engine.ts
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/lib/survey.ts]
+Thought: 现在创建问卷逻辑（将用户选择转换为AHP判断矩阵）和全局状态Context：
+
+
+
+
+Command: create
+Created File with Text:
+```
+import type { DimensionKey } from './types';
+import { DIMENSION_KEYS } from './types';
+
+// 问卷题目定义
+export interface QuestionOption {
+  label: string;
+  value: string;
+  // 该选项对各维度的偏好强度（用于构建判断矩阵）
+  preferences: Partial<Record<DimensionKey, number>>;
+}
+
+export interface SurveyQuestion {
+  id: string;
+  title: string;
+  subtitle: string;
+  type: 'single' | 'multi';
+  options: QuestionOption[];
+}
+
+export const SURVEY_QUESTIONS: SurveyQuestion[] = [
+  {
+    id: 'scenario',
+    title: '您的主要使用场景是？',
+    subtitle: '这决定了我们对各能力维度的初始权重倾向',
+    type: 'single',
+    options: [
+      {
+        label: '日常问答与搜索替代',
+        value: 'light',
+        preferences: { knowledge: 3, speed: 3, cost: 5, coding: 1, reasoning: 1 },
+      },
+      {
+        label: '办公写作与文档处理',
+        value: 'office',
+        preferences: { knowledge: 4, reasoning: 3, longContext: 3, cost: 3, speed: 2 },
+      },
+      {
+        label: '软件开发与编程',
+        value: 'dev',
+        preferences: { coding: 5, agent: 3, reasoning: 3, speed: 2, cost: 2 },
+      },
+      {
+        label: '学术研究与文献分析',
+        value: 'research',
+        preferences: { reasoning: 5, knowledge: 4, longContext: 4, cost: 1 },
+      },
+      {
+        label: '企业团队与自动化',
+        value: 'enterprise',
+        preferences: { agent: 5, longContext: 4, knowledge: 3, cost: 2 },
+      },
+      {
+        label: 'AI 创业与大规模调用',
+        value: 'startup',
+        preferences: { agent: 5, speed: 4, coding: 3, cost: 2 },
+      },
+    ],
+  },
+  {
+    id: 'mainTask',
+    title: '您最常处理哪类任务？',
+    subtitle: '可多选，系统将综合计算任务需求向量',
+    type: 'multi',
+    options: [
+      { label: '编程与代码', value: 'coding', preferences: { coding: 5, reasoning: 3 } },
+      { label: 'Agent 自动化', value: 'agent', preferences: { agent: 5, coding: 2 } },
+      { label: '长文本处理', value: 'longContext', preferences: { longContext: 5 } },
+      { label: '推理与分析', value: 'reasoning', preferences: { reasoning: 5, knowledge: 3 } },
+      { label: '图片生成', value: 'image', preferences: { speed: 3, cost: 3 } },
+      { label: '视频生成', value: 'video', preferences: { speed: 3, cost: 3 } },
+    ],
+  },
+  {
+    id: 'budget',
+    title: '您的月度预算大概是？',
+    subtitle: '预算将作为硬约束参与推荐优化',
+    type: 'single',
+    options: [
+      { label: '免费 / $0', value: '0', preferences: { cost: 9 } },
+      { label: '$1 - $30', value: '30', preferences: { cost: 5 } },
+      { label: '$31 - $200', value: '200', preferences: { cost: 3 } },
+      { label: '$201 - $2000', value: '2000', preferences: { cost: 2 } },
+      { label: '$2000 以上', value: '10000', preferences: { cost: 1 } },
+    ],
+  },
+  {
+    id: 'frequency',
+    title: '您的使用频率如何？',
+    subtitle: '影响月度成本估算与速度权重',
+    type: 'single',
+    options: [
+      { label: '偶尔使用（每月几次）', value: '10', preferences: { speed: 2 } },
+      { label: '每天使用（每月几十次）', value: '100', preferences: { speed: 3 } },
+      { label: '高频调用（每月数百次）', value: '500', preferences: { speed: 5, cost: 3 } },
+      { label: '大规模自动化（每月数千次）', value: '5000', preferences: { speed: 5, cost: 4 } },
+    ],
+  },
+  {
+    id: 'priority1',
+    title: '在能力上，您最看重哪一个？',
+    subtitle: '请选择最重要的能力维度',
+    type: 'single',
+    options: [
+      { label: '准确性（知识与事实）', value: 'knowledge', preferences: { knowledge: 7 } },
+      { label: '推理能力', value: 'reasoning', preferences: { reasoning: 7 } },
+      { label: '代码能力', value: 'coding', preferences: { coding: 7 } },
+      { label: '长文本处理', value: 'longContext', preferences: { longContext: 7 } },
+      { label: '生成速度', value: 'speed', preferences: { speed: 7 } },
+      { label: '价格成本', value: 'cost', preferences: { cost: 7 } },
+    ],
+  },
+  {
+    id: 'priority2',
+    title: '其次，您更看重哪一个？',
+    subtitle: '作为第二优先级的能力维度',
+    type: 'single',
+    options: [
+      { label: '准确性（知识与事实）', value: 'knowledge', preferences: { knowledge: 5 } },
+      { label: '推理能力', value: 'reasoning', preferences: { reasoning: 5 } },
+      { label: '代码能力', value: 'coding', preferences: { coding: 5 } },
+      { label: '长文本处理', value: 'longContext', preferences: { longContext: 5 } },
+      { label: '生成速度', value: 'speed', preferences: { speed: 5 } },
+      { label: '价格成本', value: 'cost', preferences: { cost: 5 } },
+    ],
+  },
+  {
+    id: 'priority3',
+    title: '第三，您更看重哪一个？',
+    subtitle: '作为第三优先级的能力维度',
+    type: 'single',
+    options: [
+      { label: '准确性（知识与事实）', value: 'knowledge', preferences: { knowledge: 3 } },
+      { label: '推理能力', value: 'reasoning', preferences: { reasoning: 3 } },
+      { label: '代码能力', value: 'coding', preferences: { coding: 3 } },
+      { label: '长文本处理', value: 'longContext', preferences: { longContext: 3 } },
+      { label: '生成速度', value: 'speed', preferences: { speed: 3 } },
+      { label: '价格成本', value: 'cost', preferences: { cost: 3 } },
+    ],
+  },
+];
+
+// 将问卷答案转换为各维度的偏好强度分数
+export function buildPreferenceScores(answers: Record<string, string | string[]>): Record<DimensionKey, number> {
+  const scores: Record<DimensionKey, number> = {
+    coding: 1,
+    agent: 1,
+    longContext: 1,
+    knowledge: 1,
+    reasoning: 1,
+    cost: 1,
+    speed: 1,
+  };
+
+  for (const q of SURVEY_QUESTIONS) {
+    const ans = answers[q.id];
+    if (!ans) continue;
+    const selected = Array.isArray(ans) ? ans : [ans];
+    for (const val of selected) {
+      const opt = q.options.find((o) => o.value === val);
+      if (!opt) continue;
+      for (const k of DIMENSION_KEYS) {
+        const p = opt.preferences[k];
+        if (p) scores[k] += p;
+      }
+    }
+  }
+
+  return scores;
+}
+
+// 由偏好强度分数构建 AHP 判断矩阵（1-9 标度）
+export function buildJudgmentMatrix(scores: Record<DimensionKey, number>): number[][] {
+  const n = DIMENSION_KEYS.length;
+  const matrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(1));
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (i === j) {
+        matrix[i][j] = 1;
+      } else {
+        const ratio = scores[DIMENSION_KEYS[i]] / (scores[DIMENSION_KEYS[j]] || 1);
+        // 映射到 1-9 标度
+        let val: number;
+        if (ratio >= 8) val = 9;
+        else if (ratio >= 4) val = 7;
+        else if (ratio >= 2.5) val = 5;
+        else if (ratio >= 1.5) val = 3;
+        else if (ratio > 1 / 1.5) val = 2;
+        else if (ratio > 1 / 2.5) val = 1 / 2;
+        else if (ratio > 1 / 4) val = 1 / 3;
+        else if (ratio > 1 / 8) val = 1 / 5;
+        else if (ratio > 1 / 16) val = 1 / 7;
+        else val = 1 / 9;
+        matrix[i][j] = val;
+      }
+    }
+  }
+  return matrix;
+}
+
+// 生成偏好画像描述
+export function generateProfileDescription(weights: Record<DimensionKey, number>): string {
+  const entries = DIMENSION_KEYS.map((k) => ({ key: k, w: weights[k] }));
+  entries.sort((a, b) => b.w - a.w);
+  const top = entries.slice(0, 2);
+  const labels: Record<DimensionKey, string> = {
+    coding: '编程能力',
+    agent: 'Agent 能力',
+    longContext: '长上下文处理',
+    knowledge: '知识准确性',
+    reasoning: '专业推理',
+    cost: '成本控制',
+    speed: '生成速度',
+  };
+  return `您最看重${labels[top[0].key]}与${labels[top[1].key]}，是典型的${getPersona(top[0].key)}用户。`;
+}
+
+function getPersona(key: DimensionKey): string {
+  const map: Record<DimensionKey, string> = {
+    coding: '技术开发',
+    agent: '自动化驱动',
+    longContext: '长文档处理',
+    knowledge: '知识准确',
+    reasoning: '深度推理',
+    cost: '成本敏感',
+    speed: '效率优先',
+  };
+  return map[key];
+}
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/lib/survey.ts
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/contexts/AppContext.tsx]
+Thought: 现在创建全局状态Context，管理用户偏好与推荐结果：
+
+
+
+
+Command: create
+Created File with Text:
+```
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import type { DimensionKey, UserProfile, TaskTemplate, Recommendation } from '@/lib/types';
+import { computeAhpWeights, computeRecommendations } from '@/lib/engine';
+import {
+  buildPreferenceScores,
+  buildJudgmentMatrix,
+  generateProfileDescription,
+} from '@/lib/survey';
+import { AI_TOOLS } from '@/lib/data';
+
+interface AppState {
+  profile: UserProfile | null;
+  hasProfile: boolean;
+  setProfileFromAnswers: (answers: Record<string, string | string[]>) => void;
+  // 当前任务
+  selectedTask: TaskTemplate | null;
+  setSelectedTask: (task: TaskTemplate | null) => void;
+  budget: number;
+  setBudget: (n: number) => void;
+  frequency: number;
+  setFrequency: (n: number) => void;
+  // 推荐结果
+  recommendations: Recommendation[];
+  runRecommendation: () => void;
+  hasResult: boolean;
+  // 对比
+  compareIds: string[];
+  toggleCompare: (id: string) => void;
+  clearCompare: () => void;
+}
+
+const AppContext = createContext<AppState | undefined>(undefined);
+
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskTemplate | null>(null);
+  const [budget, setBudget] = useState(30);
+  const [frequency, setFrequency] = useState(100);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [hasResult, setHasResult] = useState(false);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+
+  const setProfileFromAnswers = useCallback((answers: Record<string, string | string[]>) => {
+    const scores = buildPreferenceScores(answers);
+    const matrix = buildJudgmentMatrix(scores);
+    const ahp = computeAhpWeights(matrix);
+    const description = generateProfileDescription(ahp.weights);
+
+    const scenario = answers.scenario || 'office';
+    const mainTask = Array.isArray(answers.mainTask)
+      ? answers.mainTask.join('、')
+      : answers.mainTask || '';
+    const budgetVal = Number(answers.budget || '30');
+    const freqVal = Number(answers.frequency || '100');
+
+    setProfile({
+      scenario,
+      mainTask,
+      budget: budgetVal,
+      frequency: String(freqVal),
+      weights: ahp.weights,
+      lambdaMax: ahp.lambdaMax,
+      ci: ahp.ci,
+      cr: ahp.cr,
+      consistent: ahp.consistent,
+      description,
+    });
+    setBudget(budgetVal);
+    setFrequency(freqVal);
+  }, []);
+
+  const runRecommendation = useCallback(() => {
+    if (!profile || !selectedTask) return;
+    // 根据任务类型筛选候选工具
+    const isMediaTask = selectedTask.id === 'image-generation' || selectedTask.id === 'video-generation';
+    const candidates = isMediaTask
+      ? AI_TOOLS.filter((t) => t.category === selectedTask.id.replace('-generation', ''))
+      : AI_TOOLS.filter((t) => t.category === 'llm');
+
+    const { recommendations: recs } = computeRecommendations({
+      tools: candidates,
+      weights: profile.weights,
+      demands: selectedTask.demands,
+      budget,
+      frequency,
+      avgInputTokens: selectedTask.avgInputTokens,
+      avgOutputTokens: selectedTask.avgOutputTokens,
+    });
+    setRecommendations(recs);
+    setHasResult(true);
+  }, [profile, selectedTask, budget, frequency]);
+
+  const toggleCompare = useCallback((id: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 4) return prev;
+      return [...prev, id];
+    });
+  }, []);
+
+  const clearCompare = useCallback(() => setCompareIds([]), []);
+
+  const value = useMemo<AppState>(
+    () => ({
+      profile,
+      hasProfile: !!profile,
+      setProfileFromAnswers,
+      selectedTask,
+      setSelectedTask,
+      budget,
+      setBudget,
+      frequency,
+      setFrequency,
+      recommendations,
+      runRecommendation,
+      hasResult,
+      compareIds,
+      toggleCompare,
+      clearCompare,
+    }),
+    [
+      profile,
+      setProfileFromAnswers,
+      selectedTask,
+      budget,
+      frequency,
+      recommendations,
+      runRecommendation,
+      hasResult,
+      compareIds,
+      toggleCompare,
+      clearCompare,
+    ]
+  );
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
+
+export function useApp(): AppState {
+  const ctx = useContext(AppContext);
+  if (!ctx) throw new Error('useApp must be used within AppProvider');
+  return ctx;
+}
+
+export type { DimensionKey };
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/contexts/AppContext.tsx
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-dvtmyuucfs3l/src/components/CapabilityRadar.tsx]
+Thought: 核心算法与状态层完成。现在创建可复用组件（雷达图、布局、工具卡片）和页面。先创建共享组件：
+
+
+
+
+Command: create
+Created File with Text:
+```
+import React from 'react';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
+import type { TopsisProfile } from '@/lib/types';
+import { DIMENSIONS } from '@/lib/types';
+
+interface Props {
+  data: Array<{ label: string; [key: string]: number | string }>;
+  series: { key: string; name: string; color: string }[];
+  height?: number;
+  showLegend?: boolean;
+}
+
+export const CapabilityRadar: React.FC<Props> = ({ data, series, height = 300, showLegend = true }) => {
+  return (
+    <div className="w-full min-w-0 overflow-hidden" style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart data={data} outerRadius="72%">
+          <PolarGrid stroke="hsl(var(--border))" />
+          <PolarAngleAxis
+            dataKey="label"
+            tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+          />
+          <PolarRadiusAxis
+            angle={90}
+            domain={[0, 1]}
+            tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+            tickCount={5}
+          />
+          {series.map((s) => (
+            <Radar
+              key={s.key}
+              name={s.name}
+              dataKey={s.key}
+              stroke={s.color}
+              fill={s.color}
+              fillOpacity={0.2}
+              strokeWidth={2}
+            />
+          ))}
+          {showLegend && (
+            <Legend
+              layout="horizontal"
+              wrapperStyle={{ paddingTop: 8, fontSize: 12, color: 'hsl(var(--muted-foreground))' }}
+            />
+          )}
+        </RadarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// 将 TopsisProfile 转换为雷达图数据
+export function buildRadarData(profiles: { name: string; profile: TopsisProfile; color: string }[]) {
+  return DIMENSIONS.map((d) => {
+    const row: Record<string, number | string> = { label: d.shortLabel };
+    for (const p of profiles) {
+      row[p.name] = Number((p.profile[d.key] ?? 0).toFixed(2));
+    }
+    return row;
+  });
+}
+```
+
+</action>
+<observation>
+File created successfully at: /workspace/app-dvtmyuucfs3l/src/components/CapabilityRadar.tsx
+
+</observation>
