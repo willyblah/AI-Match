@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import PageMeta from "@/components/common/PageMeta";
 
 export default function NotFound() {
+  const assetBase = import.meta.env.BASE_URL;
+
   return (
     <>
       <PageMeta title="页面未找到" description="" />
@@ -11,9 +13,9 @@ export default function NotFound() {
             错误
           </h1>
 
-          <img src="/images/error/404.svg" alt="404" className="dark:hidden" />
+          <img src={`${assetBase}images/error/404.svg`} alt="404" className="dark:hidden" />
           <img
-            src="/images/error/404-dark.svg"
+            src={`${assetBase}images/error/404-dark.svg`}
             alt="404"
             className="hidden dark:block"
           />
