@@ -102,7 +102,7 @@ const RankingPage: React.FC = () => {
                         {e.tool.name}
                       </Link>
                       <Badge variant="secondary" className="ml-2 text-[10px]">
-                        {e.tool.category === 'llm' ? 'LLM' : e.tool.category === 'image' ? '图像' : '视频'}
+                        LLM
                       </Badge>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{e.tool.company}</td>

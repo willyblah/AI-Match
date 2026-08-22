@@ -10,82 +10,86 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --radius: 0.75rem;
-    /* 霓虹科技：深紫蓝基底 */
-    --background: 244 47% 6%;
-    --foreground: 240 20% 96%;
-    --card: 244 40% 10%;
-    --card-foreground: 240 20% 96%;
-    --popover: 244 42% 9%;
-    --popover-foreground: 240 20% 96%;
-    --primary: 258 90% 66%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 244 30% 16%;
-    --secondary-foreground: 240 20% 92%;
-    --muted: 244 25% 15%;
-    --muted-foreground: 240 12% 62%;
-    --accent: 187 85% 42%;
+    /* 电气氰青 × 霓虹 AI 风 —— 深午夜蓝基底 */
+    --background: 222 42% 7%;
+    --foreground: 200 15% 97%;
+    --card: 222 36% 11%;
+    --card-foreground: 200 15% 97%;
+    --popover: 222 38% 9%;
+    --popover-foreground: 200 15% 97%;
+    /* 电气氰青作为主色：#00D8F5 */
+    --primary: 191 100% 48%;
+    --primary-foreground: 222 42% 7%;
+    --secondary: 222 28% 18%;
+    --secondary-foreground: 200 15% 88%;
+    --muted: 222 24% 15%;
+    --muted-foreground: 215 20% 68%;
+    /* 霓虹紫作为强调色 */
+    --accent: 268 85% 65%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 72% 55%;
+    --destructive: 0 80% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 244 25% 20%;
-    --input: 244 25% 18%;
-    --ring: 258 90% 66%;
-    --chart-1: 258 90% 66%;
-    --chart-2: 187 85% 42%;
-    --chart-3: 330 80% 62%;
-    --chart-4: 38 92% 55%;
-    --chart-5: 160 65% 45%;
-    --sidebar-background: 244 44% 8%;
-    --sidebar-foreground: 240 15% 85%;
-    --sidebar-primary: 258 90% 66%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 244 30% 14%;
-    --sidebar-accent-foreground: 240 20% 92%;
-    --sidebar-border: 244 25% 18%;
-    --sidebar-ring: 258 90% 66%;
-    --success: 160 65% 45%;
-    --warning: 38 92% 55%;
-    --info: 187 85% 42%;
-    --gradient-primary: linear-gradient(135deg, hsl(258 90% 66%), hsl(330 80% 62%));
-    --gradient-card: linear-gradient(135deg, hsla(244,40%,12%,0.9), hsla(258,40%,14%,0.7));
-    --gradient-background: linear-gradient(180deg, hsl(244 47% 6%), hsl(258 50% 8%));
-    --shadow-card: 0 8px 32px hsla(258, 60%, 10%, 0.5);
-    --shadow-hover: 0 12px 40px hsla(258, 80%, 40%, 0.35);
+    --border: 222 30% 22%;
+    --input: 222 28% 19%;
+    --ring: 191 100% 48%;
+    /* 图表：氰-紫-粉-金-绿 五彩霓虹 */
+    --chart-1: 191 100% 52%;
+    --chart-2: 268 85% 65%;
+    --chart-3: 328 90% 62%;
+    --chart-4: 44 95% 54%;
+    --chart-5: 148 72% 48%;
+    --sidebar-background: 222 40% 8%;
+    --sidebar-foreground: 200 15% 85%;
+    --sidebar-primary: 191 100% 48%;
+    --sidebar-primary-foreground: 222 42% 7%;
+    --sidebar-accent: 222 28% 15%;
+    --sidebar-accent-foreground: 200 15% 92%;
+    --sidebar-border: 222 30% 20%;
+    --sidebar-ring: 191 100% 48%;
+    --success: 148 72% 48%;
+    --warning: 44 95% 54%;
+    --info: 191 100% 48%;
+    /* 氰→紫 对角线主渐变 */
+    --gradient-primary: linear-gradient(135deg, hsl(191 100% 52%), hsl(268 85% 65%));
+    --gradient-card: linear-gradient(135deg, hsla(222,36%,13%,0.9), hsla(268,30%,14%,0.7));
+    --gradient-background: linear-gradient(180deg, hsl(222 42% 7%), hsl(240 38% 9%));
+    --shadow-card: 0 8px 32px hsla(222, 60%, 5%, 0.6);
+    --shadow-hover: 0 12px 40px hsla(191, 100%, 48%, 0.3);
   }
 
   .dark {
-    --background: 244 47% 6%;
-    --foreground: 240 20% 96%;
-    --card: 244 40% 10%;
-    --card-foreground: 240 20% 96%;
-    --popover: 244 42% 9%;
-    --popover-foreground: 240 20% 96%;
-    --primary: 258 90% 66%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 244 30% 16%;
-    --secondary-foreground: 240 20% 92%;
-    --muted: 244 25% 15%;
-    --muted-foreground: 240 12% 62%;
-    --accent: 187 85% 42%;
+    --background: 222 42% 7%;
+    --foreground: 200 15% 97%;
+    --card: 222 36% 11%;
+    --card-foreground: 200 15% 97%;
+    --popover: 222 38% 9%;
+    --popover-foreground: 200 15% 97%;
+    --primary: 191 100% 48%;
+    --primary-foreground: 222 42% 7%;
+    --secondary: 222 28% 18%;
+    --secondary-foreground: 200 15% 88%;
+    --muted: 222 24% 15%;
+    --muted-foreground: 215 20% 68%;
+    --accent: 268 85% 65%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 72% 55%;
+    --destructive: 0 80% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 244 25% 20%;
-    --input: 244 25% 18%;
-    --ring: 258 90% 66%;
-    --chart-1: 258 90% 66%;
-    --chart-2: 187 85% 42%;
-    --chart-3: 330 80% 62%;
-    --chart-4: 38 92% 55%;
-    --chart-5: 160 65% 45%;
-    --sidebar-background: 244 44% 8%;
-    --sidebar-foreground: 240 15% 85%;
-    --sidebar-primary: 258 90% 66%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 244 30% 14%;
-    --sidebar-accent-foreground: 240 20% 92%;
-    --sidebar-border: 244 25% 18%;
-    --sidebar-ring: 258 90% 66%;
+    --border: 222 30% 22%;
+    --input: 222 28% 19%;
+    --ring: 191 100% 48%;
+    --chart-1: 191 100% 52%;
+    --chart-2: 268 85% 65%;
+    --chart-3: 328 90% 62%;
+    --chart-4: 44 95% 54%;
+    --chart-5: 148 72% 48%;
+    --sidebar-background: 222 40% 8%;
+    --sidebar-foreground: 200 15% 85%;
+    --sidebar-primary: 191 100% 48%;
+    --sidebar-primary-foreground: 222 42% 7%;
+    --sidebar-accent: 222 28% 15%;
+    --sidebar-accent-foreground: 200 15% 92%;
+    --sidebar-border: 222 30% 20%;
+    --sidebar-ring: 191 100% 48%;
     --destructive-foreground: 0 0% 100%;
   }
 }
@@ -98,6 +102,11 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'AlibabaPuHuiTi', system-ui, sans-serif;
+    /* 微型电路网格：赋予AI科技感底纹 */
+    background-image:
+      linear-gradient(hsla(191, 100%, 52%, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(191, 100%, 52%, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
   * {
@@ -108,9 +117,9 @@ All colors MUST be HSL.
 
 @layer utilities {
   .glass-card {
-    background: hsla(244, 40%, 12%, 0.6);
+    background: hsla(222, 36%, 12%, 0.65);
     backdrop-filter: blur(16px);
-    border: 1px solid hsla(240, 20%, 96%, 0.1);
+    border: 1px solid hsla(191, 100%, 52%, 0.12);
   }
 
   .gradient-text {
@@ -120,11 +129,24 @@ All colors MUST be HSL.
     background-clip: text;
   }
 
+  /* 电气氰青双层光晕 */
   .glow-primary {
-    box-shadow: 0 0 24px hsla(258, 90%, 66%, 0.35);
+    box-shadow:
+      0 0 16px hsla(191, 100%, 52%, 0.55),
+      0 0 40px hsla(191, 100%, 52%, 0.22);
   }
 
+  /* 霓虹紫双层光晕 */
   .glow-accent {
-    box-shadow: 0 0 24px hsla(187, 85%, 42%, 0.35);
+    box-shadow:
+      0 0 16px hsla(268, 85%, 65%, 0.5),
+      0 0 40px hsla(268, 85%, 65%, 0.2);
+  }
+
+  /* 霓虹文字光晕 */
+  .glow-text {
+    text-shadow:
+      0 0 8px hsla(191, 100%, 52%, 0.8),
+      0 0 20px hsla(191, 100%, 52%, 0.4);
   }
 }

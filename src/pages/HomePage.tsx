@@ -64,11 +64,11 @@ const HomePage: React.FC = () => {
             基于论文熵权-TOPSIS 与 AHP 层次分析法
           </div>
           <h1 className="text-balance text-3xl font-bold leading-tight text-foreground md:text-5xl">
-            找到最适合你的 <span className="gradient-text">AI 工具</span>
+            找到最适合你的 <span className="gradient-text">LLM 大模型</span>
           </h1>
           <p className="mx-auto mt-4 max-w-prose text-pretty text-sm text-muted-foreground md:text-base">
             无需复杂问卷，只需回答几道简单选择题并输入任务，AI Match 即可基于多维能力画像与成本约束，
-            为你推荐 Top 3 最适合的 AI 工具或组合方案。
+            为你推荐 Top 3 最适合的 LLM 大模型方案。
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/survey">
@@ -84,11 +84,11 @@ const HomePage: React.FC = () => {
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-              已收录 {AI_TOOLS.length} 款主流 AI 工具
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+              已收录 {AI_TOOLS.length} 款主流 LLM 大模型
             </span>
             <span className="flex items-center gap-1.5">
-              <Layers className="h-3.5 w-3.5 text-accent" />
+              <Layers className="h-3.5 w-3.5 text-primary" />
               7 大能力维度 · 16 项 Benchmark
             </span>
           </div>
