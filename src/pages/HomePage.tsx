@@ -10,6 +10,13 @@ import {
   Target,
   BrainCircuit,
   ShieldCheck,
+  FileText,
+  Search,
+  Code2,
+  Presentation,
+  Database,
+  Bot,
+  PenTool,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -46,13 +53,25 @@ const STEPS = [
   { step: '04', title: '智能推荐', desc: '获得 Top 3 匹配方案与推荐理由' },
 ];
 
+/* 首页展示的 AI 工具能力图标 */
+const TOOL_ICONS = [
+  { icon: PenTool, label: '论文写作' },
+  { icon: FileText, label: '文献分析' },
+  { icon: Database, label: '数据分析' },
+  { icon: Code2, label: 'Python 编程' },
+  { icon: Presentation, label: 'PPT 制作' },
+  { icon: Search, label: '信息检索' },
+  { icon: Bot, label: 'Agent 自动化' },
+  { icon: BrainCircuit, label: '深度推理' },
+];
+
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
       {/* Hero */}
       <section className="relative overflow-hidden py-12 md:py-20">
-        <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-primary/20 blur-[100px]" />
-        <div className="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-accent/20 blur-[100px]" />
+        <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-primary/15 blur-[100px]" />
+        <div className="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-accent/15 blur-[100px]" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,11 +83,11 @@ const HomePage: React.FC = () => {
             基于论文熵权-TOPSIS 与 AHP 层次分析法
           </div>
           <h1 className="text-balance text-3xl font-bold leading-tight text-foreground md:text-5xl">
-            找到最适合你的 <span className="gradient-text">LLM 大模型</span>
+            让每一个任务 <span className="gradient-text">找到最适合的 AI 工具</span>
           </h1>
           <p className="mx-auto mt-4 max-w-prose text-pretty text-sm text-muted-foreground md:text-base">
             无需复杂问卷，只需回答几道简单选择题并输入任务，AI Match 即可基于多维能力画像与成本约束，
-            为你推荐 Top 3 最适合的 LLM 大模型方案。
+            为你推荐 Top 3 最适合的 AI 工具方案。
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/survey">
@@ -82,10 +101,36 @@ const HomePage: React.FC = () => {
               </Button>
             </Link>
           </div>
+
+          {/* AI 工具能力图标 */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-10 grid grid-cols-4 gap-3 md:grid-cols-8"
+          >
+            {TOOL_ICONS.map((t) => {
+              const Icon = t.icon;
+              return (
+                <div
+                  key={t.label}
+                  className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card/80 p-3 shadow-card transition-colors hover:border-primary/40"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-center text-[11px] leading-tight text-muted-foreground">
+                    {t.label}
+                  </span>
+                </div>
+              );
+            })}
+          </motion.div>
+
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-              已收录 {AI_TOOLS.length} 款主流 LLM 大模型
+              已收录 {AI_TOOLS.length} 款主流 AI 工具
             </span>
             <span className="flex items-center gap-1.5">
               <Layers className="h-3.5 w-3.5 text-primary" />
