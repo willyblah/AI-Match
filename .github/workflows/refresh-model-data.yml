@@ -1,0 +1,142 @@
+name: Refresh model benchmark data
+
+# Weekly pull of current benchmark numbers from the Artificial Analysis Data API.
+#
+# Two different things can happen, deliberately kept separate:
+#   1. Benchmark NUMBERS changed  -> committed straight to master, site redeploys.
+#   2. A lab shipped a NEWER MODEL -> an issue is opened. Nothing is swapped
+#      automatically, because adopting a new model needs a human: it changes the
+#      paper's model set, and its LiveBench score has to be read by hand (the AA
+#      API does not carry LiveBench).
+#
+# Setup required before this can run — see docs/DATA_REFRESH.md:
+#   Settings > Secrets and variables > Actions > New repository secret
+#   Name: AA_API_KEY
+
+on:
+  # Scheduled refresh is intentionally DISABLED. This workflow only runs when a
+  # human clicks "Run workflow" in the Actions tab. To re-enable weekly runs,
+  # uncomment the two lines below.
+  #
+  # schedule:
+  #   - cron: '0 8 * * 1' # Mondays 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Report changes without committing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh-model-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --include=dev
+
+      - name: Refresh benchmark data
+        id: refresh
+        env:
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+        run: |
+          if [ -z "$AA_API_KEY" ]; then
+            echo "::error::AA_API_KEY secret is not set. See docs/DATA_REFRESH.md."
+            exit 1
+          fi
+          node scripts/refresh-model-data.mjs \
+            ${{ inputs.dry_run && '--dry-run' || '' }} | tee refresh.log
+
+      # A bad number does not crash anything downstream — it just produces a
+      # confident, wrong ranking. So the build and typecheck must pass before
+      # any refreshed data is allowed to reach master.
+      - name: Typecheck and build with the new data
+        if: ${{ !inputs.dry_run }}
+        run: |
+          npx tsgo -p tsconfig.check.json
+          npm run build
+
+      - name: Commit refreshed data
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if git diff --quiet -- src/lib/model-data.json; then
+            echo "No data changes this run."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/model-data.json
+          git commit -m "chore(data): refresh benchmark data from Artificial Analysis
+
+          ${{ steps.refresh.outputs.summary }}
+
+          Automated by .github/workflows/refresh-model-data.yml"
+          git push
+
+      - name: Open an issue if a newer model is available
+        if: ${{ steps.refresh.outputs.newer != '0' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `${{ steps.refresh.outputs.summary }}`;
+            const newer = summary.split('\n').filter(l => l.startsWith('NEWER:'));
+            const title = 'Newer model(s) available on Artificial Analysis';
+            const body = [
+              'The weekly refresh found a higher-scoring model for at least one tracked lab.',
+              'Nothing was swapped automatically — adopting one changes the paper\'s model set.',
+              '',
+              '### Candidates',
+              '```',
+              ...newer,
+              '```',
+              '',
+              '### To adopt one',
+              '- [ ] Update that slot\'s `id` and `aaSlug` in `scripts/models.config.json`',
+              '- [ ] Write a description for the new id in `src/lib/data.ts` (`DESCRIPTIONS`)',
+              '- [ ] Look up the new model\'s **LiveBench CODING** score at https://livebench.ai and set `liveBench` in `src/lib/model-data.json` (the AA API does not provide it)',
+              '- [ ] Run `npm run refresh:data` to pull the rest',
+              '- [ ] Confirm the paper/site divergence is intentional before merging',
+              '',
+              '_Opened automatically by the refresh workflow._',
+            ].join('\n');
+
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'model-update',
+            });
+            if (existing.data.length) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.data[0].number,
+                body: `Still detected on ${new Date().toISOString().slice(0, 10)}:\n\n\`\`\`\n${newer.join('\n')}\n\`\`\``,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['model-update'],
+              });
+            }
+
+      - name: Upload run log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-log
+          path: refresh.log
+          if-no-files-found: ignore
