@@ -4,6 +4,8 @@ import { Sparkles, Menu, Trophy, GitCompareArrows, LayoutDashboard } from 'lucid
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+// 背景主题切换器（试验性，可整体移除，见该文件顶部注释）
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 const NAV = [
   { label: '首页', path: '/', icon: LayoutDashboard },
@@ -44,6 +46,8 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
+      {/* 背景主题切换器（试验性，可整体移除） */}
+      <ThemeSwitcher />
       {/* 顶部导航 */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 md:px-6">

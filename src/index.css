@@ -302,3 +302,533 @@ All colors MUST be HSL.
     }
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ▼▼▼ 背景主题（试验性）—— 整块删除即可完全移除，不影响默认浅色主题 ▼▼▼
+
+   所有样式都限定在 [data-theme='cyber'] 之下，未开启时这段代码完全不生效。
+   配套文件：src/components/ThemeSwitcher.tsx（右下角开关）
+   包含 Cyber / Circuit / Minimal 三套深色主题
+   移除方法见该文件顶部注释。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  /* 深空蓝紫底 + 霓虹青/品红。整套 token 一起换掉，
+     否则深色背景配深色文字会完全不可读。 */
+  :root[data-theme='cyber'] {
+    --background: 234 60% 6%;
+    --foreground: 190 45% 94%;
+    --card: 235 46% 11%;
+    --card-foreground: 190 45% 94%;
+    --popover: 235 50% 9%;
+    --popover-foreground: 190 45% 94%;
+    --primary: 187 100% 56%;
+    --primary-foreground: 234 70% 8%;
+    --secondary: 236 38% 18%;
+    --secondary-foreground: 190 40% 90%;
+    --muted: 236 34% 16%;
+    --muted-foreground: 214 30% 72%;
+    --accent: 315 100% 64%;
+    --accent-foreground: 234 70% 8%;
+    --destructive: 352 90% 62%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 235 40% 24%;
+    --input: 235 40% 24%;
+    --ring: 187 100% 56%;
+    --chart-1: 187 100% 56%;
+    --chart-2: 315 100% 64%;
+    --chart-3: 265 95% 70%;
+    --chart-4: 45 100% 62%;
+    --chart-5: 150 90% 55%;
+    --chart-6: 220 100% 66%;
+    --success: 150 90% 55%;
+    --warning: 45 100% 62%;
+    --info: 187 100% 56%;
+    --gradient-primary: linear-gradient(135deg, hsl(187 100% 56%), hsl(315 100% 64%));
+    --shadow-card: 0 8px 30px hsla(234, 80%, 2%, 0.6);
+    --shadow-hover:
+      0 0 0 1px hsla(187, 100%, 56%, 0.35), 0 12px 40px hsla(187, 100%, 50%, 0.22);
+  }
+
+  /* 底层：深空渐变 + 霓虹网格 + 边缘暗角 */
+  :root[data-theme='cyber'] body {
+    background-color: hsl(234 60% 6%);
+    background-image:
+      radial-gradient(60rem 40rem at 8% -10%, hsla(187, 100%, 50%, 0.18), transparent 60%),
+      radial-gradient(52rem 38rem at 92% 2%, hsla(315, 100%, 60%, 0.16), transparent 60%),
+      radial-gradient(46rem 40rem at 50% 108%, hsla(265, 95%, 62%, 0.16), transparent 62%),
+      linear-gradient(hsla(187, 100%, 60%, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(187, 100%, 60%, 0.05) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(236 62% 7%), hsl(246 58% 9%));
+    background-size: cover, cover, cover, 44px 44px, 44px 44px, cover;
+    background-attachment: fixed, fixed, fixed, scroll, scroll, fixed;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+  }
+
+  /* 顶部霓虹高光条 */
+  :root[data-theme='cyber'] body::before {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      hsl(187 100% 56%),
+      hsl(315 100% 64%),
+      transparent
+    );
+    opacity: 1;
+    height: 2px;
+    box-shadow: 0 0 12px hsla(187, 100%, 56%, 0.8);
+  }
+
+  /* 让内容浮在光球层之上（光球层 z-0，内容 z-1） */
+  :root[data-theme='cyber'] main,
+  :root[data-theme='cyber'] footer {
+    position: relative;
+    z-index: 1;
+  }
+  :root[data-theme='cyber'] header {
+    background-color: hsla(235, 55%, 8%, 0.72);
+    border-bottom-color: hsla(187, 100%, 56%, 0.18);
+  }
+}
+
+@layer utilities {
+  /* 玻璃卡片改为「暗面玻璃 + 青色描边」 */
+  :root[data-theme='cyber'] .glass-card {
+    background: hsla(235, 46%, 13%, 0.62);
+    backdrop-filter: blur(18px);
+    border: 1px solid hsla(187, 100%, 56%, 0.2);
+    box-shadow:
+      inset 0 1px 0 hsla(187, 100%, 80%, 0.08),
+      0 8px 30px hsla(234, 80%, 2%, 0.5);
+  }
+
+  :root[data-theme='cyber'] .glow-primary {
+    box-shadow:
+      0 0 14px hsla(187, 100%, 56%, 0.75),
+      0 0 42px hsla(187, 100%, 56%, 0.35);
+  }
+  :root[data-theme='cyber'] .glow-accent {
+    box-shadow:
+      0 0 14px hsla(315, 100%, 64%, 0.7),
+      0 0 42px hsla(315, 100%, 64%, 0.32);
+  }
+  :root[data-theme='cyber'] .card-interactive:hover {
+    border-color: hsla(187, 100%, 56%, 0.55);
+  }
+
+  /* 渐变文字用的是写死的浅色主题配色，深色背景下需要换成霓虹色 */
+  :root[data-theme='cyber'] .gradient-text-animated {
+    background-image: linear-gradient(
+      110deg,
+      hsl(187 100% 62%),
+      hsl(315 100% 70%),
+      hsl(265 95% 74%),
+      hsl(187 100% 62%)
+    );
+  }
+
+  /* ---- 漂浮光球 ---- */
+  .cyber-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+  }
+  .cyber-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(60px);
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+
+  @keyframes orb-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(6vw, -5vh, 0) scale(1.12);
+    }
+    66% {
+      transform: translate3d(-4vw, 6vh, 0) scale(0.92);
+    }
+  }
+  @keyframes orb-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    40% {
+      transform: translate3d(-7vw, 7vh, 0) scale(1.18);
+    }
+    75% {
+      transform: translate3d(5vw, 3vh, 0) scale(0.9);
+    }
+  }
+  @keyframes orb-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cyber-orb {
+      animation: none !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------
+   CIRCUIT 主题：深海军蓝/炭灰底 + 青蓝六边形电路网格 + 呼吸式脉冲
+   --------------------------------------------------------------------- */
+
+@layer base {
+  :root[data-theme='circuit'] {
+    --background: 210 38% 7%;
+    --foreground: 195 35% 93%;
+    --card: 211 34% 11%;
+    --card-foreground: 195 35% 93%;
+    --popover: 211 38% 9%;
+    --popover-foreground: 195 35% 93%;
+    --primary: 190 100% 55%;
+    --primary-foreground: 210 45% 7%;
+    --secondary: 211 28% 18%;
+    --secondary-foreground: 195 30% 90%;
+    --muted: 211 26% 16%;
+    --muted-foreground: 205 22% 72%;
+    --accent: 205 100% 62%;
+    --accent-foreground: 210 45% 7%;
+    --destructive: 4 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 205 28% 24%;
+    --input: 205 28% 24%;
+    --ring: 190 100% 55%;
+    --chart-1: 190 100% 55%;
+    --chart-2: 205 100% 62%;
+    --chart-3: 168 90% 50%;
+    --chart-4: 45 95% 60%;
+    --chart-5: 145 75% 50%;
+    --chart-6: 225 95% 66%;
+    --success: 145 75% 50%;
+    --warning: 45 95% 60%;
+    --info: 190 100% 55%;
+    --gradient-primary: linear-gradient(135deg, hsl(190 100% 55%), hsl(212 100% 62%));
+    --shadow-card: 0 8px 28px hsla(210, 60%, 2%, 0.6);
+    --shadow-hover:
+      0 0 0 1px hsla(190, 100%, 55%, 0.4), 0 12px 36px hsla(190, 100%, 50%, 0.2);
+  }
+
+  /* 六边形晶格：三组 60° 夹角的重复线性渐变叠加即构成蜂窝网格；
+     再叠一层网格交点的发光节点，形成电路板质感。全部为纯 CSS 渐变。 */
+  :root[data-theme='circuit'] body {
+    background-color: hsl(210 38% 7%);
+    background-image:
+      /* 环境光 */
+      radial-gradient(50rem 34rem at 10% -8%, hsla(190, 100%, 50%, 0.14), transparent 62%),
+      radial-gradient(44rem 32rem at 90% 4%, hsla(212, 100%, 55%, 0.13), transparent 62%),
+      /* 电路节点 */
+      radial-gradient(circle at 50% 50%, hsla(190, 100%, 60%, 0.5) 0px, hsla(190, 100%, 60%, 0.5) 1.5px, transparent 2px),
+      /* 六边形晶格：0° / 60° / 120° */
+      repeating-linear-gradient(0deg, hsla(190, 100%, 60%, 0.09) 0px, hsla(190, 100%, 60%, 0.09) 1px, transparent 1px, transparent 52px),
+      repeating-linear-gradient(60deg, hsla(190, 100%, 60%, 0.09) 0px, hsla(190, 100%, 60%, 0.09) 1px, transparent 1px, transparent 52px),
+      repeating-linear-gradient(120deg, hsla(190, 100%, 60%, 0.09) 0px, hsla(190, 100%, 60%, 0.09) 1px, transparent 1px, transparent 52px),
+      /* 底色渐变 */
+      linear-gradient(180deg, hsl(211 40% 8%), hsl(206 34% 10%));
+    background-size:
+      cover,
+      cover,
+      52px 90px,
+      52px 52px,
+      52px 52px,
+      52px 52px,
+      cover;
+    background-attachment: fixed, fixed, scroll, scroll, scroll, scroll, fixed;
+    background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, no-repeat;
+  }
+
+  :root[data-theme='circuit'] body::before {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      hsl(190 100% 55%),
+      hsl(212 100% 62%),
+      transparent
+    );
+    opacity: 1;
+    height: 2px;
+    box-shadow: 0 0 12px hsla(190, 100%, 55%, 0.75);
+  }
+
+  :root[data-theme='circuit'] main,
+  :root[data-theme='circuit'] footer {
+    position: relative;
+    z-index: 1;
+  }
+  :root[data-theme='circuit'] header {
+    background-color: hsla(211, 40%, 8%, 0.74);
+    border-bottom-color: hsla(190, 100%, 55%, 0.18);
+  }
+}
+
+@layer utilities {
+  :root[data-theme='circuit'] .glass-card {
+    background: hsla(211, 34%, 12%, 0.66);
+    backdrop-filter: blur(18px);
+    border: 1px solid hsla(190, 100%, 55%, 0.2);
+    box-shadow:
+      inset 0 1px 0 hsla(190, 100%, 80%, 0.07),
+      0 8px 28px hsla(210, 60%, 2%, 0.5);
+  }
+  :root[data-theme='circuit'] .glow-primary {
+    box-shadow:
+      0 0 14px hsla(190, 100%, 55%, 0.7),
+      0 0 40px hsla(190, 100%, 55%, 0.32);
+  }
+  :root[data-theme='circuit'] .glow-accent {
+    box-shadow:
+      0 0 14px hsla(212, 100%, 62%, 0.65),
+      0 0 40px hsla(212, 100%, 62%, 0.3);
+  }
+  :root[data-theme='circuit'] .card-interactive:hover {
+    border-color: hsla(190, 100%, 55%, 0.55);
+  }
+
+  :root[data-theme='circuit'] .gradient-text-animated {
+    background-image: linear-gradient(
+      110deg,
+      hsl(190 100% 62%),
+      hsl(212 100% 70%),
+      hsl(168 90% 58%),
+      hsl(190 100% 62%)
+    );
+  }
+
+  /* 呼吸脉冲层：与 body 同样的晶格，但更亮，靠 opacity 缓慢起伏，
+     让线条看起来像在「呼吸」。单独一层是为了只重绘它，不动主背景。 */
+  .circuit-pulse {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(0deg, hsla(190, 100%, 65%, 0.16) 0px, hsla(190, 100%, 65%, 0.16) 1px, transparent 1px, transparent 52px),
+      repeating-linear-gradient(60deg, hsla(190, 100%, 65%, 0.16) 0px, hsla(190, 100%, 65%, 0.16) 1px, transparent 1px, transparent 52px),
+      repeating-linear-gradient(120deg, hsla(212, 100%, 68%, 0.16) 0px, hsla(212, 100%, 68%, 0.16) 1px, transparent 1px, transparent 52px);
+    background-size: 52px 52px;
+    animation: circuit-breathe 6.5s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /* 一道极缓慢扫过的高光，暗示电流流动 */
+  .circuit-sweep {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      36rem 36rem at 50% 50%,
+      hsla(190, 100%, 60%, 0.1),
+      transparent 62%
+    );
+    animation: circuit-sweep 18s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes circuit-breathe {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes circuit-sweep {
+    0% {
+      transform: translate3d(-26%, -16%, 0);
+      opacity: 0.35;
+    }
+    50% {
+      transform: translate3d(24%, 14%, 0);
+      opacity: 0.85;
+    }
+    100% {
+      transform: translate3d(-26%, -16%, 0);
+      opacity: 0.35;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .circuit-pulse,
+    .circuit-sweep {
+      animation: none !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------
+   MINIMAL 主题：深蓝灰渐变 + 极简点阵 + 一点电光蓝。
+   与前两套刻意相反——不用大面积光晕、不用混合模式，克制、专业。
+   --------------------------------------------------------------------- */
+
+@layer base {
+  :root[data-theme='minimal'] {
+    --background: 217 24% 10%;
+    --foreground: 210 18% 93%;
+    /* 卡片比底色亮 9%，否则「极简」会变成「看不见」——
+       卡片面与底色需要拉开足够差值，边框也要够亮才看得到轮廓。 */
+    --card: 217 20% 19%;
+    --card-foreground: 210 18% 93%;
+    --popover: 217 22% 17%;
+    --popover-foreground: 210 18% 93%;
+    --primary: 213 96% 62%;
+    --primary-foreground: 217 30% 9%;
+    --secondary: 217 18% 21%;
+    --secondary-foreground: 210 16% 90%;
+    --muted: 217 16% 19%;
+    --muted-foreground: 214 14% 70%;
+    --accent: 205 88% 60%;
+    --accent-foreground: 217 30% 9%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    /* 40% 亮度让卡片轮廓对底色达到 3:1（WCAG 非文本对比阈值） */
+    --border: 215 15% 40%;
+    --input: 215 15% 40%;
+    --ring: 213 96% 62%;
+    --chart-1: 213 96% 62%;
+    --chart-2: 199 88% 58%;
+    --chart-3: 258 72% 68%;
+    --chart-4: 40 88% 62%;
+    --chart-5: 158 62% 52%;
+    --chart-6: 232 78% 68%;
+    --success: 158 62% 52%;
+    --warning: 40 88% 62%;
+    --info: 213 96% 62%;
+    --gradient-primary: linear-gradient(135deg, hsl(213 96% 62%), hsl(199 88% 58%));
+    --shadow-card: 0 6px 22px hsla(217, 40%, 3%, 0.5);
+    --shadow-hover:
+      0 0 0 1px hsla(213, 96%, 62%, 0.3), 0 10px 30px hsla(217, 45%, 3%, 0.55);
+  }
+
+  /* 极简点阵：一层 26px 的细点 + 一层极淡的直线网格，
+     再加一道自上而下的深蓝灰渐变。刻意不加光晕，保持干净。 */
+  :root[data-theme='minimal'] body {
+    background-color: hsl(217 24% 10%);
+    background-image:
+      /* 极淡的一点电光蓝提亮，仅在左上角 */
+      radial-gradient(46rem 30rem at 14% -10%, hsla(213, 96%, 58%, 0.1), transparent 64%),
+      /* 点阵 */
+      radial-gradient(circle at 50% 50%, hsla(213, 90%, 72%, 0.16) 0px, hsla(213, 90%, 72%, 0.16) 1px, transparent 1.6px),
+      /* 极淡直线网格 */
+      linear-gradient(hsla(213, 60%, 70%, 0.032) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(213, 60%, 70%, 0.032) 1px, transparent 1px),
+      /* 底色渐变 */
+      linear-gradient(180deg, hsl(217 26% 11%), hsl(215 20% 13%));
+    background-size: cover, 26px 26px, 104px 104px, 104px 104px, cover;
+    background-attachment: fixed, scroll, scroll, scroll, fixed;
+    background-repeat: no-repeat, repeat, repeat, repeat, no-repeat;
+  }
+
+  /* 顶部高光收得更细、更淡，符合「专业」的定位 */
+  :root[data-theme='minimal'] body::before {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      hsl(213 96% 62%),
+      hsl(199 88% 58%),
+      transparent
+    );
+    opacity: 0.85;
+    height: 1px;
+    box-shadow: none;
+  }
+
+  :root[data-theme='minimal'] main,
+  :root[data-theme='minimal'] footer {
+    position: relative;
+    z-index: 1;
+  }
+  :root[data-theme='minimal'] header {
+    background-color: hsla(217, 26%, 11%, 0.8);
+    border-bottom-color: hsla(213, 60%, 70%, 0.12);
+  }
+}
+
+@layer utilities {
+  :root[data-theme='minimal'] .glass-card {
+    background: hsla(217, 22%, 15%, 0.72);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsla(213, 40%, 70%, 0.13);
+    box-shadow: 0 6px 22px hsla(217, 40%, 3%, 0.45);
+  }
+  /* 光晕收敛成克制的描边光，不做霓虹 */
+  :root[data-theme='minimal'] .glow-primary {
+    box-shadow: 0 0 0 1px hsla(213, 96%, 62%, 0.35), 0 4px 18px hsla(213, 96%, 55%, 0.25);
+  }
+  :root[data-theme='minimal'] .glow-accent {
+    box-shadow: 0 0 0 1px hsla(205, 88%, 60%, 0.32), 0 4px 18px hsla(205, 88%, 55%, 0.22);
+  }
+  :root[data-theme='minimal'] .card-interactive:hover {
+    border-color: hsla(213, 96%, 62%, 0.42);
+  }
+  :root[data-theme='minimal'] .gradient-text-animated {
+    background-image: linear-gradient(
+      110deg,
+      hsl(213 96% 68%),
+      hsl(199 88% 66%),
+      hsl(232 78% 74%),
+      hsl(213 96% 68%)
+    );
+  }
+
+  /* 缓慢横向漂移的点阵层。位移只有一个点距（26px），
+     所以看起来是「点在慢慢呼吸/游走」，而不是整块背景在动。 */
+  .minimal-dots {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      hsla(213, 96%, 74%, 0.2) 0px,
+      hsla(213, 96%, 74%, 0.2) 1px,
+      transparent 1.6px
+    );
+    background-size: 26px 26px;
+    animation: minimal-drift 24s linear infinite, minimal-fade 9s ease-in-out infinite;
+    will-change: background-position, opacity;
+  }
+
+  @keyframes minimal-drift {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 26px 26px;
+    }
+  }
+  @keyframes minimal-fade {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .minimal-dots {
+      animation: none !important;
+    }
+  }
+}
+
+/* ▲▲▲ 背景主题结束 ▲▲▲ */

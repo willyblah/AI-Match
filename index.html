@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="%BASE_URL%favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 背景主题（试验性）：在 React 挂载前同步套用已保存的主题，
+         否则首帧会先渲染浅色再跳到深色，出现一次闪白。
+         与 ThemeSwitcher 一同移除即可；单独留着也无副作用。 -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('ai-match:bg-theme');
+          if (t === 'cyber' || t === 'circuit' || t === 'minimal') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) {
+          /* localStorage 不可用时忽略，回落到默认浅色 */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
