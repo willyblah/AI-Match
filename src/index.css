@@ -38,6 +38,8 @@ All colors MUST be HSL.
     --chart-3: 328 80% 56%;
     --chart-4: 38 92% 48%;
     --chart-5: 152 60% 42%;
+    /* 第 6 条曲线：正蓝，与青(191)拉开色相距离，保证 6 款模型同图可辨 */
+    --chart-6: 222 78% 52%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 35% 30%;
     --sidebar-primary: 191 90% 40%;
@@ -82,6 +84,7 @@ All colors MUST be HSL.
     --chart-3: 328 80% 56%;
     --chart-4: 38 92% 48%;
     --chart-5: 152 60% 42%;
+    --chart-6: 222 78% 52%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 35% 30%;
     --sidebar-primary: 191 90% 40%;
@@ -102,11 +105,51 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'AlibabaPuHuiTi', system-ui, sans-serif;
-    /* 微型电路网格：白底上的浅青底纹 */
+
+    /* 科技感背景：三层彩色光晕 + 双层电路网格。
+       全部用 background-image 叠加实现，不额外插入 DOM，也不会盖住内容。
+       光晕使用 fixed 附着，滚动时保持不动，网格随内容滚动，形成纵深感。 */
+    background-color: hsl(var(--background));
     background-image:
+      /* 光晕：青 / 紫 / 玫红 */
+      radial-gradient(48rem 32rem at 12% -8%, hsla(191, 90%, 45%, 0.16), transparent 62%),
+      radial-gradient(42rem 30rem at 88% 4%, hsla(268, 72%, 58%, 0.15), transparent 62%),
+      radial-gradient(40rem 34rem at 50% 104%, hsla(328, 80%, 58%, 0.11), transparent 62%),
+      /* 粗网格 */
+      linear-gradient(hsla(268, 72%, 56%, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(268, 72%, 56%, 0.045) 1px, transparent 1px),
+      /* 细网格 */
       linear-gradient(hsla(191, 90%, 40%, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, hsla(191, 90%, 40%, 0.05) 1px, transparent 1px);
-    background-size: 48px 48px;
+    background-size:
+      cover,
+      cover,
+      cover,
+      192px 192px,
+      192px 192px,
+      48px 48px,
+      48px 48px;
+    background-attachment: fixed, fixed, fixed, scroll, scroll, scroll, scroll;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat;
+  }
+
+  /* 顶部一道渐变高光，强化「科技产品」的观感 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      hsl(191 90% 45%),
+      hsl(268 72% 58%),
+      hsl(328 80% 58%),
+      transparent
+    );
+    opacity: 0.75;
+    z-index: 50;
+    pointer-events: none;
   }
 
   * {
@@ -148,5 +191,114 @@ All colors MUST be HSL.
     text-shadow:
       0 0 8px hsla(191, 90%, 40%, 0.6),
       0 0 20px hsla(191, 90%, 40%, 0.3);
+  }
+
+  /* ---------- 表面与层次 ---------- */
+
+  /* 可交互卡片：悬停轻微上浮 + 青色光晕，给出明确的可点击反馈 */
+  .card-interactive {
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: hsla(191, 90%, 40%, 0.4);
+  }
+  .card-interactive:active {
+    transform: translateY(-1px);
+  }
+
+  /* 顶部渐变高光条，用于强调选中/首位卡片 */
+  .edge-top::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background-image: var(--gradient-primary);
+  }
+
+  /* ---------- 装饰 ---------- */
+
+  /* 背景光斑：柔和的彩色模糊球 */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* ---------- 动效 ---------- */
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .animate-rise {
+    animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -14px, 0);
+    }
+  }
+  .animate-drift {
+    animation: drift 9s ease-in-out infinite;
+  }
+
+  /* 渐变文字缓慢流动，用于主标题 */
+  @keyframes pan {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  .gradient-text-animated {
+    background-image: linear-gradient(
+      110deg,
+      hsl(191 90% 40%),
+      hsl(268 72% 56%),
+      hsl(328 80% 56%),
+      hsl(191 90% 40%)
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pan 7s ease-in-out infinite;
+  }
+
+  /* 数字等宽，避免变化时抖动 */
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 尊重系统的减少动效偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rise,
+    .animate-drift,
+    .gradient-text-animated {
+      animation: none;
+    }
+    .card-interactive:hover {
+      transform: none;
+    }
   }
 }

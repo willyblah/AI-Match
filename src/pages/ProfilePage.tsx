@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { MainLayout } from '@/components/layouts/MainLayout';
+import { StepIndicator } from '@/components/StepIndicator';
 import { CapabilityRadar, buildRadarData } from '@/components/CapabilityRadar';
 import { useApp } from '@/contexts/AppContext';
 import { DIMENSIONS } from '@/lib/types';
@@ -36,13 +37,19 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="mx-auto max-w-4xl">
+      <div className="relative mx-auto max-w-4xl">
+        <div className="orb -left-28 top-0 h-64 w-64 bg-primary/20 animate-drift" />
+        <div className="orb -right-28 top-36 h-64 w-64 bg-accent/20 animate-drift [animation-delay:2s]" />
+        <div className="relative">
+        <StepIndicator current={2} reachable={3} />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div className="mb-6 text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> 您的 AI 偏好画像已生成
+              <Sparkles className="h-3.5 w-3.5" /> 第 2 步：偏好画像
             </div>
-            <h1 className="text-balance text-2xl font-bold text-foreground md:text-3xl">偏好画像分析</h1>
+            <h1 className="text-balance text-2xl font-bold text-foreground md:text-3xl">
+              你的 <span className="gradient-text-animated">偏好画像</span>
+            </h1>
             <p className="mt-2 text-sm text-muted-foreground">{profile.description}</p>
           </div>
 
@@ -91,6 +98,7 @@ const ProfilePage: React.FC = () => {
             </Button>
           </div>
         </motion.div>
+        </div>
       </div>
     </MainLayout>
   );

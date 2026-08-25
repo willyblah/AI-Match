@@ -70,8 +70,9 @@ const HomePage: React.FC = () => {
     <MainLayout>
       {/* Hero */}
       <section className="relative overflow-hidden py-12 md:py-20">
-        <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-primary/15 blur-[100px]" />
-        <div className="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-accent/15 blur-[100px]" />
+        <div className="orb -left-20 top-0 h-72 w-72 bg-primary/25 animate-drift" />
+        <div className="orb -right-20 top-20 h-72 w-72 bg-accent/25 animate-drift [animation-delay:3s]" />
+        <div className="orb left-1/3 top-40 h-56 w-56 bg-chart-3/20 animate-drift [animation-delay:1.5s]" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,7 +84,7 @@ const HomePage: React.FC = () => {
             基于论文熵权-TOPSIS 与偏好权重建模
           </div>
           <h1 className="text-balance text-3xl font-bold leading-tight text-foreground md:text-5xl">
-            让每一个任务 <span className="gradient-text">找到最适合的 AI 工具</span>
+            让每一个任务 <span className="gradient-text-animated">找到最适合的 AI 工具</span>
           </h1>
           <p className="mx-auto mt-4 max-w-prose text-pretty text-sm text-muted-foreground md:text-base">
             无需复杂问卷，只需拖动滑块设定偏好权重并输入任务，AI Match 即可基于多维能力画像与成本约束，
@@ -114,7 +115,7 @@ const HomePage: React.FC = () => {
               return (
                 <div
                   key={t.label}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card/80 p-3 shadow-card transition-colors hover:border-primary/40"
+                  className="card-interactive flex flex-col items-center gap-2 rounded-xl border border-border bg-card/80 p-3 shadow-card"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
@@ -155,8 +156,8 @@ const HomePage: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="glass-card h-full p-5">
-                <div className="mb-3 text-2xl font-bold text-primary/40">{s.step}</div>
+              <Card className="glass-card card-interactive relative h-full overflow-hidden p-5">
+                <div className="num mb-3 text-2xl font-bold gradient-text">{s.step}</div>
                 <h3 className="mb-1 text-sm font-semibold text-foreground">{s.title}</h3>
                 <p className="text-xs text-muted-foreground">{s.desc}</p>
               </Card>
@@ -175,7 +176,7 @@ const HomePage: React.FC = () => {
           {FEATURES.map((f) => {
             const Icon = f.icon;
             return (
-              <Card key={f.title} className="glass-card flex h-full gap-4 p-5">
+              <Card key={f.title} className="glass-card card-interactive flex h-full gap-4 p-5">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>

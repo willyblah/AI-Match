@@ -17,11 +17,19 @@ export const RecommendationCard: React.FC<Props> = ({ rec, rank }) => {
   const radarData = buildRadarData([{ name: '能力', profile: topsis, color: 'hsl(var(--chart-1))' }]);
 
   return (
-    <Card className="glass-card overflow-hidden">
+    <Card
+      className={`glass-card card-interactive relative overflow-hidden ${rank === 1 ? 'edge-top border-primary/40' : ''}`}
+    >
       {/* 头部 */}
       <div className="flex items-start justify-between gap-3 border-b border-border/50 p-5">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-sm font-bold text-primary">
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${
+              rank === 1
+                ? 'bg-gradient-primary text-primary-foreground glow-primary'
+                : 'bg-primary/15 text-primary'
+            }`}
+          >
             #{rank}
           </div>
           <div className="min-w-0">
@@ -32,8 +40,14 @@ export const RecommendationCard: React.FC<Props> = ({ rec, rank }) => {
           </div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="text-2xl font-bold gradient-text">{matchScore}%</div>
+          <div className="num text-2xl font-bold gradient-text">{matchScore}%</div>
           <p className="text-[10px] text-muted-foreground">匹配度</p>
+          <div className="mt-1 h-1 w-16 overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full bg-gradient-primary transition-all duration-700"
+              style={{ width: `${matchScore}%` }}
+            />
+          </div>
         </div>
       </div>
 
