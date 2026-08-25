@@ -1,208 +1,53 @@
 import type { AITool, TaskTemplate } from './types';
 
-// 原始指标数据：6 款主流 LLM（2026-08 版）
-// 数据来源：Artificial Analysis Intelligence Index v4.1.1 + LiveBench-2026-06-25 + 各厂商官方 API 定价。
-// 抓取日期：2026-08-25
-export const AI_TOOLS: AITool[] = [
-  {
-    id: 'claude-opus-5',
-    name: 'Claude Opus 5',
-    version: 'Opus 5',
-    company: 'Anthropic',
-    category: 'llm',
-    description: '综合智能指数排名第一，长上下文推理与知识深度领先，适合高难度复杂任务，但价格与速度是短板。',
-    indicators: {
-      terminalBench: 0.891,
-      sciCode: 0.557,
-      liveBench: 0.814,
-      gdpvalAA: 0.667,
-      tau3Banking: 0.421,
-      aaLCR: 0.556,
-      omniAccuracy: 0.609,
-      omniNonHall: 0.392,
-      humanLastExam: 0.549,
-      gpqaDiamond: 0.932,
-      critpt: 0.291,
-      inputPrice: 5.0,
-      outputPrice: 25,
-      tokenForIndex: 100,
-      costPerTask: 2.34,
-      apiSpeed: 58.8,
-    },
-    inputPrice: 5.0,
-    outputPrice: 25,
-    tokenForIndex: 100,
-    costPerTask: 2.34,
-    apiSpeed: 58.8,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'gpt-5-6-sol',
-    name: 'GPT-5.6 Sol',
-    version: '5.6 Sol',
-    company: 'OpenAI',
-    category: 'llm',
-    description: '编程与物理推理维度最强，LiveBench 编程分项领先，综合能力全面，成本处于中高区间。',
-    indicators: {
-      terminalBench: 0.88,
-      sciCode: 0.561,
-      liveBench: 0.839,
-      gdpvalAA: 0.608,
-      tau3Banking: 0.443,
-      aaLCR: 0.261,
-      omniAccuracy: 0.594,
-      omniNonHall: 0.078,
-      humanLastExam: 0.495,
-      gpqaDiamond: 0.941,
-      critpt: 0.323,
-      inputPrice: 4.0,
-      outputPrice: 20,
-      tokenForIndex: 70,
-      costPerTask: 0.96,
-      apiSpeed: 74.4,
-    },
-    inputPrice: 4.0,
-    outputPrice: 20,
-    tokenForIndex: 70,
-    costPerTask: 0.96,
-    apiSpeed: 74.4,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'gemini-3-7-flash',
-    name: 'Gemini 3.7 Flash',
-    version: '3.7 Flash',
-    company: 'Google',
-    category: 'llm',
-    description: '生成速度 371 tokens/s 断层领先，价格极低且科学推理最强，但长上下文推理明显偏弱。',
-    indicators: {
-      terminalBench: 0.858,
-      sciCode: 0.568,
-      liveBench: 0.789,
-      gdpvalAA: 0.514,
-      tau3Banking: 0.328,
-      aaLCR: 0.15,
-      omniAccuracy: 0.553,
-      omniNonHall: 0.355,
-      humanLastExam: 0.479,
-      gpqaDiamond: 0.945,
-      critpt: 0.143,
-      inputPrice: 0.75,
-      outputPrice: 3.75,
-      tokenForIndex: 64,
-      costPerTask: 0.4,
-      apiSpeed: 371.1,
-    },
-    inputPrice: 0.75,
-    outputPrice: 3.75,
-    tokenForIndex: 64,
-    costPerTask: 0.4,
-    apiSpeed: 371.1,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'glm-5-3',
-    name: 'GLM-5.3',
-    version: '5.3',
-    company: 'ZhipuAI',
-    category: 'llm',
-    description: '国产模型代表，Agent 工具调用（τ³-Banking）与抗幻觉率两项排名第一，成本控制优秀。',
-    indicators: {
-      terminalBench: 0.839,
-      sciCode: 0.565,
-      liveBench: 0.79,
-      gdpvalAA: 0.633,
-      tau3Banking: 0.503,
-      aaLCR: 0.483,
-      omniAccuracy: 0.339,
-      omniNonHall: 0.704,
-      humanLastExam: 0.423,
-      gpqaDiamond: 0.917,
-      critpt: 0.191,
-      inputPrice: 1.4,
-      outputPrice: 4.4,
-      tokenForIndex: 170,
-      costPerTask: 0.68,
-      apiSpeed: 90,
-    },
-    inputPrice: 1.4,
-    outputPrice: 4.4,
-    tokenForIndex: 170,
-    costPerTask: 0.68,
-    apiSpeed: 90,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'deepseek-v4-pro',
-    name: 'DeepSeek V4 Pro',
-    version: 'V4 Pro 0813',
-    company: '深度求索',
-    category: 'llm',
-    description: '开源权重模型，单任务成本 $0.25 全场最低，性价比突出，但知识可靠性与长上下文较弱。',
-    indicators: {
-      terminalBench: 0.787,
-      sciCode: 0.492,
-      liveBench: 0.772,
-      gdpvalAA: 0.543,
-      tau3Banking: 0.396,
-      aaLCR: 0.178,
-      omniAccuracy: 0.491,
-      omniNonHall: 0.052,
-      humanLastExam: 0.41,
-      gpqaDiamond: 0.928,
-      critpt: 0.18,
-      inputPrice: 1.32,
-      outputPrice: 3.96,
-      tokenForIndex: 130,
-      costPerTask: 0.25,
-      apiSpeed: 73.9,
-    },
-    inputPrice: 1.32,
-    outputPrice: 3.96,
-    tokenForIndex: 130,
-    costPerTask: 0.25,
-    apiSpeed: 73.9,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'kimi-k3',
-    name: 'Kimi K3',
-    version: 'K3',
-    company: 'MoonshotAI',
-    category: 'llm',
-    description: '2.8T 开源权重模型，SciCode 编程分项第一，Agent 与知识维度均衡，但生成速度最慢。',
-    indicators: {
-      terminalBench: 0.85,
-      sciCode: 0.587,
-      liveBench: 0.814,
-      gdpvalAA: 0.588,
-      tau3Banking: 0.46,
-      aaLCR: 0.383,
-      omniAccuracy: 0.476,
-      omniNonHall: 0.468,
-      humanLastExam: 0.469,
-      gpqaDiamond: 0.935,
-      critpt: 0.234,
-      inputPrice: 3.0,
-      outputPrice: 15,
-      tokenForIndex: 130,
-      costPerTask: 0.84,
-      apiSpeed: 35.2,
-    },
-    inputPrice: 3.0,
-    outputPrice: 15,
-    tokenForIndex: 130,
-    costPerTask: 0.84,
-    apiSpeed: 35.2,
-    dataSource: 'Artificial Analysis / LiveBench / 官方定价',
-    updatedAt: '2026-08-25',
-  },
-];
+import modelData from './model-data.json';
+
+// AI 工具原始指标数据。
+// 指标数值由 scripts/refresh-model-data.mjs 自动写入 model-data.json（勿手工编辑）；
+// 下方 DESCRIPTIONS 为人工撰写的模型简介，自动更新流程不会覆盖。
+// 数据来源见 model-data.json 的 meta.sources，更新方式见 docs/DATA_REFRESH.md。
+const DESCRIPTIONS: Record<string, string> = {
+  'claude-opus-5':
+    '综合智能指数排名第一，长上下文推理与知识深度领先，适合高难度复杂任务，但价格与速度是短板。',
+  'gpt-5-6-sol':
+    '编程与物理推理维度最强，LiveBench 编程分项领先，综合能力全面，成本处于中高区间。',
+  'gemini-3-7-flash':
+    '生成速度 371 tokens/s 断层领先，价格极低且科学推理最强，但长上下文推理明显偏弱。',
+  'glm-5-3':
+    '国产模型代表，Agent 工具调用（τ³-Banking）与抗幻觉率两项排名第一，成本控制优秀。',
+  'deepseek-v4-pro':
+    '开源权重模型，单任务成本 $0.25 全场最低，性价比突出，但知识可靠性与长上下文较弱。',
+  'kimi-k3':
+    '2.8T 开源权重模型，SciCode 编程分项第一，Agent 与知识维度均衡，但生成速度最慢。',
+};
+
+/** 指标数据最后一次刷新的日期（展示于工具详情页）。 */
+export const DATA_UPDATED_AT: string = modelData.meta.generatedAt;
+
+/** 指标数据来源列表。 */
+export const DATA_SOURCES: string[] = modelData.meta.sources;
+
+export const AI_TOOLS: AITool[] = modelData.models.map((m): AITool => {
+  const ind = m.indicators as Record<string, number>;
+  return {
+    id: m.id,
+    name: m.name,
+    version: m.version,
+    company: m.company,
+    category: m.category as AITool['category'],
+    description: DESCRIPTIONS[m.id] ?? '',
+    indicators: ind,
+    inputPrice: ind.inputPrice,
+    outputPrice: ind.outputPrice,
+    tokenForIndex: ind.tokenForIndex,
+    costPerTask: ind.costPerTask,
+    apiSpeed: ind.apiSpeed,
+    dataSource: m.provenance.external?.liveBench
+      ? 'Artificial Analysis / LiveBench / 官方定价'
+      : 'Artificial Analysis / 官方定价',
+    updatedAt: modelData.meta.generatedAt,
+  };
+});
 
 // 任务模板（含 7 维需求向量 r_jk 与平均 token 量）
 export const TASK_TEMPLATES: TaskTemplate[] = [

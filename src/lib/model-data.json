@@ -1,0 +1,321 @@
+{
+  "$comment": "GENERATED FILE - do not hand-edit the indicator numbers. Run `npm run refresh:data` to update. Model prose descriptions live in src/lib/data.ts and are written by hand.",
+  "meta": {
+    "generatedAt": "2026-08-25",
+    "generatedBy": "manual seed (first run)",
+    "intelligenceIndexVersion": "4.1.1",
+    "sources": [
+      "Artificial Analysis Intelligence Index v4.1.1 - https://artificialanalysis.ai",
+      "LiveBench-2026-06-25 - https://livebench.ai",
+      "Vendor official API pricing pages"
+    ]
+  },
+  "models": [
+    {
+      "id": "claude-opus-5",
+      "aaSlug": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "version": "Opus 5",
+      "company": "Anthropic",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.891,
+        "sciCode": 0.557,
+        "liveBench": 0.814,
+        "gdpvalAA": 0.667,
+        "tau3Banking": 0.421,
+        "aaLCR": 0.556,
+        "omniAccuracy": 0.609,
+        "omniNonHall": 0.392,
+        "humanLastExam": 0.549,
+        "gpqaDiamond": 0.932,
+        "critpt": 0.291,
+        "inputPrice": 5.0,
+        "outputPrice": 25.0,
+        "tokenForIndex": 100.0,
+        "costPerTask": 2.34,
+        "apiSpeed": 58.8
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    },
+    {
+      "id": "gpt-5-6-sol",
+      "aaSlug": "gpt-5-6-sol",
+      "name": "GPT-5.6 Sol",
+      "version": "5.6 Sol",
+      "company": "OpenAI",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.88,
+        "sciCode": 0.561,
+        "liveBench": 0.839,
+        "gdpvalAA": 0.608,
+        "tau3Banking": 0.443,
+        "aaLCR": 0.261,
+        "omniAccuracy": 0.594,
+        "omniNonHall": 0.078,
+        "humanLastExam": 0.495,
+        "gpqaDiamond": 0.941,
+        "critpt": 0.323,
+        "inputPrice": 4.0,
+        "outputPrice": 20.0,
+        "tokenForIndex": 70.0,
+        "costPerTask": 0.96,
+        "apiSpeed": 74.4
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    },
+    {
+      "id": "gemini-3-7-flash",
+      "aaSlug": "gemini-3-7-flash",
+      "name": "Gemini 3.7 Flash",
+      "version": "3.7 Flash",
+      "company": "Google",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.858,
+        "sciCode": 0.568,
+        "liveBench": 0.789,
+        "gdpvalAA": 0.514,
+        "tau3Banking": 0.328,
+        "aaLCR": 0.15,
+        "omniAccuracy": 0.553,
+        "omniNonHall": 0.355,
+        "humanLastExam": 0.479,
+        "gpqaDiamond": 0.945,
+        "critpt": 0.143,
+        "inputPrice": 0.75,
+        "outputPrice": 3.75,
+        "tokenForIndex": 64.0,
+        "costPerTask": 0.4,
+        "apiSpeed": 371.1
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    },
+    {
+      "id": "glm-5-3",
+      "aaSlug": "glm-5-3",
+      "name": "GLM-5.3",
+      "version": "5.3",
+      "company": "ZhipuAI",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.839,
+        "sciCode": 0.565,
+        "liveBench": 0.79,
+        "gdpvalAA": 0.633,
+        "tau3Banking": 0.503,
+        "aaLCR": 0.483,
+        "omniAccuracy": 0.339,
+        "omniNonHall": 0.704,
+        "humanLastExam": 0.423,
+        "gpqaDiamond": 0.917,
+        "critpt": 0.191,
+        "inputPrice": 1.4,
+        "outputPrice": 4.4,
+        "tokenForIndex": 170.0,
+        "costPerTask": 0.68,
+        "apiSpeed": 90.0
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "aaSlug": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "version": "V4 Pro 0813",
+      "company": "深度求索",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.787,
+        "sciCode": 0.492,
+        "liveBench": 0.772,
+        "gdpvalAA": 0.543,
+        "tau3Banking": 0.396,
+        "aaLCR": 0.178,
+        "omniAccuracy": 0.491,
+        "omniNonHall": 0.052,
+        "humanLastExam": 0.41,
+        "gpqaDiamond": 0.928,
+        "critpt": 0.18,
+        "inputPrice": 1.32,
+        "outputPrice": 3.96,
+        "tokenForIndex": 130.0,
+        "costPerTask": 0.25,
+        "apiSpeed": 73.9
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    },
+    {
+      "id": "kimi-k3",
+      "aaSlug": "kimi-k3",
+      "name": "Kimi K3",
+      "version": "K3",
+      "company": "MoonshotAI",
+      "category": "llm",
+      "indicators": {
+        "terminalBench": 0.85,
+        "sciCode": 0.587,
+        "liveBench": 0.814,
+        "gdpvalAA": 0.588,
+        "tau3Banking": 0.46,
+        "aaLCR": 0.383,
+        "omniAccuracy": 0.476,
+        "omniNonHall": 0.468,
+        "humanLastExam": 0.469,
+        "gpqaDiamond": 0.935,
+        "critpt": 0.234,
+        "inputPrice": 3.0,
+        "outputPrice": 15.0,
+        "tokenForIndex": 130.0,
+        "costPerTask": 0.84,
+        "apiSpeed": 35.2
+      },
+      "provenance": {
+        "artificialAnalysis": [
+          "aaLCR",
+          "apiSpeed",
+          "costPerTask",
+          "critpt",
+          "gdpvalAA",
+          "gpqaDiamond",
+          "humanLastExam",
+          "inputPrice",
+          "omniAccuracy",
+          "outputPrice",
+          "sciCode",
+          "tau3Banking",
+          "terminalBench",
+          "tokenForIndex"
+        ],
+        "derived": [
+          "omniNonHall"
+        ],
+        "external": {
+          "liveBench": "LiveBench-2026-06-25"
+        },
+        "stale": []
+      }
+    }
+  ]
+}
