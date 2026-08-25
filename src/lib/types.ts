@@ -39,14 +39,14 @@ export interface Indicator {
 }
 
 export const INDICATORS: Indicator[] = [
-  { key: 'terminalBench', label: 'Terminal-Bench', dimension: 'coding', isCost: false },
+  { key: 'terminalBench', label: 'Terminal-Bench v2.1', dimension: 'coding', isCost: false },
   { key: 'sciCode', label: 'SciCode', dimension: 'coding', isCost: false },
   { key: 'liveBench', label: 'LiveBench', dimension: 'coding', isCost: false },
   { key: 'gdpvalAA', label: 'GDPval-AA v2', dimension: 'agent', isCost: false },
   { key: 'tau3Banking', label: 'τ3-Banking', dimension: 'agent', isCost: false },
-  { key: 'aaLCR', label: 'AA-LCR', dimension: 'longContext', isCost: false },
-  { key: 'omniAccuracy', label: 'AA-Omni Accuracy', dimension: 'knowledge', isCost: false },
-  { key: 'omniNonHall', label: 'AA-Omni Non-Hall.', dimension: 'knowledge', isCost: false },
+  { key: 'aaLCR', label: 'MLCR-AA', dimension: 'longContext', isCost: false },
+  { key: 'omniAccuracy', label: 'AA-Omniscience Accuracy', dimension: 'knowledge', isCost: false },
+  { key: 'omniNonHall', label: 'AA-Omniscience Non-Hall.', dimension: 'knowledge', isCost: false },
   { key: 'humanLastExam', label: "Humanity's Last Exam", dimension: 'knowledge', isCost: false },
   { key: 'gpqaDiamond', label: 'GPQA Diamond', dimension: 'reasoning', isCost: false },
   { key: 'critpt', label: 'Critpt', dimension: 'reasoning', isCost: false },
