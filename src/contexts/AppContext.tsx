@@ -1,23 +1,29 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import type { DimensionKey, UserProfile, TaskTemplate, Recommendation } from '@/lib/types';
-import { computeRecommendations } from '@/lib/engine';
+import type { DimensionKey, UserProfile, TaskTemplate } from '@/lib/types';
+import { computeMultiTaskRecommendations } from '@/lib/engine';
+import type { MultiTaskOutput } from '@/lib/engine';
 import { normalizeWeights, generateProfileDescription } from '@/lib/survey';
 import { AI_TOOLS } from '@/lib/data';
+
+/** 一次可选择的最大任务数，避免结果页过长。 */
+export const MAX_TASKS = 5;
 
 interface AppState {
   profile: UserProfile | null;
   hasProfile: boolean;
   // 由用户拖动滑块设定的原始权重（0~100）计算偏好画像
   setProfileFromWeights: (raw: Record<DimensionKey, number>) => void;
-  // 当前任务
-  selectedTask: TaskTemplate | null;
-  setSelectedTask: (task: TaskTemplate | null) => void;
+  // 当前任务（多选）
+  selectedTasks: TaskTemplate[];
+  toggleTask: (task: TaskTemplate) => void;
+  clearTasks: () => void;
+  isTaskSelected: (id: string) => boolean;
   budget: number;
   setBudget: (n: number) => void;
   frequency: number;
   setFrequency: (n: number) => void;
   // 推荐结果
-  recommendations: Recommendation[];
+  result: MultiTaskOutput | null;
   runRecommendation: () => void;
   hasResult: boolean;
   // 对比
@@ -30,10 +36,10 @@ const AppContext = createContext<AppState | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [selectedTask, setSelectedTask] = useState<TaskTemplate | null>(null);
+  const [selectedTasks, setSelectedTasks] = useState<TaskTemplate[]>([]);
   const [budget, setBudget] = useState(30);
   const [frequency, setFrequency] = useState(100);
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [result, setResult] = useState<MultiTaskOutput | null>(null);
   const [hasResult, setHasResult] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
@@ -49,30 +55,53 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         weights,
         description,
       });
+      // 偏好变了，旧结果作废
+      setHasResult(false);
     },
     [budget, frequency]
   );
 
+  const toggleTask = useCallback((task: TaskTemplate) => {
+    setSelectedTasks((prev) => {
+      const exists = prev.some((t) => t.id === task.id);
+      if (exists) return prev.filter((t) => t.id !== task.id);
+      if (prev.length >= MAX_TASKS) return prev;
+      return [...prev, task];
+    });
+    setHasResult(false);
+  }, []);
+
+  const clearTasks = useCallback(() => {
+    setSelectedTasks([]);
+    setHasResult(false);
+  }, []);
+
+  const isTaskSelected = useCallback(
+    (id: string) => selectedTasks.some((t) => t.id === id),
+    [selectedTasks]
+  );
+
   const runRecommendation = useCallback(() => {
-    if (!profile || !selectedTask) return;
-    // 根据任务类型筛选候选工具
-    const isMediaTask = selectedTask.id === 'image-generation' || selectedTask.id === 'video-generation';
-    const candidates = isMediaTask
-      ? AI_TOOLS.filter((t) => t.category === selectedTask.id.replace('-generation', ''))
+    if (!profile || selectedTasks.length === 0) return;
+    // 图片/视频类任务只在同类工具中匹配；其余用 LLM
+    const mediaOnly = selectedTasks.every(
+      (t) => t.id === 'image-generation' || t.id === 'video-generation'
+    );
+    const candidates = mediaOnly
+      ? AI_TOOLS.filter((t) => t.category === selectedTasks[0].id.replace('-generation', ''))
       : AI_TOOLS.filter((t) => t.category === 'llm');
 
-    const { recommendations: recs } = computeRecommendations({
-      tools: candidates,
-      weights: profile.weights,
-      demands: selectedTask.demands,
-      budget,
-      frequency,
-      avgInputTokens: selectedTask.avgInputTokens,
-      avgOutputTokens: selectedTask.avgOutputTokens,
-    });
-    setRecommendations(recs);
+    setResult(
+      computeMultiTaskRecommendations({
+        tools: candidates,
+        weights: profile.weights,
+        tasks: selectedTasks,
+        budget,
+        frequencyPerTask: frequency,
+      })
+    );
     setHasResult(true);
-  }, [profile, selectedTask, budget, frequency]);
+  }, [profile, selectedTasks, budget, frequency]);
 
   const toggleCompare = useCallback((id: string) => {
     setCompareIds((prev) => {
@@ -89,13 +118,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       profile,
       hasProfile: !!profile,
       setProfileFromWeights,
-      selectedTask,
-      setSelectedTask,
+      selectedTasks,
+      toggleTask,
+      clearTasks,
+      isTaskSelected,
       budget,
       setBudget,
       frequency,
       setFrequency,
-      recommendations,
+      result,
       runRecommendation,
       hasResult,
       compareIds,
@@ -105,10 +136,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [
       profile,
       setProfileFromWeights,
-      selectedTask,
+      selectedTasks,
+      toggleTask,
+      clearTasks,
+      isTaskSelected,
       budget,
       frequency,
-      recommendations,
+      result,
       runRecommendation,
       hasResult,
       compareIds,

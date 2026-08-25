@@ -329,6 +329,135 @@ const DIMENSION_LABELS: Record<DimensionKey, string> = {
   speed: '生成速度',
 };
 
+// ========== 多任务组合推荐 ==========
+// 对应论文第 4 章：为每个任务分别指派最合适的模型，而非全局只选一个模型。
+
+export interface MultiTaskInput {
+  tools: AITool[];
+  weights: Record<DimensionKey, number>;
+  tasks: import('./types').TaskTemplate[];
+  budget: number;
+  /** 每个任务每月的调用次数 f_j */
+  frequencyPerTask: number;
+}
+
+export interface TaskResult {
+  task: import('./types').TaskTemplate;
+  recommendations: import('./types').Recommendation[];
+}
+
+export interface AssignmentEntry {
+  task: import('./types').TaskTemplate;
+  tool: AITool;
+  matchScore: number;
+  monthlyCost: number;
+}
+
+export interface MultiTaskOutput {
+  taskResults: TaskResult[];
+  /** 每个任务的最优指派（论文 x_ij） */
+  assignment: AssignmentEntry[];
+  totalMonthlyCost: number;
+  withinBudget: boolean;
+  /** 混合调用的总效用 Z */
+  mixedUtility: number;
+  /** 若全部任务都用同一个模型，最优的那个模型及其总效用 */
+  bestSingle: { tool: AITool; utility: number; monthlyCost: number } | null;
+  /** 混合调用相对单一模型的效用提升（百分比，可能为 0） */
+  mixedGainPct: number;
+}
+
+/** 单个工具在单个任务下的原始效用 U_ij = Σ w_k · r_jk · c_ik */
+function rawUtility(
+  topsis: TopsisProfile,
+  weights: Record<DimensionKey, number>,
+  demands: Record<DimensionKey, number>
+): number {
+  return DIMENSION_KEYS.reduce(
+    (sum, k) => sum + (weights[k] ?? 0) * (demands[k] ?? 0) * (topsis[k] ?? 0),
+    0
+  );
+}
+
+/** 单次调用成本 C_ij = Pin·Tin + Pout·Tout */
+function callCost(tool: AITool, task: import('./types').TaskTemplate): number {
+  return tool.category === 'llm'
+    ? (tool.inputPrice * task.avgInputTokens + tool.outputPrice * task.avgOutputTokens) / 1_000_000
+    : tool.costPerTask;
+}
+
+export function computeMultiTaskRecommendations(input: MultiTaskInput): MultiTaskOutput {
+  const { tools, weights, tasks, budget, frequencyPerTask } = input;
+  const { profiles } = computeTopsis();
+
+  const taskResults: TaskResult[] = tasks.map((task) => ({
+    task,
+    recommendations: computeRecommendations({
+      tools,
+      weights,
+      demands: task.demands,
+      budget,
+      frequency: frequencyPerTask,
+      avgInputTokens: task.avgInputTokens,
+      avgOutputTokens: task.avgOutputTokens,
+    }).recommendations,
+  }));
+
+  // 每个任务取排序后的第一名作为指派结果
+  const assignment: AssignmentEntry[] = taskResults
+    .filter((r) => r.recommendations.length > 0)
+    .map((r) => {
+      const top = r.recommendations[0];
+      return {
+        task: r.task,
+        tool: top.tool,
+        matchScore: top.matchScore,
+        monthlyCost: top.monthlyCost,
+      };
+    });
+
+  const totalMonthlyCost = assignment.reduce((s, a) => s + a.monthlyCost, 0);
+
+  // 混合调用总效用：各任务最优模型的原始效用之和
+  const mixedUtility = assignment.reduce((s, a) => {
+    const p = profiles.get(a.tool.id) || ({} as TopsisProfile);
+    return s + rawUtility(p, weights, a.task.demands);
+  }, 0);
+
+  // 单一模型基线：所有任务都用同一个模型时，效用最高的那个。
+  // 注意必须同样受预算约束——指派方案是「可负担优先」排序出来的，
+  // 若基线不设预算限制，就等于拿一个买不起的方案去比，比较本身没有意义。
+  const singles = tools.map((tool) => {
+    const p = profiles.get(tool.id) || ({} as TopsisProfile);
+    return {
+      tool,
+      utility: tasks.reduce((s, t) => s + rawUtility(p, weights, t.demands), 0),
+      monthlyCost: tasks.reduce((s, t) => s + callCost(tool, t) * frequencyPerTask, 0),
+    };
+  });
+  const affordableSingles = singles.filter((s) => s.monthlyCost <= budget);
+  // 预算内无可用模型时退回全集，至少给出一个参照
+  const singlePool = affordableSingles.length > 0 ? affordableSingles : singles;
+  const bestSingle: MultiTaskOutput['bestSingle'] = singlePool.reduce<
+    MultiTaskOutput['bestSingle']
+  >((best, s) => (!best || s.utility > best.utility ? s : best), null);
+
+  const mixedGainPct =
+    bestSingle && bestSingle.utility > 0
+      ? Math.max(0, ((mixedUtility - bestSingle.utility) / bestSingle.utility) * 100)
+      : 0;
+
+  return {
+    taskResults,
+    assignment,
+    totalMonthlyCost,
+    withinBudget: totalMonthlyCost <= budget,
+    mixedUtility,
+    bestSingle,
+    mixedGainPct,
+  };
+}
+
 // ========== 排行榜 ==========
 
 export function computeRankings(): import('./types').RankEntry[] {
