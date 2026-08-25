@@ -94,7 +94,28 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
       {/* 页脚 */}
       <footer className="border-t border-border py-6">
         <div className="mx-auto w-full max-w-7xl px-4 text-center text-xs text-muted-foreground md:px-6">
-          AI Match · 基于熵权-TOPSIS 与 AHP 层次分析法的 AI 工具智能推荐平台
+          <div>AI Match · 基于熵权-TOPSIS 与 AHP 层次分析法的 AI 工具智能推荐平台</div>
+          {/* Artificial Analysis 数据 API 要求所有使用方标注来源，请勿移除。 */}
+          <div className="mt-1.5">
+            基准数据来源{' '}
+            <a
+              href="https://artificialanalysis.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 transition-colors hover:text-foreground"
+            >
+              Artificial Analysis
+            </a>{' '}
+            与{' '}
+            <a
+              href="https://livebench.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 transition-colors hover:text-foreground"
+            >
+              LiveBench
+            </a>
+          </div>
         </div>
       </footer>
     </div>

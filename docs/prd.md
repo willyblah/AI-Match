@@ -106,10 +106,10 @@ AI Match是一个现代化的AI工具智能推荐平台（Web应用，中文界�
 - 展示AI工具基本信息：名称、版本、研发公司
 - 展示价格信息：输入价格、输出价格、完成Index所需token量、单任务平均成本
 - 展示全部16项Benchmark指标数据：
-  + 编程能力：Terminal-Bench、SciCode、LiveBench
+  + 编程能力：Terminal-Bench v2.1、SciCode、LiveBench
   + Agent能力：GDPval-AA v2、τ3-Banking
-  + 长上下文：AA-LCR
-  + 知识推理：AA-Omni Accuracy、AA-Omni Non-Hallucination、Humanity's Last Exam
+  + 长上下文：MLCR-AA（原 AA-LCR，Artificial Analysis 已更名）
+  + 知识推理：AA-Omniscience Accuracy、AA-Omniscience Non-Hallucination、Humanity's Last Exam
   + 专业推理：GPQA Diamond、Critpt
   + 成本价格：输入价格、输出价格、完成Index所需token量、单任务平均成本
   + 生成速度：API Speed (tokens/s)
@@ -154,10 +154,10 @@ AI Match是一个现代化的AI工具智能推荐平台（Web应用，中文界�
 - 系统维护AI工具数据库，包含7个一级维度、16项二级Benchmark指标
 - 7个一级维度：编程能力、Agent能力、长上下文、知识推理、专业推理、成本价格、生成速度
 - 16项二级Benchmark指标：
-  + 编程能力：Terminal-Bench、SciCode、LiveBench
+  + 编程能力：Terminal-Bench v2.1、SciCode、LiveBench
   + Agent能力：GDPval-AA v2、τ3-Banking
-  + 长上下文：AA-LCR
-  + 知识推理：AA-Omni Accuracy、AA-Omni Non-Hallucination、Humanity's Last Exam
+  + 长上下文：MLCR-AA（原 AA-LCR，Artificial Analysis 已更名）
+  + 知识推理：AA-Omniscience Accuracy、AA-Omniscience Non-Hallucination、Humanity's Last Exam
   + 专业推理：GPQA Diamond、Critpt
   + 成本价格：输入价格$/1M、输出价格$/1M、完成Index所需token量、单任务平均成本$
   + 生成速度：API Speed (tokens/s)
@@ -210,13 +210,13 @@ AI Match是一个现代化的AI工具智能推荐平台（Web应用，中文界�
 
 ### 4.3 论文基准数据
 
-系统初始数据库需包含论文中的6款模型基准数据（见论文表3.2、表3.4、表4.5）：
-- Claude Opus 4.8
-- GPT-5.5
-- Gemini 3.5 Flash
-- GLM-5.2
-- DeepSeek V4 Pro
-- Kimi K2.6
+系统初始数据库需包含 6 款主流模型基准数据。论文原始数据见表3.2、表3.4、表4.5；当前库内数据已更新至 2026-08-25 的最新一代模型（数据来源：Artificial Analysis Intelligence Index v4.1.1 + LiveBench-2026-06-25 + 各厂商官方定价）：
+- Claude Opus 5
+- GPT-5.6 Sol
+- Gemini 3.7 Flash
+- GLM-5.3
+- DeepSeek V4 Pro 0813
+- Kimi K3
 
 原始指标数据见论文表3.2，分维度贴近度矩阵见论文表3.4，六类用户AHP权重见论文表4.5（轻度用户、普通员工、软件开发者、企业团队、研究人员、AI创业者）。
 

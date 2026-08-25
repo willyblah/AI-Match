@@ -1,0 +1,48 @@
+{
+  "$comment": "Which model occupies each of the six lab slots from the paper. The refresh script updates the NUMBERS for these every run. If a lab ships something newer and stronger, the script reports it but does not swap it in — see docs/DATA_REFRESH.md.",
+  "intelligenceIndexVersion": "4.1.1",
+  "slots": [
+    { "slot": "anthropic",  "id": "claude-opus-5",     "aaSlug": "claude-opus-5",     "company": "Anthropic",  "creatorMatch": ["anthropic"] },
+    { "slot": "openai",     "id": "gpt-5-6-sol",       "aaSlug": "gpt-5-6-sol",       "company": "OpenAI",     "creatorMatch": ["openai"] },
+    { "slot": "google",     "id": "gemini-3-7-flash",  "aaSlug": "gemini-3-7-flash",  "company": "Google",     "creatorMatch": ["google"] },
+    { "slot": "zhipu",      "id": "glm-5-3",           "aaSlug": "glm-5-3",           "company": "ZhipuAI",    "creatorMatch": ["z-ai", "zai", "zhipu"] },
+    { "slot": "deepseek",   "id": "deepseek-v4-pro",   "aaSlug": "deepseek-v4-pro",   "company": "深度求索",    "creatorMatch": ["deepseek"] },
+    { "slot": "moonshot",   "id": "kimi-k3",           "aaSlug": "kimi-k3",           "company": "MoonshotAI", "creatorMatch": ["kimi", "moonshot"] }
+  ],
+  "indicatorMap": {
+    "$comment": "AI Match indicator key -> candidate field paths in the AA API response, tried in order. AA field names are snake_case and occasionally change; extra candidates make the script resilient.",
+    "terminalBench":  ["evaluations.terminal_bench_v2_1", "evaluations.terminal_bench", "evaluations.terminalbench"],
+    "sciCode":        ["evaluations.scicode", "evaluations.sci_code"],
+    "gdpvalAA":       ["evaluations.gdpval_aa_v2", "evaluations.gdpval_aa", "evaluations.gdpval"],
+    "tau3Banking":    ["evaluations.tau3_banking", "evaluations.tau_3_banking"],
+    "aaLCR":          ["evaluations.mlcr_aa", "evaluations.aa_lcr", "evaluations.lcr"],
+    "omniAccuracy":   ["evaluations.aa_omniscience_accuracy", "evaluations.omniscience_accuracy"],
+    "humanLastExam":  ["evaluations.humanitys_last_exam", "evaluations.hle"],
+    "gpqaDiamond":    ["evaluations.gpqa_diamond", "evaluations.gpqa"],
+    "critpt":         ["evaluations.critpt", "evaluations.crit_pt"],
+    "inputPrice":     ["pricing.price_1m_input_tokens"],
+    "outputPrice":    ["pricing.price_1m_output_tokens"],
+    "costPerTask":    ["cost_per_intelligence_index_task", "pricing.cost_per_intelligence_index_task"],
+    "tokenForIndex":  ["output_tokens_from_intelligence_index_millions", "token_use.intelligence_index_output_tokens_millions"],
+    "apiSpeed":       ["performance.median_output_tokens_per_second", "median_output_tokens_per_second"]
+  },
+  "derived": {
+    "$comment": "omniNonHall is not published per-model by AA. Derived from accuracy + omniscience index; verified exact against the three models AA does publish. See docs/DATA_REFRESH.md.",
+    "omniNonHall": {
+      "formula": "1 - (accuracy - omniscienceIndex/100) / (1 - accuracy)",
+      "inputs": {
+        "accuracy": ["evaluations.aa_omniscience_accuracy", "evaluations.omniscience_accuracy"],
+        "omniscienceIndex": ["evaluations.aa_omniscience_index", "evaluations.omniscience_index"]
+      }
+    }
+  },
+  "externalSources": {
+    "$comment": "Not available from the AA API. Refreshed separately; if unavailable the previous value is kept and flagged stale rather than guessed.",
+    "liveBench": {
+      "source": "LiveBench",
+      "url": "https://livebench.ai",
+      "column": "CODING",
+      "scale": "0-100 -> /100"
+    }
+  }
+}
