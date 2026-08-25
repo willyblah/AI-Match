@@ -8,6 +8,9 @@ import { AI_TOOLS } from '@/lib/data';
 /** 一次可选择的最大任务数，避免结果页过长。 */
 export const MAX_TASKS = 5;
 
+/** 对比页最多可同时对比的工具数：允许一次看完库内全部模型。 */
+export const MAX_COMPARE = AI_TOOLS.length;
+
 interface AppState {
   profile: UserProfile | null;
   hasProfile: boolean;
@@ -30,6 +33,7 @@ interface AppState {
   compareIds: string[];
   toggleCompare: (id: string) => void;
   clearCompare: () => void;
+  selectAllCompare: () => void;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -106,12 +110,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const toggleCompare = useCallback((id: string) => {
     setCompareIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
-      if (prev.length >= 4) return prev;
+      if (prev.length >= MAX_COMPARE) return prev;
       return [...prev, id];
     });
   }, []);
 
   const clearCompare = useCallback(() => setCompareIds([]), []);
+
+  const selectAllCompare = useCallback(
+    () => setCompareIds(AI_TOOLS.slice(0, MAX_COMPARE).map((t) => t.id)),
+    []
+  );
 
   const value = useMemo<AppState>(
     () => ({
@@ -132,6 +141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       compareIds,
       toggleCompare,
       clearCompare,
+      selectAllCompare,
     }),
     [
       profile,
@@ -148,6 +158,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       compareIds,
       toggleCompare,
       clearCompare,
+      selectAllCompare,
     ]
   );
 
