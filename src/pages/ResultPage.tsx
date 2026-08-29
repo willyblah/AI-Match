@@ -36,7 +36,7 @@ const ResultPage: React.FC = () => {
         <div className="mx-auto max-w-md py-20 text-center">
           <p className="text-muted-foreground">请先设定偏好并选择任务</p>
           <Button
-            className="mt-4 bg-gradient-primary text-primary-foreground hover:opacity-90"
+            className="mt-4 bg-primary text-primary-foreground hover:opacity-90"
             onClick={() => navigate('/survey')}
           >
             重新开始
@@ -231,7 +231,7 @@ const ResultPage: React.FC = () => {
                       className={cn(
                         'rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all duration-200',
                         on
-                          ? 'border-transparent bg-gradient-primary text-primary-foreground shadow-card'
+                          ? 'border-transparent bg-primary text-primary-foreground shadow-card'
                           : 'border-border bg-card/70 text-muted-foreground hover:border-primary/40 hover:text-foreground'
                       )}
                     >
@@ -267,7 +267,7 @@ const ResultPage: React.FC = () => {
             </Button>
             <Button
               size="lg"
-              className="bg-gradient-primary text-primary-foreground hover:opacity-90"
+              className="bg-primary text-primary-foreground hover:opacity-90"
               onClick={() => navigate('/survey')}
             >
               重新测试偏好 <ArrowRight className="ml-1 h-4 w-4" />

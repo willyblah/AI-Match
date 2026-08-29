@@ -19,7 +19,7 @@ const ProfilePage: React.FC = () => {
       <MainLayout>
         <div className="mx-auto max-w-md py-20 text-center">
           <p className="text-muted-foreground">请先设定偏好权重</p>
-          <Button className="mt-4 bg-gradient-primary text-primary-foreground hover:opacity-90" onClick={() => navigate('/survey')}>
+          <Button className="mt-4 bg-primary text-primary-foreground hover:opacity-90" onClick={() => navigate('/survey')}>
             去设定偏好
           </Button>
         </div>
@@ -91,7 +91,7 @@ const ProfilePage: React.FC = () => {
             </Button>
             <Button
               size="lg"
-              className="bg-gradient-primary text-primary-foreground hover:opacity-90"
+              className="bg-primary text-primary-foreground hover:opacity-90"
               onClick={() => navigate('/task')}
             >
               开始推荐 <ArrowRight className="ml-1 h-4 w-4" />

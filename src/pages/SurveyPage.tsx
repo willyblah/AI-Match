@@ -168,7 +168,7 @@ const SurveyPage: React.FC = () => {
               <Button
                 size="lg"
                 onClick={handleSubmit}
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90"
+                className="bg-primary text-primary-foreground hover:opacity-90"
               >
                 生成偏好画像 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>

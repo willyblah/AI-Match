@@ -133,7 +133,7 @@ const ComparePage: React.FC = () => {
                       className={cn(
                         'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all',
                         on
-                          ? 'border-transparent bg-gradient-primary text-primary-foreground'
+                          ? 'border-transparent bg-primary text-primary-foreground'
                           : 'border-border bg-background'
                       )}
                     >
@@ -149,7 +149,7 @@ const ComparePage: React.FC = () => {
             <Card className="glass-card p-12 text-center">
               <p className="text-sm text-muted-foreground">请至少选择 2 个工具进行对比</p>
               <Button
-                className="mt-4 bg-gradient-primary text-primary-foreground hover:opacity-90"
+                className="mt-4 bg-primary text-primary-foreground hover:opacity-90"
                 onClick={selectAllCompare}
               >
                 <CheckCheck className="mr-1 h-4 w-4" /> 对比全部 {AI_TOOLS.length} 款

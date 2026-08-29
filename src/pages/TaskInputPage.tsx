@@ -36,7 +36,7 @@ const TaskInputPage: React.FC = () => {
         <div className="mx-auto max-w-md py-20 text-center">
           <p className="text-muted-foreground">请先设定偏好权重</p>
           <Button
-            className="mt-4 bg-gradient-primary text-primary-foreground hover:opacity-90"
+            className="mt-4 bg-primary text-primary-foreground hover:opacity-90"
             onClick={() => navigate('/survey')}
           >
             去设定偏好
@@ -131,7 +131,7 @@ const TaskInputPage: React.FC = () => {
                       className={cn(
                         'absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-md border transition-all duration-200',
                         active
-                          ? 'border-transparent bg-gradient-primary text-primary-foreground'
+                          ? 'border-transparent bg-primary text-primary-foreground'
                           : 'border-border bg-background'
                       )}
                     >
@@ -239,7 +239,7 @@ const TaskInputPage: React.FC = () => {
                 size="lg"
                 disabled={count === 0}
                 onClick={handleRun}
-                className="bg-gradient-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
+                className="bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
               >
                 {count === 0 ? '请至少选择一个任务' : `生成 ${count} 个任务的推荐`}
                 <ArrowRight className="ml-1 h-4 w-4" />
