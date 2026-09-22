@@ -64,7 +64,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
 
           <div className="hidden md:block">
             <Link to="/survey">
-              <Button className="bg-gradient-primary text-primary-foreground hover:opacity-90">
+              <Button className="bg-primary text-primary-foreground hover:opacity-90">
                 开始智能推荐
               </Button>
             </Link>
@@ -82,7 +82,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
               <div className="mt-6 flex flex-col gap-2">
                 <NavItems onClick={() => setOpen(false)} />
                 <Link to="/survey" onClick={() => setOpen(false)}>
-                  <Button className="mt-4 w-full bg-gradient-primary text-primary-foreground hover:opacity-90">
+                  <Button className="mt-4 w-full bg-primary text-primary-foreground hover:opacity-90">
                     开始智能推荐
                   </Button>
                 </Link>

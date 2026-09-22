@@ -63,7 +63,7 @@ const ToolDetailPage: React.FC = () => {
             <Button
               variant={inCompare ? 'secondary' : 'default'}
               onClick={() => toggleCompare(tool.id)}
-              className={inCompare ? '' : 'bg-gradient-primary text-primary-foreground hover:opacity-90'}
+              className={inCompare ? '' : 'bg-primary text-primary-foreground hover:opacity-90'}
             >
               <GitCompareArrows className="mr-1 h-4 w-4" />
               {inCompare ? '已加入对比' : '加入对比'}

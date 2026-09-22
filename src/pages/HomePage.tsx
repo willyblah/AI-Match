@@ -92,7 +92,7 @@ const HomePage: React.FC = () => {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/survey">
-              <Button size="lg" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 sm:w-auto">
+              <Button size="lg" className="w-full bg-primary text-primary-foreground hover:opacity-90 sm:w-auto">
                 开始智能推荐 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
@@ -202,7 +202,7 @@ const HomePage: React.FC = () => {
               拖动滑块设定偏好权重，仅需一分钟，即可获得专属 AI 工具推荐。
             </p>
             <Link to="/survey" className="mt-6 inline-block">
-              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:opacity-90">
                 立即测试 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
